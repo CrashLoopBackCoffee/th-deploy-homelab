@@ -1,0 +1,45 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended",
+        ":dependencyDashboard"
+    ],
+    "mode": "full",
+    "customManagers": [
+        // Manager which can act on versions specified as ARGs in Dockerfiles like:
+        // # renovate: datasource=github-releases packageName=kyverno/kyverno versioning=loose
+        // ARG KYVERNO_VERSION=1.13.0
+        {
+            "customType": "regex",
+            "fileMatch": "^Dockerfile$",
+            "matchStrings": [
+                "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\sARG \\S+?=(?<currentValue>\\S+)"
+            ],
+            "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
+        },
+        // Manager which can act on versions specified in YAML files like:
+        // # renovate: datasource=github-releases packageName=kyverno/kyverno versioning=loose
+        // kyvernoVersion: 1.13.0
+        {
+            "customType": "regex",
+            "fileMatch": ".*.(yaml|yml)$",
+            "matchStrings": [
+                "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s+[a-zA-Z_]+:\\s+(?<currentValue>\\S+)"
+            ],
+            "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
+        }
+    ],
+    "packageRules": [
+        {
+            "groupName": "pulumi",
+            "schedule": [
+                "before 10am on Monday"
+            ],
+            "matchPackageNames": [
+                "/pulumi/"
+            ]
+        }
+    ],
+    "prHourlyLimit": 10,
+    "rangeStrategy": "replace"
+}
