@@ -57,3 +57,9 @@ fi
 
 # Generate config schema
 ./.venv/bin/python3 "${DEPLOY_BASE_ROOT}/bin/generate-config-schema"
+
+# Handle ONE_PASSWORD_TOKEN if exists
+if [ -n "${ONE_PASSWORD_TOKEN}" ]; then
+  echo -e "Setting up 1Password CLI"
+  export OP_SERVICE_ACCOUNT_TOKEN=$(op.exe read "${ONE_PASSWORD_TOKEN}")
+fi
