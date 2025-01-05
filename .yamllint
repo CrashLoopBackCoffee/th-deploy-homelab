@@ -1,0 +1,14 @@
+extends: default
+ignore: |
+  .git
+  .venv
+
+rules:
+  document-start:
+    level: error
+    present: false
+  line-length:
+    allow-non-breakable-inline-mappings: true
+    allow-non-breakable-words: true
+    max: 120
+  truthy: disable
