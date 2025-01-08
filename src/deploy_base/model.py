@@ -14,3 +14,9 @@ class OnePasswordRef(StrictBaseModel):
         from deploy_base.onepassword import resolve_secret_ref
 
         return resolve_secret_ref(self.ref)
+
+
+class CloudflareConfig(StrictBaseModel):
+    api_key: OnePasswordRef = pydantic.Field(alias='api-key')
+    email: str
+    zone: str
