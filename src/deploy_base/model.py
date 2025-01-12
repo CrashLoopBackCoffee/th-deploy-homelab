@@ -1,11 +1,20 @@
 import pydantic
 
 
-class StrictBaseModel(pydantic.BaseModel):
-    model_config = {'extra': 'forbid'}
+def _to_kebap_case(name: str) -> str:
+    return name.replace('_', '-')
 
 
-class OnePasswordRef(StrictBaseModel):
+class LocalBaseModel(pydantic.BaseModel):
+    model_config = {
+        'extra': 'forbid',
+        'alias_generator': _to_kebap_case,
+        # Allow instanciation also with original names
+        'populate_by_name': True,
+    }
+
+
+class OnePasswordRef(LocalBaseModel):
     ref: str
 
     @property
@@ -16,7 +25,7 @@ class OnePasswordRef(StrictBaseModel):
         return resolve_secret_ref(self.ref)
 
 
-class CloudflareConfig(StrictBaseModel):
+class CloudflareConfig(LocalBaseModel):
     api_key: OnePasswordRef = pydantic.Field(alias='api-key')
     email: str
     zone: str
