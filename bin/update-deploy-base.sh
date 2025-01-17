@@ -23,9 +23,9 @@ if [ -n "$(git status --porcelain)" ]; then
   FETCH=false
 fi
 
-# Check if master is checked out. If not emit a warning and skip update.
-if [ "$(git rev-parse --abbrev-ref HEAD)" != "master" ]; then
-  echo -e "${RED}Warning, current HEAD is not master!${ENDCOLOR}"
+# Check if main is checked out. If not emit a warning and skip update.
+if [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ]; then
+  echo -e "${RED}Warning, current HEAD is not main!${ENDCOLOR}"
   FETCH=false
 fi
 
