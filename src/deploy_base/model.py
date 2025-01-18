@@ -26,6 +26,6 @@ class OnePasswordRef(LocalBaseModel):
 
 
 class CloudflareConfig(LocalBaseModel):
-    api_key: OnePasswordRef = pydantic.Field(alias='api-key')
+    api_key: OnePasswordRef
     email: str
     zone: str
