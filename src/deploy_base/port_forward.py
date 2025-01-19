@@ -102,7 +102,7 @@ def ensure_port_forward(
 
         # Note: We don't handle termination of the process because the pulumi-language-python
         # process will be terminated before resource deletion is done by pulumi. Therefore we need
-        # to just let the process run. Pulumi in the end will terminate all child processes anyway.st
+        # to just let the process run. Pulumi in the end will terminate all child processes anyway.
         return local_port
 
     return p.Output.all(
