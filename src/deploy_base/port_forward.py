@@ -10,6 +10,10 @@ import pulumi as p
 import pulumi_kubernetes as k8s
 
 
+class PortForwardError(RuntimeError):
+    pass
+
+
 class ResourceType(enum.StrEnum):
     DEPLOYMENT = 'deployment'
     POD = 'pod'
@@ -89,15 +93,15 @@ def ensure_port_forward(
         while True:
             process.poll()
             if process.returncode is not None:
-                raise Exception('Port forward process exited unexpectedly')
+                raise PortForwardError('Port forward process exited unexpectedly')
             try:
                 s = socket.socket()
                 s.connect(('localhost', local_port))
                 s.close()
                 break
-            except ConnectionRefusedError:
+            except Exception:
                 if time.monotonic() - start > 30:
-                    raise Exception('Timed out waiting for port forward to be established')
+                    raise PortForwardError('Timed out waiting for port forward to be established')
                 time.sleep(0.1)
 
         # Note: We don't handle termination of the process because the pulumi-language-python
