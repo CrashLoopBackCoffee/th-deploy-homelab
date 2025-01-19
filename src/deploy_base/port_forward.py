@@ -100,6 +100,9 @@ def ensure_port_forward(
                     raise Exception('Timed out waiting for port forward to be established')
                 time.sleep(0.1)
 
+        # Note: We don't handle termination of the process because the pulumi-language-python
+        # process will be terminated before resource deletion is done by pulumi. Therefore we need
+        # to just let the process run. Pulumi in the end will terminate all child processes anyway.st
         return local_port
 
     return p.Output.all(
