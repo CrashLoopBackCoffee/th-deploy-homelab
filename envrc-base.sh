@@ -25,7 +25,6 @@ export PYRIGHT_PYTHON_IGNORE_WARNINGS=1
 # https://www.pulumi.com/registry/packages/kubernetes/how-to-guides/managing-resources-with-server-side-apply/#handle-field-conflicts-on-existing-resources
 export PULUMI_K8S_ENABLE_PATCH_FORCE=true
 
-
 #  check if repo is enabled for pre-commit by checking if present in venv
 if [ -f "./.venv/bin/pre-commit" ] && [ "${SKIP_PRE_COMMIT:-false}" != "true" ]; then
 
@@ -62,4 +61,12 @@ fi
 if [ -n "${ONE_PASSWORD_TOKEN}" ]; then
   echo -e "Setting up 1Password CLI"
   export OP_SERVICE_ACCOUNT_TOKEN=$(op.exe read "${ONE_PASSWORD_TOKEN}")
+fi
+
+if [ "${USE_S3_BACKEND:-false)}" = "true" ]; then
+  echo "Using S3 backend for pulumi"
+  export AWS_ACCESS_KEY_ID=$(op read "op://Pulumi/Pulumi S3 Token/username")
+  export AWS_SECRET_ACCESS_KEY=$(op read "op://Pulumi/Pulumi S3 Token/password")
+  export PULUMI_BACKEND_URL="s3://pulumi?region=home&endpoint=s3.tobiash.net:443&s3ForcePathStyle=true"
+  export PULUMI_CONFIG_PASSPHRASE=$(op read "op://Pulumi/Pulumi Passphrase/password")
 fi
