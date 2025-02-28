@@ -183,6 +183,8 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "pulumi-kubernetes" },
+    { name = "pulumi-postgresql" },
+    { name = "pulumi-random" },
     { name = "requests" },
 ]
 
@@ -207,6 +209,8 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "pulumi-kubernetes", specifier = ">=4.21.0" },
+    { name = "pulumi-postgresql", specifier = ">=3.15.0" },
+    { name = "pulumi-random", specifier = ">=4.18.0" },
     { name = "requests", specifier = ">=2.32.3" },
 ]
 
@@ -456,6 +460,34 @@ dependencies = [
     { name = "semver" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/2d/e3/15ba07147bf1ad602cd6234bb5ff09c29f9206d5ee0bf6845657c593264a/pulumi_onepassword-1.1.3.tar.gz", hash = "sha256:2ebbefa9463d8a9c6faf65491cad418c186d3a604360e78eaa319ef09c2478ba", size = 17968 }
+
+[[package]]
+name = "pulumi-postgresql"
+version = "3.15.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "parver" },
+    { name = "pulumi" },
+    { name = "semver" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fe/93/15e7cc6cbff0adf669cc0b83cb34eba201d6b5603a5605219fcdd8fffcd4/pulumi_postgresql-3.15.0.tar.gz", hash = "sha256:793f1c0bc964e23961669585cb1bd2159442f30af7e9b50aebf69dbad688ca98", size = 46113 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ea/b7/68dcda016521edb1c695a51625e8616035c36ab2c61315357263c529dc84/pulumi_postgresql-3.15.0-py3-none-any.whl", hash = "sha256:d6bee44f204165d267e6cc9992b287a38f8b42dd5e358d65bf7d91a9ceb79c04", size = 72411 },
+]
+
+[[package]]
+name = "pulumi-random"
+version = "4.18.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "parver" },
+    { name = "pulumi" },
+    { name = "semver" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4d/46/0bb5f261e86c0e56c9a568c213addbe983a2107f3167a5eb5546f2d60a9e/pulumi_random-4.18.0.tar.gz", hash = "sha256:84862ecfff13ca97de87dc2b7dc14f79650e033a461c61a4ccdc76af4ed891f5", size = 21250 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/df/14/4b4156761d9c168e48cc1f2d9192ce3dd01f290f9183ceaebe335bb452a0/pulumi_random-4.18.0-py3-none-any.whl", hash = "sha256:420508895f20a4f7c54ea04c91ebb083a7726a2a6d9b697a485d869ab8c46044", size = 30895 },
+]
 
 [[package]]
 name = "pydantic"

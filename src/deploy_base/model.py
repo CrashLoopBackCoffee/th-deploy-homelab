@@ -29,3 +29,10 @@ class CloudflareConfig(LocalBaseModel):
     api_key: OnePasswordRef
     email: str
     zone: str
+
+
+class ProxmoxConfig(LocalBaseModel):
+    api_token: OnePasswordRef = pydantic.Field(alias='api-token')
+    api_endpoint: str = pydantic.Field(alias='api-endpoint')
+    node_name: str = pydantic.Field(alias='node-name')
+    insecure: bool = False
