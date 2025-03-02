@@ -5,6 +5,7 @@
         ":dependencyDashboard"
     ],
     "mode": "full",
+    "lockFileMaintenance": { "enabled": true },
     "customManagers": [
         // Manager which can act on versions specified as ARGs in Dockerfiles like:
         // # renovate: datasource=github-releases packageName=kyverno/kyverno versioning=loose
