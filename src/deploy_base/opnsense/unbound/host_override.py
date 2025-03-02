@@ -78,7 +78,7 @@ class HostOverrideProvider(OpnSenseBaseProvider):
         """
         client = self.get_client()
         response = client.post(
-            f'{self.get_api_path('unbound', 'settings', 'delHostOverride')}/{_id}',
+            f'{self.get_api_path("unbound", "settings", "delHostOverride")}/{_id}',
             json={'uuid': _id},
         )
         response.raise_for_status()
