@@ -1,0 +1,9 @@
+pve:
+  hosts:
+    pve.tobiash.net:
+      ansible_user: root
+
+pbs:
+  hosts:
+    pbs.tobiash.net:
+      ansible_user: root

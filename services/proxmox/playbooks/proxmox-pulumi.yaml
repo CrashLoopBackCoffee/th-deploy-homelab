@@ -1,0 +1,36 @@
+- name: Setup access for Pulumi
+  hosts: pve
+  gather_facts: true
+
+  vars:
+    pulumi_user: pulumi
+    pulumi_token_name: pulumi
+    vault: Pulumi
+
+  roles:
+    - role: ensure-pve-user
+      ensure_pve_user_username: "{{ pulumi_user }}"
+      ensure_pve_user_role: Administrator
+
+    - role: ensure-pve-api-token
+      ensure_api_token_userid: "{{ pulumi_user }}@pve"
+      ensure_api_token_name: "{{ pulumi_token_name }}"
+
+  handlers:
+    - name: Export API token {{ pulumi_user }}@pve {{ pulumi_token_name }}
+      ansible.builtin.shell: |
+        set -eu
+
+        # Check if item exists
+        TITLE="{{ ansible_hostname }} Token {{ pulumi_user }}@pve {{ pulumi_token_name }}"
+        PASSWORD="{{ pulumi_user }}@pve!{{ pulumi_token_name }}={{ (create_token_result.stdout | from_json).value }}"
+
+        if op item get --vault "{{ vault }}" "${TITLE}"; then
+          echo "Item exists, updating..."
+          op item template get Password | op item edit --vault "{{ vault }}" "${TITLE}" password="${PASSWORD}"
+        else
+          echo "Item does not exist, creating..."
+          op item template get Password | op item create --vault "{{ vault }}" --title "${TITLE}" password="${PASSWORD}"
+        fi
+
+      delegate_to: localhost

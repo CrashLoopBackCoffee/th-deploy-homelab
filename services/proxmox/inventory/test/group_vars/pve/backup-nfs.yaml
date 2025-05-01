@@ -1,0 +1,4 @@
+backup_nfs:
+  server: 192.168.2.11
+  export: /volume2/backup/Proxmox/test
+  options: soft,nfsvers=4.1

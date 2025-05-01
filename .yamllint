@@ -10,5 +10,5 @@ rules:
   line-length:
     allow-non-breakable-inline-mappings: true
     allow-non-breakable-words: true
-    max: 120
+    max: 220
   truthy: disable

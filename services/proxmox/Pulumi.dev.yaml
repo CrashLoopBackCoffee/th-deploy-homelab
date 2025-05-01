@@ -1,0 +1,7 @@
+config:
+  proxmox:config:
+    cloudflare:
+      email: tobias_henkel@gmx.de
+      api-key:
+        secure: AAABAAfmaM+kV8pOPS9isDesPo4PsGrei2AQHo+P5Nb2TpU19j+R11Q6mVu+PsWm8IpQa2Ldqc0SesWuiLZcutdRmHtF
+      zone: tobiash.net

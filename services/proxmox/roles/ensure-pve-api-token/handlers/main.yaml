@@ -1,0 +1,3 @@
+- name: Export API token {{ ensure_api_token_userid }} {{ ensure_api_token_name }}
+  ansible.builtin.debug:
+    msg: "Export API token."

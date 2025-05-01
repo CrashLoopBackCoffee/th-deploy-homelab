@@ -1,0 +1,7 @@
+- name: Install prometheus-node-exporter
+  hosts: pve
+  gather_facts: true
+  roles:
+    - role: prometheus.prometheus.node_exporter
+      # renovate: datasource=github-releases packageName=prometheus/node_exporter versioning=loose
+      node_exporter_version: 1.9.0

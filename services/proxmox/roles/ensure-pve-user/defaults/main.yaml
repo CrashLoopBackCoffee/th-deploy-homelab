@@ -1,0 +1,3 @@
+ensure_pve_user_password: "{{ lookup('password', '/dev/null', chars=['ascii_letters','digits'], length=32) }}"
+ensure_pve_user_acl_path: "/"
+ensure_pve_user_realm: pve

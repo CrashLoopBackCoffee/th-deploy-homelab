@@ -1,0 +1,52 @@
+- name: Configure TLS certificate for Proxmox Backup Server through acme.sh
+  hosts: pbs
+  gather_facts: false
+  vars:
+    pem: /etc/proxmox-backup/proxy.pem
+    key: /etc/proxmox-backup/proxy.key
+    reloadcmd: chown root:backup {{ pem }} {{ key }};
+      chmod 640 {{ pem }} {{ key }};
+      systemctl reload proxmox-backup-proxy
+  tasks:
+    - name: Check for installed acme.sh
+      ansible.builtin.stat:
+        path: /root/.acme.sh/acme.sh
+      register: acme_sh_stat_result
+
+    - name: Install acme.sh
+      ansible.builtin.shell:
+        cmd: set -o pipefail && wget -O - https://get.acme.sh | sh -s email={{ acme.account.contact }}
+        executable: /bin/bash
+      changed_when: true
+      when: not acme_sh_stat_result.stat.exists
+
+    - name: Ensure certificate for {{ inventory_hostname }}
+      ansible.builtin.command:
+        cmd: /root/.acme.sh/acme.sh
+          --issue
+          {% if acme.staging %}--staging{% endif %}
+          -d {{ inventory_hostname }}
+          --dns dns_cf
+          --cert-file {{ pem }}
+          --key-file {{ key }}
+          --fullchain-file {{ pem }}
+          --reloadcmd "{{ reloadcmd }}"
+          --no-cron
+      environment:
+        CF_Account_ID: "{{ acme.plugin.data | selectattr('key', 'equalto', 'CF_Account_ID') | map(attribute='value') | first }}"
+        CF_Token: "{{ acme.plugin.data | selectattr('key', 'equalto', 'CF_Token') | map(attribute='value') | first }}"
+      register: issue_cert_result
+      # RC 0: created successfully
+      # RC 2: certificate already exists
+      failed_when: issue_cert_result.rc not in (0, 2)
+      changed_when: issue_cert_result.rc == 0
+
+    - name: Add reload command to crontab for certificate renewal
+      ansible.builtin.cron:
+        name: Renew TLS certificate for {{ inventory_hostname }}
+        job: /root/.acme.sh/acme.sh
+          --cron
+          --home /root/.acme.sh
+          --renew-hook "{{ reloadcmd }}"
+        minute: "{{ 60 | random(seed=inventory_hostname) }}"
+        hour: "{{ 24 | random(seed=inventory_hostname) }}"

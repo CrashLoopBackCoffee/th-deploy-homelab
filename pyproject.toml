@@ -22,6 +22,7 @@ dependencies = [
     "monitoring",
     "obsidian",
     "paperless",
+    "proxmox",
     "s3",
     "unifi",
 ]
@@ -43,6 +44,7 @@ kubernetes = { workspace = true }
 monitoring = { workspace = true }
 obsidian = { workspace = true }
 paperless = { workspace = true }
+proxmox = { workspace = true }
 s3 = { workspace = true }
 unifi = { workspace = true }
 utils = { workspace = true }
@@ -127,6 +129,10 @@ model = "monitoring.config:PulumiConfigRoot"
 [tool.config-models.paperless]
 root = "services/paperless"
 model = "paperless.config:PulumiConfigRoot"
+
+[tool.config-models.proxmox]
+root = "services/proxmox"
+model = "proxmox.config:PulumiConfigRoot"
 
 [tool.config-models.s3]
 root = "services/s3"
