@@ -1,8 +1,9 @@
 """A Python Pulumi program"""
 
 import pulumi as p
-import pulumi_cloudflare as cloudflare
 import pulumi_docker as docker
+
+import utils.cloudflare
 
 from monitoring.alloy_legacy import create_alloy
 from monitoring.cadvisor_legacy import create_cadvisor
@@ -22,11 +23,7 @@ def main_legacy():
     opts = p.ResourceOptions(provider=provider)
 
     assert component_config.cloudflare
-    cloudflare_provider = cloudflare.Provider(
-        'cloudflare',
-        api_key=component_config.cloudflare.api_key.value,
-        email=component_config.cloudflare.email,
-    )
+    cloudflare_provider = utils.cloudflare.get_provider(component_config.cloudflare)
 
     # Create networks so we don't have to expose all ports on the host
     network = docker.Network('monitoring', opts=opts)
