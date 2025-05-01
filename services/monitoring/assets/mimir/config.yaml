@@ -1,0 +1,46 @@
+multitenancy_enabled: false
+target: all
+
+common:
+  storage:
+    backend: s3
+    s3:
+      endpoint: "${MINIO_HOSTNAME}"
+      secret_access_key: "${AWS_SECRET_ACCESS_KEY}"
+      access_key_id: "${AWS_ACCESS_KEY_ID}"
+
+blocks_storage:
+  s3:
+    bucket_name: "${MINIO_BUCKET_BLOCKS}"
+  tsdb:
+    dir: /data/ingester
+
+alertmanager_storage:
+  s3:
+    bucket_name: "${MINIO_BUCKET_ALERTMANAGER}"
+
+ruler_storage:
+  s3:
+    bucket_name: "${MINIO_BUCKET_RULER}"
+
+compactor:
+  data_dir: /data/compactor
+
+ingester:
+  ring:
+    replication_factor: 1
+
+ruler:
+  rule_path: /data/ruler
+
+server:
+  http_listen_port: 9009
+  log_level: info
+
+store_gateway:
+  sharding_ring:
+    replication_factor: 1
+
+limits:
+  compactor_blocks_retention_period: 2y
+  compactor_block_upload_enabled: true

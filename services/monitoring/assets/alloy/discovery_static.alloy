@@ -1,0 +1,32 @@
+//===========================================================
+// Static scrape targets
+//===========================================================
+
+discovery.relabel "static" {
+	targets = [
+		// cadvisor
+		{__address__ = "localhost:8081", job = "cadvisor"},
+		// Prometheus
+		{__address__ = "localhost:9090", job = "prometheus"},
+		// Script exporter
+		{__address__ = "192.168.40.80:9469", job = "script_exporter", instance = "speedtest-exporter:9469"},
+		// Windows exporter
+		{__address__ = "192.168.2.10:9182", job = "windows_exporter"},
+		// Ohmgraphite
+		{__address__ = "192.168.2.10:9002", job = "ohmgraphite"},
+		// mqtt2prometheus
+		{__address__ = "shellies.mqtt2prometheus.local:9641", job = "mqtt2prometheus-shellies"},
+		{__address__ = "zwave-last-active.mqtt2prometheus.local:9641", job = "mqtt2prometheus-zwave-last-active"},
+		{__address__ = "zwave-power.mqtt2prometheus.local:9641", job = "mqtt2prometheus-zwave-power"},
+		{__address__ = "zwave-energy.mqtt2prometheus.local:9641", job = "mqtt2prometheus-zwave-energy"},
+		{__address__ = "zwave-voltage.mqtt2prometheus.local:9641", job = "mqtt2prometheus-zwave-voltage"},
+		{__address__ = "zwave-power-factor.mqtt2prometheus.local:9641", job = "mqtt2prometheus-zwave-power-factor"},
+		{__address__ = "zwave-current.mqtt2prometheus.local:9641", job = "mqtt2prometheus-zwave-current"},
+		{__address__ = "zigbee-nous-plug.mqtt2prometheus.local:9641", job = "mqtt2prometheus-zigbee-nous-plug"},
+		{__address__ = "zigbee-aqara-temp.mqtt2prometheus.local:9641", job = "mqtt2prometheus-zigbee-aqara-temp"},
+		// Node exporter
+		{__address__ = "opnsense.tobiash.net:9100", job = "integrations/unix", instance = "opnsense.tobiash.net"},
+		{__address__ = "pve-test.tobiash.net:9100", job = "integrations/unix", instance = "pve-test.tobiash.net"},
+		{__address__ = "pve.tobiash.net:9100", job = "integrations/unix", instance = "pve.tobiash.net"},
+	]
+}

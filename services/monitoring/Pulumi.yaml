@@ -1,0 +1,6 @@
+name: monitoring
+runtime:
+  name: python
+  options:
+    virtualenv: .venv
+description: Monitoring Stack

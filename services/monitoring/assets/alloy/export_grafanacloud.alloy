@@ -1,0 +1,14 @@
+//===========================================================
+// Grafana Cloud Export
+//===========================================================
+otelcol.exporter.otlphttp "grafana_cloud" {
+	client {
+		endpoint = "https://otlp-gateway-prod-eu-west-2.grafana.net/otlp"
+		auth     = otelcol.auth.basic.grafana_cloud.handler
+	}
+}
+
+otelcol.auth.basic "grafana_cloud" {
+	username = sys.env("GRAFANA_CLOUD_API_USER")
+	password = sys.env("GRAFANA_CLOUD_API_TOKEN")
+}
