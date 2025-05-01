@@ -1,0 +1,6 @@
+name: iot
+runtime:
+  name: python
+  options:
+    virtualenv: .venv
+description: IoT Stack

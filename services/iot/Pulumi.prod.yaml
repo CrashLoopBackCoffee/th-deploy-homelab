@@ -1,0 +1,245 @@
+config:
+  iot:config:
+    kubeconfig:
+      ref: op://Pulumi/Kubeconfig prod/password
+
+    proxmox:
+      username: root@pam
+      password:
+        ref: op://Pulumi/7se4f6wpe6pxnayudrtkcfs4am/password
+      api-endpoint: https://pve.tobiash.net:8006
+      node-name: pve
+
+    zwave_controller:
+      address: 192.168.20.21/24
+      hostname: zwave-controller.tobiash.net
+      ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ
+      vlan: 20
+      # renovate: datasource=github-releases packageName=zwave-js/zwave-js-ui versioning=semver
+      version: 9.29.0
+      zwave-adapter:
+        usb-id: 1a86:55d4
+        serial-id: usb-Zooz_800_Z-Wave_Stick_533D004242-if00
+
+
+    mosquitto:
+      # renovate: datasource=github-releases packageName=eclipse-mosquitto/mosquitto versioning=semver
+      version: 2.0.19
+      hostname: mqtt.tobiash.net
+      passwords:
+        # Generated via mosquitto_passwd using op://Pulumi/Mosquitto/password
+        - iot:$7$101$Nd2Krv0tCk+QN75e$rCpqdQXzS6R3k714tuP7TD80t6vI3TNL4BeHFvBi3XdGYMbuib8W5gRKFaCF8HJWhhqU5z3rY/fFpQcq4FPxuQ==
+
+    mqtt2prometheus:
+      # renovate: datasource=github-releases packageName=hikhvar/mqtt2prometheus versioning=semver
+      version: v0.1.8-RC2
+      username:
+        ref: op://Pulumi/Mosquitto/username
+      password:
+        ref: op://Pulumi/Mosquitto/password
+      instances:
+        - name: shellies
+          topic-path: "home/shellies/#"
+          device-id-regex: "home/(.*?)/(?P<deviceid>.*?)/.*"
+          metrics:
+            - prom_name: mqtt_voltage
+              mqtt_name: voltage
+              help: Voltage reading
+              type: gauge
+
+            - prom_name: mqtt_current
+              mqtt_name: current
+              help: Current reading
+              type: gauge
+
+            - prom_name: mqtt_power
+              mqtt_name: apower
+              help: Power reading
+              type: gauge
+
+            - prom_name: mqtt_output
+              mqtt_name: output
+              help: Output state
+              type: gauge
+
+            - prom_name: mqtt_total_energy
+              mqtt_name: aenergy.total
+              help: Total energy used in Wh
+              type: counter
+              # TODO: When updated to next release
+              # force_monotonicy: true
+
+            - prom_name: mqtt_temperature
+              mqtt_name: temperature.tC
+              help: Temperature reading in °C
+              type: gauge
+              const_labels:
+                sensor_type: shelly
+
+            - prom_name: restart_required
+              mqtt_name: restart_required
+              help: Flag indicating that a restart is required
+              type: gauge
+
+        - name: zwave-last-active
+          topic-path: zwave/+/lastActive
+          device-id-regex: zwave/(?P<deviceid>.*?)/lastActive
+          metrics:
+            - prom_name: mqtt_zwave_last_active
+              mqtt_name: value
+              help: Last active time
+              type: gauge
+              const_labels:
+                sensor_type: zwave
+
+        - name: zwave-power
+          topic-path: zwave/+/meter/endpoint_0/value/66049
+          device-id-regex: zwave/(?P<deviceid>.*?)/meter/endpoint_0/value/66049
+          metrics:
+            - prom_name: mqtt_power
+              mqtt_name: value
+              help: Power reading
+              type: gauge
+              const_labels:
+                sensor_type: zwave
+
+        - name: zwave-voltage
+          topic-path: zwave/+/meter/endpoint_0/value/66561
+          device-id-regex: zwave/(?P<deviceid>.*?)/meter/endpoint_0/value/66561
+          metrics:
+            - prom_name: mqtt_voltage
+              mqtt_name: value
+              help: Voltage reading
+              type: gauge
+              const_labels:
+                sensor_type: zwave
+
+        - name: zwave-energy
+          topic-path: zwave/+/meter/endpoint_0/value/65537
+          device-id-regex: zwave/(?P<deviceid>.*?)/meter/endpoint_0/value/65537
+          metrics:
+            - prom_name: mqtt_total_energy
+              mqtt_name: value
+              # Convert kWh to Wh
+              mqtt_value_scale: 1000
+              help: Total energy used in Wh
+              type: counter
+              const_labels:
+                sensor_type: zwave
+
+        - name: zwave-power-factor
+          topic-path: zwave/+/meter/endpoint_0/value/67073
+          device-id-regex: zwave/(?P<deviceid>.*?)/meter/endpoint_0/value/67073
+          metrics:
+            - prom_name: mqtt_power_factor
+              mqtt_name: value
+              help: Power factor
+              type: gauge
+              const_labels:
+                sensor_type: zwave
+
+        - name: zwave-current
+          topic-path: zwave/+/meter/endpoint_0/value/66817
+          device-id-regex: zwave/(?P<deviceid>.*?)/meter/endpoint_0/value/66817
+          metrics:
+            - prom_name: mqtt_current
+              mqtt_name: value
+              help: Current reading
+              type: gauge
+              const_labels:
+                sensor_type: zwave
+
+        - name: zigbee-nous-plug
+          topic-path: zigbee2mqtt/+
+          device-id-regex: zigbee2mqtt/(?P<deviceid>nous-plug-.*)
+          metrics:
+            - prom_name: mqtt_voltage
+              mqtt_name: voltage
+              help: Voltage reading
+              type: gauge
+              sensor_name_filter: "^nous-plug-.*$"
+              const_labels:
+                sensor_type: nous-plug
+
+
+            - prom_name: mqtt_current
+              mqtt_name: current
+              help: Current reading
+              type: gauge
+              sensor_name_filter: "^nous-plug-.*$"
+              const_labels:
+                sensor_type: nous-plug
+
+            - prom_name: mqtt_power
+              mqtt_name: power
+              help: Power reading
+              type: gauge
+              sensor_name_filter: "^nous-plug-.*$"
+              const_labels:
+                sensor_type: nous-plug
+
+            - prom_name: mqtt_output
+              mqtt_name: state
+              help: Output state
+              type: gauge
+              string_value_mapping:
+                map:
+                  "ON": 1
+                  "OFF": 0
+              sensor_name_filter: "^nous-plug-.*$"
+              const_labels:
+                sensor_type: nous-plug
+
+            - prom_name: mqtt_total_energy
+              mqtt_name: energy
+              # Convert kWh to Wh
+              mqtt_value_scale: 1000
+              help: Total energy used in Wh
+              type: counter
+              sensor_name_filter: "^nous-plug-.*$"
+              # TODO: When updated to next release
+              # force_monotonicy: true
+              const_labels:
+                sensor_type: nous-plug
+
+        - name: zigbee-aqara-temp
+          topic-path: zigbee2mqtt/+
+          device-id-regex: zigbee2mqtt/(?P<deviceid>aqara-temp-.*)
+          metrics:
+            - prom_name: mqtt_voltage
+              mqtt_name: voltage
+              # Convert mV to V
+              mqtt_value_scale: 0.001
+              help: Voltage reading
+              type: gauge
+              sensor_name_filter: "^aqara-temp-.*$"
+              omit_timestamp: true
+              const_labels:
+                sensor_type: aqara-temp
+
+            - prom_name: mqtt_temperature
+              mqtt_name: temperature
+              help: Temperature reading in °C
+              type: gauge
+              sensor_name_filter: "^aqara-temp-.*$"
+              omit_timestamp: true
+              const_labels:
+                sensor_type: aqara-temp
+
+            - prom_name: mqtt_pressure
+              mqtt_name: pressure
+              help: Pressure reading in hPa
+              type: gauge
+              sensor_name_filter: "^aqara-temp-.*$"
+              omit_timestamp: true
+              const_labels:
+                sensor_type: aqara-temp
+
+            - prom_name: mqtt_humidity
+              mqtt_name: humidity
+              help: Humidity reading in %
+              type: gauge
+              sensor_name_filter: "^aqara-temp-.*$"
+              omit_timestamp: true
+              const_labels:
+                sensor_type: aqara-temp
