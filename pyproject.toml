@@ -18,6 +18,7 @@ dependencies = [
 
     # Workspaces
     "ingress",
+    "iot",
     "kubernetes",
     "monitoring",
     "obsidian",
@@ -40,6 +41,7 @@ dev = [
 
 [tool.uv.sources]
 ingress = { workspace = true }
+iot = { workspace = true }
 kubernetes = { workspace = true }
 monitoring = { workspace = true }
 obsidian = { workspace = true }
@@ -117,6 +119,10 @@ venvPath = "."
 [tool.config-models.ingress]
 root = "services/ingress"
 model = "ingress.config:PulumiConfigRoot"
+
+[tool.config-models.iot]
+root = "services/iot"
+model = "iot.config:PulumiConfigRoot"
 
 [tool.config-models.kubernetes]
 root = "services/kubernetes"

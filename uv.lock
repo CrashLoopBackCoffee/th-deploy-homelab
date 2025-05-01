@@ -6,6 +6,7 @@ requires-python = ">=3.13"
 members = [
     "homelab",
     "ingress",
+    "iot",
     "kubernetes",
     "monitoring",
     "obsidian",
@@ -322,6 +323,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "ingress" },
+    { name = "iot" },
     { name = "kubernetes" },
     { name = "monitoring" },
     { name = "obsidian" },
@@ -354,6 +356,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "ingress", virtual = "services/ingress" },
+    { name = "iot", virtual = "services/iot" },
     { name = "kubernetes", virtual = "services/kubernetes" },
     { name = "monitoring", virtual = "services/monitoring" },
     { name = "obsidian", virtual = "services/obsidian" },
@@ -417,6 +420,17 @@ wheels = [
 name = "ingress"
 version = "0.1.0"
 source = { virtual = "services/ingress" }
+dependencies = [
+    { name = "utils" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "utils", editable = "utils" }]
+
+[[package]]
+name = "iot"
+version = "0.1.0"
+source = { virtual = "services/iot" }
 dependencies = [
     { name = "utils" },
 ]

@@ -1,0 +1,7 @@
+name: iot
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: ../../.venv
+description: IoT Stack
