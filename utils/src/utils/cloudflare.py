@@ -2,6 +2,15 @@ import pulumi as p
 import pulumi_cloudflare as cloudflare
 
 
+def get_zone(
+    name: str, cloudflare_provider: cloudflare.Provider
+) -> p.Output[cloudflare.GetZoneResult]:
+    return cloudflare.get_zone_output(
+        filter={'match': 'all', 'name': name},
+        opts=p.InvokeOptions(provider=cloudflare_provider),
+    )
+
+
 def create_cloudflare_cname(
     name: str, zone_name: str, cloudflare_provider: cloudflare.Provider
 ) -> cloudflare.DnsRecord:

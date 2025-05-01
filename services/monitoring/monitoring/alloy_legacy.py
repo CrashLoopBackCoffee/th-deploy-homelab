@@ -1,4 +1,3 @@
-import pathlib
 import urllib.error
 import urllib.request
 
@@ -8,20 +7,10 @@ import pulumi_command
 import pulumi_docker as docker
 
 import utils.cloudflare
+import utils.utils
 
 from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path
-
-
-def directory_content(path: pathlib.Path) -> list[str]:
-    """
-    Hashes the contents of a directory.
-    """
-    contents = []
-    for file in path.rglob('*'):
-        if file.is_file():
-            contents.append(file.read_text())
-    return contents
 
 
 def create_alloy(
@@ -65,7 +54,7 @@ def create_alloy(
         f'{target_user}@{target_host}:{target_root_dir}/alloy-config/'
     )
 
-    alloy_config = directory_content(alloy_path)
+    alloy_config = utils.utils.directory_content(alloy_path)
     alloy_config = pulumi_command.local.Command(
         'alloy-config',
         create=sync_command,

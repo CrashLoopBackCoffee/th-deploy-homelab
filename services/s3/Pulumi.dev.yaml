@@ -3,7 +3,7 @@ config:
     target:
       host: synology
       user: tobias
-      root_dir: /volume2/docker
+      root-dir: /volume2/docker
     cloudflare:
       email: tobias_henkel@gmx.de
       api-key:

@@ -12,6 +12,8 @@ import pulumi_random
 from obsidian.utils import get_image
 from pulumi import InvokeOptions, ResourceOptions
 
+import utils.cloudflare
+
 
 def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
     """
@@ -49,10 +51,7 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
         account_id=cloudflare_account_id, tunnel_id=tunnel.id, opts=cloudflare_invoke_opts
     )
 
-    zone = pulumi_cloudflare.get_zone_output(
-        filter={'match': 'all', 'name': '.'.join(public_hostname.split('.')[1:])},
-        opts=cloudflare_invoke_opts,
-    )
+    zone = utils.cloudflare.get_zone('.'.join(public_hostname.split('.')[1:]), cloudflare_provider)
 
     record = pulumi_cloudflare.DnsRecord(
         'couchdb',
