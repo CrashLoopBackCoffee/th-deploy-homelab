@@ -85,3 +85,7 @@ exclude = [
 reportUnnecessaryTypeIgnoreComment = true
 venv = ".venv"
 venvPath = "."
+
+[tool.config-models.unifi]
+root = "services/unifi"
+model = "unifi.config:PulumiConfigRoot"
