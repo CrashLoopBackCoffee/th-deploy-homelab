@@ -1,0 +1,41 @@
+config:
+  kubernetes:config:
+    proxmox:
+      api-token:
+        ref: op://Pulumi/cejfwasemie3kbbfphb5zta2ci/password
+      api-endpoint: https://pve.tobiash.net:8006
+      node-name: pve
+    cert-manager:
+      # renovate: datasource=github-releases packageName=cert-manager/cert-manager versioning=semver
+      version: v1.17.1
+      use_staging: false
+    cloudflare:
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      email: tobias_henkel@gmx.de
+      zone: tobiash.net
+    csi-nfs-driver:
+      # renovate: datasource=github-releases packageName=kubernetes-csi/csi-driver-nfs versioning=semver
+      version: v4.10.0
+    microk8s:
+      version: 1.31/stable
+      vlan: 40
+      ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ
+      metallb:
+        # renovate: datasource=github-releases packageName=metallb/metallb versioning=semver
+        version: 0.14.9
+        start: 192.168.40.70
+        end: 192.168.40.99
+      master-nodes:
+        - name: microk8s-prod-master-0
+          address: 192.168.40.10/24
+          cores: 16
+          memory-min: 4096
+          memory-max: 32768
+          disks:
+            - size: 20
+            # Data disk
+            - size: 20
+    traefik:
+      # renovate: datasource=github-releases packageName=traefik/traefik versioning=semver
+      version: v34.3.0

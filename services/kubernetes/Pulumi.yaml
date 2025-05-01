@@ -1,0 +1,9 @@
+name: kubernetes
+pulumi:disable-default-providers:
+  - kubernetes
+  - proxmoxve
+runtime:
+  name: python
+  options:
+    virtualenv: .venv
+description: IoT Stack
