@@ -1,0 +1,6 @@
+name: deploy-obsidian
+runtime:
+  name: python
+  options:
+    virtualenv: .venv
+description: Obsidian sync backend
