@@ -29,7 +29,7 @@ config:
       version: 16.4.16
     redis:
       # renovate: datasource=github-releases packageName=redis/redis versioning=semver
-      version: 7.4.2
+      version: 7.4.3
     tika:
       # renovate: datasource=docker packageName=registry-1.docker.io/apache/tika versioning=semver
       version: 3.1.0.0
