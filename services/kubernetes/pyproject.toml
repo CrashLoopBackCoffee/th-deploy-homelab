@@ -3,4 +3,4 @@ name = "kubernetes"
 version = "0.1.0"
 requires-python = ">=3.11"
 
-dependencies = ["pulumiverse-talos==0.5.1", "pulumiverse_acme==0.10.0", "utils"]
+dependencies = ["pulumiverse-talos==0.5.2", "pulumiverse_acme==0.10.0", "utils"]
