@@ -8,7 +8,7 @@ import pulumi_docker as docker
 import pulumi_random
 
 from obsidian.config import ComponentConfig
-from obsidian.utils import get_assets_path, get_image
+from obsidian.utils import get_assets_path
 from pulumi import Output, ResourceOptions
 
 
@@ -56,7 +56,7 @@ def create_couchdb(
 
     image = docker.RemoteImage(
         'couchdb',
-        name=get_image('couchdb'),
+        name=f'couchdb:{component_config.couchdb.version}',
         keep_locally=True,
         opts=opts,
     )

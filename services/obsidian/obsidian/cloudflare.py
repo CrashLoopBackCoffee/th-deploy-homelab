@@ -10,7 +10,6 @@ import pulumi_docker as docker
 import pulumi_random
 
 from obsidian.config import ComponentConfig
-from obsidian.utils import get_image
 
 import utils.cloudflare
 
@@ -86,7 +85,7 @@ def create_cloudflare_tunnel(
 
     image = docker.RemoteImage(
         'cloudflared',
-        name=get_image('cloudflared'),
+        name=f'cloudflare/cloudflared:{component_config.cloudflared.version}',
         keep_locally=True,
         opts=opts,
     )
