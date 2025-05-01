@@ -1,3 +1,4 @@
+import ipaddress
 import pathlib
 import typing as t
 
@@ -22,6 +23,14 @@ class StrictBaseModel(pydantic.BaseModel):
     model_config = {'extra': 'forbid'}
 
 
+class ProxmoxConfig(StrictBaseModel):
+    username: str
+    password: deploy_base.model.OnePasswordRef
+    api_endpoint: str = pydantic.Field(alias='api-endpoint')
+    node_name: str = pydantic.Field(alias='node-name')
+    insecure: bool = False
+
+
 class MosquittoConfig(StrictBaseModel):
     version: str
     hostname: str
@@ -42,11 +51,36 @@ class MqttPrometheusConfig(StrictBaseModel):
     instances: list[MqttPrometheusInstanceConfig] = []
 
 
+class ZwaveAdapterConfig(StrictBaseModel):
+    usb_id: str = pydantic.Field(alias='usb-id')
+    serial_id: str = pydantic.Field(alias='serial-id')
+
+
+class ZwaveControllerConfig(StrictBaseModel):
+    address: ipaddress.IPv4Interface
+    hostname: str
+    cloud_image: str = pydantic.Field(
+        alias='cloud-image',
+        default='https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img',
+    )
+    ssh_public_key: str = pydantic.Field(alias='ssh-public-key')
+    vlan: int | None = None
+    cores: int = 2
+    memory_min: int = 1024
+    memory_max: int = 2048
+    disk_size: int = 20
+    version: str
+    zwave_adapter: ZwaveAdapterConfig = pydantic.Field(alias='zwave-adapter')
+
+
 class ComponentConfig(StrictBaseModel):
     kubeconfig: deploy_base.model.OnePasswordRef
+    proxmox: ProxmoxConfig
+
     cloudflare: deploy_base.model.CloudflareConfig | None = None
     mosquitto: MosquittoConfig
     mqtt2prometheus: MqttPrometheusConfig
+    zwave_controller: ZwaveControllerConfig
 
 
 class StackConfig(StrictBaseModel):
