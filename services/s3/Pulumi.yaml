@@ -2,5 +2,6 @@ name: s3
 runtime:
   name: python
   options:
-    virtualenv: .venv
+    toolchain: uv
+    virtualenv: ../../.venv
 description: S3 Stack
