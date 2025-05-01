@@ -1,0 +1,9 @@
+name: unifi
+pulumi:disable-default-providers:
+  - kubernetes
+  - proxmoxve
+runtime:
+  name: python
+  options:
+    virtualenv: .venv
+description: Unifi Stack
