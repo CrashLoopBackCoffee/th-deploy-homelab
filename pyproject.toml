@@ -17,6 +17,7 @@ dependencies = [
     "pulumi==3.166.0",
 
     # Workspaces
+    "ingress",
     "kubernetes",
     "monitoring",
     "obsidian",
@@ -37,6 +38,7 @@ dev = [
 ]
 
 [tool.uv.sources]
+ingress = { workspace = true }
 kubernetes = { workspace = true }
 monitoring = { workspace = true }
 obsidian = { workspace = true }
@@ -110,10 +112,13 @@ reportUnnecessaryTypeIgnoreComment = true
 venv = ".venv"
 venvPath = "."
 
+[tool.config-models.ingress]
+root = "services/ingress"
+model = "ingress.config:PulumiConfigRoot"
+
 [tool.config-models.kubernetes]
 root = "services/kubernetes"
 model = "kubernetes.config:PulumiConfigRoot"
-
 
 [tool.config-models.monitoring]
 root = "services/monitoring"
