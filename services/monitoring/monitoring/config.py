@@ -1,5 +1,3 @@
-import pydantic
-
 import utils.model
 
 
@@ -13,12 +11,6 @@ class GrafanaConfig(utils.model.LocalBaseModel):
     version: str
 
     hostname: str | None = None
-
-
-class CloudflareConfig(utils.model.LocalBaseModel):
-    api_key: utils.model.PulumiSecret | str = pydantic.Field(alias='api-key')
-    email: str
-    zone: str
 
 
 class MimirConfig(utils.model.LocalBaseModel):
@@ -38,7 +30,7 @@ class TargetConfig(utils.model.LocalBaseModel):
 class ComponentConfig(utils.model.LocalBaseModel):
     target: TargetConfig | None = None
     alloy: AlloyConfig | None = None
-    cloudflare: CloudflareConfig | None = None
+    cloudflare: utils.model.CloudflareConfig | None = None
     grafana: GrafanaConfig | None = None
     mimir: MimirConfig | None = None
     speedtest_exporter: SpeedtestExporterConfig | None = None

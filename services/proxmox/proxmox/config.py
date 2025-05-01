@@ -1,14 +1,8 @@
 import utils.model
 
 
-class CloudflareConfig(utils.model.LocalBaseModel):
-    api_key: utils.model.PulumiSecret | str
-    email: str
-    zone: str
-
-
 class ComponentConfig(utils.model.LocalBaseModel):
-    cloudflare: CloudflareConfig
+    cloudflare: utils.model.CloudflareConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

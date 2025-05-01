@@ -7,19 +7,13 @@ class TargetConfig(utils.model.LocalBaseModel):
     root_dir: str
 
 
-class CloudflareConfig(utils.model.LocalBaseModel):
-    api_key: utils.model.PulumiSecret | str
-    email: str
-    zone: str
-
-
 class MinioConfig(utils.model.LocalBaseModel):
     version: str
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
     target: TargetConfig
-    cloudflare: CloudflareConfig
+    cloudflare: utils.model.CloudflareConfig
     minio: MinioConfig
 
 
