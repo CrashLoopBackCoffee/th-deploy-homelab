@@ -7,16 +7,16 @@ from s3.config import ComponentConfig
 from s3.minio import create_minio
 
 import utils.cloudflare
+import utils.docker
 
 component_config = ComponentConfig.model_validate(p.Config().get_object('config'))
 
-provider = docker.Provider('synology', host='ssh://synology')
-
-opts = p.ResourceOptions(provider=provider)
+docker_provider = utils.docker.get_provider(component_config.target)
+docker_opts = p.ResourceOptions(provider=docker_provider)
 
 cloudflare_provider = utils.cloudflare.get_provider(component_config.cloudflare)
 
 # Create networks so we don't have to expose all ports on the host
-network = docker.Network('s3', opts=opts)
+network = docker.Network('s3', opts=docker_opts)
 
-create_minio(component_config, network, cloudflare_provider, opts)
+create_minio(component_config, network, cloudflare_provider, docker_opts)

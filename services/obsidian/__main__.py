@@ -7,11 +7,13 @@ from obsidian.cloudflare import create_cloudflare_tunnel
 from obsidian.config import ComponentConfig
 from obsidian.couchdb import create_couchdb
 
+import utils.docker
+
 component_config = ComponentConfig.model_validate(p.Config().require_object('config'))
 
 target_host = component_config.target.host
 
-provider = pulumi_docker.Provider('synology', host=f'ssh://{target_host}')
+provider = utils.docker.get_provider(component_config.target)
 
 opts = p.ResourceOptions(provider=provider)
 

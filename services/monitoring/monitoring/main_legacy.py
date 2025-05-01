@@ -4,6 +4,7 @@ import pulumi as p
 import pulumi_docker as docker
 
 import utils.cloudflare
+import utils.docker
 
 from monitoring.alloy_legacy import create_alloy
 from monitoring.cadvisor_legacy import create_cadvisor
@@ -18,17 +19,18 @@ def main_legacy():
     org = p.get_organization()
     minio_stack_ref = p.StackReference(f'{org}/s3/{stack}')
 
-    provider = docker.Provider('synology', host='ssh://synology')
+    assert component_config.target
+    docker_provider = utils.docker.get_provider(component_config.target)
 
-    opts = p.ResourceOptions(provider=provider)
+    docker_opts = p.ResourceOptions(provider=docker_provider)
 
     assert component_config.cloudflare
     cloudflare_provider = utils.cloudflare.get_provider(component_config.cloudflare)
 
     # Create networks so we don't have to expose all ports on the host
-    network = docker.Network('monitoring', opts=opts)
+    network = docker.Network('monitoring', opts=docker_opts)
 
     # Create node-exporter container
-    create_cadvisor(component_config, network, opts)
-    create_alloy(component_config, network, cloudflare_provider, opts)
-    create_mimir(component_config, network, cloudflare_provider, minio_stack_ref, opts)
+    create_cadvisor(component_config, network, docker_opts)
+    create_alloy(component_config, network, cloudflare_provider, docker_opts)
+    create_mimir(component_config, network, cloudflare_provider, minio_stack_ref, docker_opts)
