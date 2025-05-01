@@ -16,7 +16,7 @@ config:
       ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ
       vlan: 20
       # renovate: datasource=github-releases packageName=zwave-js/zwave-js-ui versioning=semver
-      version: 9.33.1
+      version: 10.3.3
       zwave-adapter:
         usb-id: 1a86:55d4
         serial-id: usb-Zooz_800_Z-Wave_Stick_533D004242-if00
