@@ -35,4 +35,4 @@ config:
       version: 3.1.0.0
     gotenberg:
       # renovate: datasource=github-releases packageName=gotenberg/gotenberg versioning=semver
-      version: 8.17.3
+      version: 8.20.1
