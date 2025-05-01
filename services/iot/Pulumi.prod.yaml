@@ -10,7 +10,7 @@ config:
       api-endpoint: https://pve.tobiash.net:8006
       node-name: pve
 
-    zwave_controller:
+    zwave-controller:
       address: 192.168.20.21/24
       hostname: zwave-controller.tobiash.net
       ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ

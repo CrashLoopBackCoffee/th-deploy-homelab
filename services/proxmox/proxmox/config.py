@@ -3,33 +3,29 @@ import pydantic
 import utils.model
 
 
-class StrictBaseModel(pydantic.BaseModel):
-    model_config = {'extra': 'forbid'}
-
-
-class PulumiSecret(StrictBaseModel):
+class PulumiSecret(utils.model.LocalBaseModel):
     secure: pydantic.SecretStr
 
     def __str__(self):
         return str(self.secure)
 
 
-class CloudflareConfig(StrictBaseModel):
-    api_key: PulumiSecret | str = pydantic.Field(alias='api-key')
+class CloudflareConfig(utils.model.LocalBaseModel):
+    api_key: PulumiSecret | str
     email: str
     zone: str
 
 
-class ComponentConfig(StrictBaseModel):
+class ComponentConfig(utils.model.LocalBaseModel):
     cloudflare: CloudflareConfig
 
 
-class StackConfig(StrictBaseModel):
+class StackConfig(utils.model.LocalBaseModel):
     model_config = {
         'alias_generator': lambda field_name: f'{utils.model.get_pulumi_project(__file__)}:{field_name}'
     }
     config: ComponentConfig
 
 
-class PulumiConfigRoot(StrictBaseModel):
+class PulumiConfigRoot(utils.model.LocalBaseModel):
     config: StackConfig

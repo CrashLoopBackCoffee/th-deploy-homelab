@@ -9,7 +9,7 @@ config:
     cert-manager:
       # renovate: datasource=github-releases packageName=cert-manager/cert-manager versioning=semver
       version: v1.17.2
-      use_staging: true
+      use-staging: true
     cloudflare:
       api-key:
         ref: op://Pulumi/Cloudflare Global API Key/password
