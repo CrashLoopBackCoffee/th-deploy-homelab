@@ -1,5 +1,0 @@
-*.pyc
-venv/
-.config-schema.json
-talosconfig
-kubeconfig

@@ -5,6 +5,7 @@ requires-python = ">=3.11"
 [manifest]
 members = [
     "homelab",
+    "kubernetes",
     "obsidian",
     "unifi",
     "utils",
@@ -191,7 +192,16 @@ name = "homelab"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "kubernetes" },
     { name = "obsidian" },
+    { name = "pulumi" },
+    { name = "pulumi-cloudflare" },
+    { name = "pulumi-command" },
+    { name = "pulumi-docker" },
+    { name = "pulumi-kubernetes" },
+    { name = "pulumi-onepassword" },
+    { name = "pulumi-proxmoxve" },
+    { name = "pulumi-random" },
     { name = "unifi" },
 ]
 
@@ -208,7 +218,16 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "kubernetes", virtual = "services/kubernetes" },
     { name = "obsidian", virtual = "services/obsidian" },
+    { name = "pulumi", specifier = "==3.166.0" },
+    { name = "pulumi-cloudflare", specifier = "==5.49.1" },
+    { name = "pulumi-command", specifier = "==1.0.2" },
+    { name = "pulumi-docker", specifier = "==4.6.2" },
+    { name = "pulumi-kubernetes", specifier = "==4.22.2" },
+    { name = "pulumi-onepassword", specifier = "==1.1.3" },
+    { name = "pulumi-proxmoxve", specifier = "==7.0.0" },
+    { name = "pulumi-random", specifier = "==4.18.2" },
     { name = "unifi", virtual = "services/unifi" },
 ]
 
@@ -242,6 +261,23 @@ wheels = [
 ]
 
 [[package]]
+name = "kubernetes"
+version = "0.1.0"
+source = { virtual = "services/kubernetes" }
+dependencies = [
+    { name = "pulumiverse-acme" },
+    { name = "pulumiverse-talos" },
+    { name = "utils" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pulumiverse-acme", specifier = "==0.10.0" },
+    { name = "pulumiverse-talos", specifier = "==0.5.1" },
+    { name = "utils", editable = "utils" },
+]
+
+[[package]]
 name = "nodeenv"
 version = "1.9.1"
 source = { registry = "https://pypi.org/simple" }
@@ -255,22 +291,12 @@ name = "obsidian"
 version = "0.1.0"
 source = { virtual = "services/obsidian" }
 dependencies = [
-    { name = "pulumi" },
-    { name = "pulumi-cloudflare" },
-    { name = "pulumi-command" },
-    { name = "pulumi-docker" },
-    { name = "pulumi-random" },
     { name = "pyyaml" },
     { name = "utils" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "pulumi", specifier = ">=3.153.1" },
-    { name = "pulumi-cloudflare", specifier = "==5.49.1" },
-    { name = "pulumi-command", specifier = ">=1.0.2" },
-    { name = "pulumi-docker", specifier = ">=4.6.1" },
-    { name = "pulumi-random", specifier = ">=4.18.0" },
     { name = "pyyaml", specifier = ">=6.0.1" },
     { name = "utils", editable = "utils" },
 ]
@@ -471,16 +497,16 @@ wheels = [
 
 [[package]]
 name = "pulumi-tls"
-version = "5.2.0"
+version = "5.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ba/82/fc4d7042e7f04c8c0b1784ba84fae9dae4e93adecaa217f8e7f1fd916e94/pulumi_tls-5.2.0.tar.gz", hash = "sha256:03fe04214acefc2714b8b4b4d50580876ec467f0f34d9db25e4a474a43d57727", size = 26251, upload-time = "2025-04-24T12:56:11.657Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ec/de/254c1ffe7e05d2cc5b803b4b78d7b6f2a3e3c4ecaf38f0e324258d581368/pulumi_tls-5.1.0.tar.gz", hash = "sha256:2f153cdb6a3ecb60f3d017b10dc6982be5b0f036ccdd39f8b3aad4f79b1907d9", size = 25680, upload-time = "2025-01-17T16:56:05.684Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/03/b7/c4a38fc1b60052148317d439e2ed3e29084e5c179b448a37d8ab5aa40626/pulumi_tls-5.2.0-py3-none-any.whl", hash = "sha256:6177513c311b61fdfe64bab34fe844e079e0557f00590465d9290b13da65cae2", size = 34749, upload-time = "2025-04-24T12:56:09.985Z" },
+    { url = "https://files.pythonhosted.org/packages/fc/a0/c2e8bcf0c44ec64507aaf33d06ed16700f9a5712fc0ffdd7b9ace7bdaec4/pulumi_tls-5.1.0-py3-none-any.whl", hash = "sha256:6419a4fbf38c1de58a774641633eb7710bc8b6b7e5d4425560e6ff7b8b1f4376", size = 34246, upload-time = "2025-01-17T16:56:04.382Z" },
 ]
 
 [[package]]
@@ -495,6 +521,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/2c/72/c0afb458d5455331e8103bc76fa1364b90c4c1d265215b0d7df3fe2e8f1f/pulumiverse_acme-0.10.0.tar.gz", hash = "sha256:9faf96c39674efd6453c6c0a7c2d63b902a5c8d27a44ef7081ad6329da963522", size = 23805, upload-time = "2025-04-18T08:49:17.56Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0e/37/44bcd81a409bc3bcf822889a044f95f2a8b9402a45ed006c6c9254ecfea7/pulumiverse_acme-0.10.0-py3-none-any.whl", hash = "sha256:ed16886fd6004618f9e085a64ee71b6672aaefe16356782739bd672314e08f0c", size = 28822, upload-time = "2025-04-18T08:49:16.302Z" },
+]
+
+[[package]]
+name = "pulumiverse-talos"
+version = "0.5.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "parver" },
+    { name = "pulumi" },
+    { name = "semver" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/be/1d/d8658bfc15145e4773b446b3860a5c85c4cc11432b8c341b7f164e1e4f90/pulumiverse_talos-0.5.1.tar.gz", hash = "sha256:9aa9d4427ecc60e1e1e94c410a179a5a1a70108019fc5cf0da5910e061a86f82", size = 34299, upload-time = "2024-12-26T09:49:40.747Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/77/2d/f8bda5cb0280123418f86f5dd667ca9301ee5b4e20f40810eb726f735b81/pulumiverse_talos-0.5.1-py3-none-any.whl", hash = "sha256:6e22f425fda6b21f6c685b6a24e809f052f34873d85683672d561511f45bebaf", size = 55371, upload-time = "2024-12-26T09:49:39.58Z" },
 ]
 
 [[package]]
@@ -700,23 +740,13 @@ name = "unifi"
 version = "0.1.0"
 source = { virtual = "services/unifi" }
 dependencies = [
-    { name = "pulumi" },
-    { name = "pulumi-command" },
-    { name = "pulumi-docker" },
-    { name = "pulumi-proxmoxve" },
     { name = "pulumi-tls" },
-    { name = "pulumiverse-acme" },
     { name = "utils" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "pulumi", specifier = ">=3.166.0" },
-    { name = "pulumi-command", specifier = ">=1.0.1" },
-    { name = "pulumi-docker", specifier = ">=4.6.1" },
-    { name = "pulumi-proxmoxve", specifier = ">=6.18.0" },
-    { name = "pulumi-tls", specifier = ">=5.1.0" },
-    { name = "pulumiverse-acme", specifier = ">=0.7.0" },
+    { name = "pulumi-tls", specifier = "==5.1.0" },
     { name = "utils", editable = "utils" },
 ]
 

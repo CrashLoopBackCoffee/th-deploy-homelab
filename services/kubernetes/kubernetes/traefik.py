@@ -1,6 +1,7 @@
-import deploy_base.opnsense.unbound.host_override
 import pulumi as p
 import pulumi_kubernetes as k8s
+
+import utils.opnsense.unbound.host_override
 
 from kubernetes.config import ComponentConfig
 
@@ -50,7 +51,7 @@ def create_traefik(
     traefik_ip = traefik_service.status.apply(lambda x: x['load_balancer']['ingress'][0]['ip'])
 
     # Create local DNS record to be used as CNAME target
-    deploy_base.opnsense.unbound.host_override.HostOverride(
+    utils.opnsense.unbound.host_override.HostOverride(
         'traefik',
         host=f'k8s-ingress-{p.get_stack()}',
         domain=component_config.cloudflare.zone,

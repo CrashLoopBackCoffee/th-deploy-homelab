@@ -6,13 +6,14 @@ import pulumi_onepassword as onepassword
 import pulumi_proxmoxve as proxmoxve
 import yaml
 
+import utils.utils
+
 from kubernetes.certmanager import create_certmanager
 from kubernetes.config import ComponentConfig
 from kubernetes.csi_nfs import create_csi_nfs
 from kubernetes.metallb import create_metallb
 from kubernetes.snap import get_snap_version
 from kubernetes.traefik import create_traefik
-from kubernetes.util import stack_is_prod
 
 
 def _get_cloud_config(hostname: str, username: str, ssh_public_key: str) -> str:
@@ -189,8 +190,8 @@ def create_microk8s(
             'user_data_file_id': cloud_config.id,
         },
         stop_on_destroy=True,
-        on_boot=stack_is_prod(),
-        protection=stack_is_prod(),
+        on_boot=utils.utils.stack_is_prod(),
+        protection=utils.utils.stack_is_prod(),
         machine='q35',
         opts=p.ResourceOptions.merge(proxmox_opts, p.ResourceOptions(ignore_changes=['cdrom'])),
     )
