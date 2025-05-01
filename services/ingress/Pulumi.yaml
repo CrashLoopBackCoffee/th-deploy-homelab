@@ -1,0 +1,7 @@
+name: ingress
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: .venv
+description: Ingress Stack
