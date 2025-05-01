@@ -32,10 +32,6 @@ class MimirConfig(utils.model.LocalBaseModel):
     version: str
 
 
-class PrometheusConfig(utils.model.LocalBaseModel):
-    version: str
-
-
 class SpeedtestExporterConfig(utils.model.LocalBaseModel):
     version: str
 
@@ -52,7 +48,6 @@ class ComponentConfig(utils.model.LocalBaseModel):
     cloudflare: CloudflareConfig | None = None
     grafana: GrafanaConfig | None = None
     mimir: MimirConfig | None = None
-    prometheus: PrometheusConfig | None = None
     speedtest_exporter: SpeedtestExporterConfig | None = None
 
 
