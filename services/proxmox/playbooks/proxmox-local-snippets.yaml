@@ -1,0 +1,20 @@
+- name: Enable file type snippets on local storage (for config files)
+  hosts: pve
+  gather_facts: true
+  tasks:
+    - name: Get list of storage types on local
+      ansible.builtin.command: pvesh get /nodes/{{ ansible_hostname }}/storage/local/status --output-format=json
+      register: storage_status_result
+      changed_when: false
+      check_mode: false
+
+    - name: Extract current content types
+      ansible.builtin.set_fact:
+        content_types: "{{ storage_status.content | split(',') }}"
+      vars:
+        storage_status: "{{ storage_status_result.stdout | from_json }}"
+
+    - name: Enable snippets if not already enabled
+      ansible.builtin.command: pvesm set local --content {{ content_types | join(",") }},snippets
+      when: "'snippets' not in content_types"
+      changed_when: true

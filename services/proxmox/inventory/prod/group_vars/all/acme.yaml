@@ -1,0 +1,13 @@
+acme:
+  account:
+    contact: tobias_henkel@gmx.de
+    name: proxmox
+  plugin:
+    api: cf
+    data:
+      - key: CF_Account_ID
+        value: "{{ lookup('env', 'CLOUDFLARE_ACCOUNT_ID', default=Undefined) }}"
+      - key: CF_Token
+        value: "{{ lookup('env', 'CLOUDFLARE_TOKEN', default=Undefined) }}"
+    name: cloudflare
+  staging: false

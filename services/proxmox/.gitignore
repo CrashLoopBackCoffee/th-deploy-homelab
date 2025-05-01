@@ -1,0 +1,5 @@
+*.pyc
+venv/
+.config-schema.json
+
+ansible.log

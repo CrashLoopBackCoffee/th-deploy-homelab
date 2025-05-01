@@ -1,0 +1,82 @@
+- name: Validate variables
+  assert:
+    that:
+      - ensure_pve_user_username is defined
+      - ensure_pve_user_role is defined
+
+- name: Query user accounts
+  ansible.builtin.command: pveum user list --output-format=json
+  register: query_users_result
+  changed_when: false
+  check_mode: false
+
+- name: Look for {{ ensure_pve_user_username }} account
+  ansible.builtin.set_fact:
+    matching_users_result: >-
+      {{ query_users_result.stdout
+      | from_json
+      | selectattr('userid', 'equalto', ensure_pve_user_username ~ '@' ~ ensure_pve_user_realm)
+      | list }}
+
+- name: Create {{ ensure_pve_user_username }} account
+  ansible.builtin.command:
+    pveum user add {{ ensure_pve_user_username }}@{{ ensure_pve_user_realm }}
+    --password={{ ensure_pve_user_password }}
+    --comment "Prometheus exporter service account."
+  when: matching_users_result | length == 0
+
+- name: Query ACLs
+  ansible.builtin.command: pveum acl list --output-format=json
+  register: query_acls_result
+  changed_when: false
+  check_mode: false
+
+- name: Look for matching {{ ensure_pve_user_username }} ACL
+  ansible.builtin.set_fact:
+    matching_acls_result: >-
+      {{ query_acls_result.stdout
+      | from_json
+      | selectattr('ugid', 'equalto', ensure_pve_user_username ~ '@' ~ ensure_pve_user_realm)
+      | selectattr('path', 'equalto', ensure_pve_user_acl_path)
+      | selectattr('roleid', 'equalto', ensure_pve_user_role)
+      | list }}
+
+- name: Look for not matching {{ ensure_pve_user_username }} ACL path
+  ansible.builtin.set_fact:
+    not_matching_acls_path_result: >-
+      {{ query_acls_result.stdout
+      | from_json
+      | selectattr('ugid', 'equalto', ensure_pve_user_username ~ '@' ~ ensure_pve_user_realm)
+      | rejectattr('path', 'equalto', ensure_pve_user_acl_path)
+      | list }}
+
+- name: Look for not matching {{ ensure_pve_user_username }} ACL role
+  ansible.builtin.set_fact:
+    not_matching_acls_role_result: >-
+      {{ query_acls_result.stdout
+      | from_json
+      | selectattr('ugid', 'equalto', ensure_pve_user_username ~ '@' ~ ensure_pve_user_realm)
+      | rejectattr('roleid', 'equalto', ensure_pve_user_role)
+      | list }}
+
+- name: Combine not matching ACLs
+  ansible.builtin.set_fact:
+    not_matching_acls_result: >-
+      {{ not_matching_acls_path_result + not_matching_acls_role_result }}
+
+- name: Matching ACLs
+  debug:
+    var: matching_acls_result
+
+- name: Not matching ACLs
+  debug:
+    var: not_matching_acls_result
+
+- name: Update {{ ensure_pve_user_username }} ACL
+  ansible.builtin.shell: pveum acl modify {{ ensure_pve_user_acl_path }} --users {{ ensure_pve_user_username }}@{{ ensure_pve_user_realm }} --roles {{ ensure_pve_user_role }}
+  when: matching_acls_result | length == 0
+
+- name: Remove not matching ACLs
+  ansible.builtin.shell: pveum acl delete {{ item.path }} --users {{ item.ugid }} --roles {{ item.roleid }}
+  loop: "{{ not_matching_acls_result }}"
+  when: not_matching_acls_result | length > 0

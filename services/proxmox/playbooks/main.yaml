@@ -1,0 +1,6 @@
+- import_playbook: proxmox-post-install.yaml
+- import_playbook: proxmox-acme-pve.yaml
+- import_playbook: proxmox-acme-pbs.yaml
+- import_playbook: proxmox-node-exporter.yaml
+- import_playbook: proxmox-local-snippets.yaml
+- import_playbook: proxmox-pulumi.yaml

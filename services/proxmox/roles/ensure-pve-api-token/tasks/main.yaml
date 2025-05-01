@@ -1,0 +1,25 @@
+- name: Validate variables
+  assert:
+    that:
+      - ensure_api_token_userid is defined
+      - ensure_api_token_name is defined
+
+- name: Query existing tokens
+  ansible.builtin.command: pveum user token list {{ ensure_api_token_userid }} --output-format=json
+  register: query_tokens_result
+  changed_when: false
+  check_mode: false
+
+- name: Create API token {{ ensure_api_token_name }}
+  ansible.builtin.command:
+    pveum user token add {{ ensure_api_token_userid }} {{ ensure_api_token_name }}
+    --privsep 0
+    --comment "Configuration by IaC."
+    --output-format=json
+  when: query_tokens_result.stdout
+    | from_json
+    | selectattr('tokenid', 'equalto', ensure_api_token_name)
+    | list | length == 0
+  register: create_token_result
+  changed_when: true
+  notify: Export API token {{ ensure_api_token_userid }} {{ ensure_api_token_name }}
