@@ -5,6 +5,8 @@ import pulumi_cloudflare as cloudflare
 import pulumi_kubernetes as k8s
 import pulumi_random
 
+import utils.cloudflare
+
 from ingress.config import ComponentConfig
 
 
@@ -132,10 +134,7 @@ def create_cloudflared(
     )
 
     # Create DNS records
-    zone = cloudflare.get_zone_output(
-        filter={'match': 'all', 'name': component_config.cloudflare.zone},
-        opts=cloudflare_invoke_opts,
-    )
+    zone = utils.cloudflare.get_zone(component_config.cloudflare.zone, cloudflare_provider)
 
     for ingress in component_config.cloudflared.ingress:
         cloudflare.DnsRecord(
