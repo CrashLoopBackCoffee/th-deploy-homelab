@@ -6,7 +6,7 @@ requires-python = ">=3.11"
 
 dependencies = [
     # Fixed pulumi deps for global pinning
-    "pulumi-cloudflare==5.49.1",
+    "pulumi-cloudflare==6.1.2",
     "pulumi-command==1.0.2",
     "pulumi-docker==4.6.2",
     "pulumi-kubernetes==4.22.2",
