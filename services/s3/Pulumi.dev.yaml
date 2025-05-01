@@ -1,0 +1,13 @@
+config:
+  s3:config:
+    target:
+      host: synology
+      user: tobias
+      root_dir: /volume2/docker
+    cloudflare:
+      email: tobias_henkel@gmx.de
+      api-key:
+        secure: AAABAKMlDmufddmuCkjXg19lhpKcOqsX6sDn0X/5vyVv2d/1+zY0sXCyXbHtzivHEjtlbj+MwdUjvg7dBeMM1iXR0JTg
+      zone: tobiash.net
+    minio:
+      version: RELEASE.2024-12-18T13-15-44Z
