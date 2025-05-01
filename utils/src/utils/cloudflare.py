@@ -4,13 +4,13 @@ import pulumi_cloudflare as cloudflare
 
 def create_cloudflare_cname(
     name: str, zone_name: str, cloudflare_provider: cloudflare.Provider
-) -> cloudflare.Record:
+) -> cloudflare.DnsRecord:
     zone = cloudflare.get_zone_output(
         filter={'match': 'all', 'name': zone_name},
         opts=p.InvokeOptions(provider=cloudflare_provider),
     )
 
-    return cloudflare.Record(
+    return cloudflare.DnsRecord(
         name,
         proxied=False,
         name=name,

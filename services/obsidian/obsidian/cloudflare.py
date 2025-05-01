@@ -35,7 +35,7 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
     password = pulumi_random.RandomPassword('tunnel', length=64)
 
     # First create a cloudflare tunnel
-    tunnel = pulumi_cloudflare.Tunnel(
+    tunnel = pulumi_cloudflare.ZeroTrustTunnelCloudflared(
         'couchdb',
         account_id=cloudflare_account_id,
         name='obsidian-couchdb',
@@ -54,7 +54,7 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
         opts=cloudflare_invoke_opts,
     )
 
-    record = pulumi_cloudflare.Record(
+    record = pulumi_cloudflare.DnsRecord(
         'couchdb',
         proxied=True,
         name=public_hostname.split('.')[0],
@@ -67,7 +67,7 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
 
     public_hostname = pulumi.Output.format('{}.{}', record.name, zone.name)
 
-    pulumi_cloudflare.TunnelConfig(
+    pulumi_cloudflare.ZeroTrustTunnelCloudflaredConfig(
         'couchdb',
         account_id=cloudflare_account_id,
         tunnel_id=tunnel.id,
