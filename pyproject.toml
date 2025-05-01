@@ -4,7 +4,7 @@ version = "0.1.0"
 readme = "README.md"
 requires-python = ">=3.11"
 
-dependencies = ["utils"]
+dependencies = ["unifi"]
 
 [dependency-groups]
 dev = [
@@ -18,13 +18,14 @@ dev = [
 ]
 
 [tool.uv.sources]
+unifi = { workspace = true }
 utils = { workspace = true }
 
 [tool.uv]
 package = false
 
 [tool.uv.workspace]
-members = ["utils"]
+members = ["services/*", "utils"]
 
 [build-system]
 requires = ["hatchling"]

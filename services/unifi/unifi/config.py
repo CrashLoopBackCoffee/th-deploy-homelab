@@ -1,8 +1,9 @@
 import ipaddress
 import pathlib
 
-import deploy_base.model
 import pydantic
+
+import utils.model
 
 REPO_PREFIX = 'deploy-'
 
@@ -30,7 +31,7 @@ class PulumiSecret(StrictBaseModel):
 
 
 class ProxmoxConfig(StrictBaseModel):
-    api_token: deploy_base.model.OnePasswordRef = pydantic.Field(alias='api-token')
+    api_token: utils.model.OnePasswordRef = pydantic.Field(alias='api-token')
     api_endpoint: str = pydantic.Field(alias='api-endpoint')
     node_name: str = pydantic.Field(alias='node-name')
     insecure: bool = False
@@ -53,7 +54,7 @@ class UnifiConfig(StrictBaseModel):
 
 
 class ComponentConfig(StrictBaseModel):
-    cloudflare: deploy_base.model.CloudflareConfig
+    cloudflare: utils.model.CloudflareConfig
     proxmox: ProxmoxConfig
     unifi: UnifiConfig
 

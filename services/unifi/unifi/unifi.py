@@ -1,10 +1,11 @@
-import deploy_base.opnsense.unbound.host_override
 import pulumi as p
 import pulumi_command
 import pulumi_docker as docker
 import pulumi_proxmoxve as proxmoxve
 import pulumiverse_acme as acme
 import yaml
+
+import utils.opnsense.unbound.host_override
 
 from unifi.config import ComponentConfig
 from unifi.utils import stack_is_prod
@@ -63,7 +64,7 @@ def create_unifi(
     proxmox_opts = p.ResourceOptions(provider=proxmox_provider)
 
     # Create local DNS record
-    deploy_base.opnsense.unbound.host_override.HostOverride(
+    utils.opnsense.unbound.host_override.HostOverride(
         'unifi',
         host=component_config.unifi.hostname.split('.', 1)[0],
         domain=component_config.unifi.hostname.split('.', 1)[1],
