@@ -3,4 +3,4 @@ name = "unifi"
 version = "0.1.0"
 requires-python = ">=3.11"
 
-dependencies = ["pulumi-tls==5.1.0", "utils"]
+dependencies = ["pulumi-tls==5.2.0", "utils"]
