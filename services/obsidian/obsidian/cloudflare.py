@@ -27,25 +27,31 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
         email=config.require('cloudflare-email'),
     )
     cloudflare_opts = ResourceOptions(provider=cloudflare_provider)
-    accounts = pulumi_cloudflare.get_accounts(opts=InvokeOptions(provider=cloudflare_provider))
-    account_id = accounts.accounts[0]['id']
+    cloudflare_invoke_opts = InvokeOptions(provider=cloudflare_provider)
+
+    cloudflare_accounts = pulumi_cloudflare.get_accounts_output(opts=cloudflare_invoke_opts)
+    cloudflare_account_id = cloudflare_accounts.results.apply(lambda results: results[0].id)
 
     password = pulumi_random.RandomPassword('tunnel', length=64)
 
     # First create a cloudflare tunnel
     tunnel = pulumi_cloudflare.Tunnel(
         'couchdb',
-        account_id=account_id,
+        account_id=cloudflare_account_id,
         name='obsidian-couchdb',
-        secret=password.result.apply(lambda p: base64.b64encode(p.encode('utf-8')).decode('utf-8')),
+        tunnel_secret=password.result.apply(
+            lambda p: base64.b64encode(p.encode('utf-8')).decode('utf-8')
+        ),
         config_src='cloudflare',
         opts=cloudflare_opts,
     )
+    tunnel_token = pulumi_cloudflare.get_zero_trust_tunnel_cloudflared_token_output(
+        account_id=cloudflare_account_id, tunnel_id=tunnel.id, opts=cloudflare_invoke_opts
+    )
 
-    zone = pulumi_cloudflare.get_zone(
-        account_id=account_id,
-        name='.'.join(public_hostname.split('.')[1:]),
-        opts=InvokeOptions(provider=cloudflare_provider),
+    zone = pulumi_cloudflare.get_zone_output(
+        filter={'match': 'all', 'name': '.'.join(public_hostname.split('.')[1:])},
+        opts=cloudflare_invoke_opts,
     )
 
     record = pulumi_cloudflare.Record(
@@ -53,26 +59,29 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
         proxied=True,
         name=public_hostname.split('.')[0],
         type='CNAME',
-        value=tunnel.id.apply(lambda _id: f'{_id}.cfargotunnel.com'),
-        zone_id=zone.id,
+        content=tunnel.id.apply(lambda _id: f'{_id}.cfargotunnel.com'),
+        ttl=60,
+        zone_id=zone.zone_id,
         opts=cloudflare_opts,
     )
 
+    public_hostname = pulumi.Output.format('{}.{}', record.name, zone.name)
+
     pulumi_cloudflare.TunnelConfig(
         'couchdb',
-        account_id=account_id,
+        account_id=cloudflare_account_id,
         tunnel_id=tunnel.id,
-        config=pulumi_cloudflare.TunnelConfigConfigArgs(
-            ingress_rules=[
-                pulumi_cloudflare.TunnelConfigConfigIngressRuleArgs(
-                    service='http://obsidian-couchdb:5984',
-                    hostname=record.hostname,
-                ),
-                pulumi_cloudflare.TunnelConfigConfigIngressRuleArgs(
-                    service='http_status:404',
-                ),
+        config={
+            'ingresses': [
+                {
+                    'service': 'http://obsidian-couchdb:5984',
+                    'hostname': public_hostname,
+                },
+                {
+                    'service': 'http_status:404',
+                },
             ],
-        ),
+        },
         opts=cloudflare_opts,
     )
 
@@ -92,7 +101,7 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
             '--no-autoupdate',
             'run',
             '--token',
-            tunnel.tunnel_token,
+            tunnel_token.token,
         ],
         networks_advanced=[
             docker.ContainerNetworksAdvancedArgs(name=network.name, aliases=['cloudflared']),
