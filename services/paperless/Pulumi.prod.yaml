@@ -1,0 +1,38 @@
+config:
+  paperless:config:
+    cloudflare:
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      email: tobias_henkel@gmx.de
+      zone: tobiash.net
+    kubeconfig:
+      ref: op://Pulumi/Kubeconfig prod/password
+    entraid:
+      client-id: a02dcdca-dd0d-4b11-8a92-e7c8307ad547
+      client-secret:
+        secure: AAABAM21YdSLrpU9qebitEnlC8/9G1C/jqWB593x8iybBZyK/xASE8rh7/bqQzkPztqxxLUbyKiKPA9iaH3lpwkkrS9uV9Mx
+    google:
+      client-id: 153248760938-p7v8p1m2vtvsj8ek8jc4qoubgjgdh8rs.apps.googleusercontent.com
+      client-secret:
+        secure: AAABAHNJhKTQyeUviwkgC8LH8PSe71ZlqYwrjjH978KnZeJhNdbgjTl+bBEnw5Gi/sLrULpnKnMv2sdCR5iBuMoffg==
+    mail:
+      client-id: 153248760938-k1ff8a6mta5k20l05keg46klsn32stue.apps.googleusercontent.com
+      client-secret:
+        secure: AAABADJWFhyDQEeCnOudImXSDQmZT38y5lHhkieOIOjtGGraR8TAtdHm7dCpP6yKeOuc8hmVzj91W4uj272+EbOsKQ==
+    paperless:
+      # renovate: datasource=github-releases packageName=paperless-ngx/paperless-ngx versioning=semver
+      version: 2.14.7
+      consume-server: synology.tobiash.net
+      consume-share: /volume2/paperless
+    postgres:
+      # renovate: datasource=docker packageName=registry-1.docker.io/bitnamicharts/postgresql versioning=semver
+      version: 16.4.16
+    redis:
+      # renovate: datasource=github-releases packageName=redis/redis versioning=semver
+      version: 7.4.2
+    tika:
+      # renovate: datasource=docker packageName=registry-1.docker.io/apache/tika versioning=semver
+      version: 3.1.0.0
+    gotenberg:
+      # renovate: datasource=github-releases packageName=gotenberg/gotenberg versioning=semver
+      version: 8.17.3
