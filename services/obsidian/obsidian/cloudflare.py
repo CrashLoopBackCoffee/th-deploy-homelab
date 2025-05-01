@@ -22,11 +22,7 @@ def create_cloudflare_tunnel(
     """
     public_hostname = f'obsidian.{component_config.cloudflare.zone}'
 
-    cloudflare_provider = pulumi_cloudflare.Provider(
-        'cloudflare',
-        api_key=component_config.cloudflare.api_key.value,
-        email=component_config.cloudflare.email,
-    )
+    cloudflare_provider = utils.cloudflare.get_provider(component_config.cloudflare)
     cloudflare_opts = p.ResourceOptions(provider=cloudflare_provider)
     cloudflare_invoke_opts = p.InvokeOptions(provider=cloudflare_provider)
 

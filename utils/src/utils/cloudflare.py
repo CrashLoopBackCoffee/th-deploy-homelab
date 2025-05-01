@@ -1,6 +1,16 @@
 import pulumi as p
 import pulumi_cloudflare as cloudflare
 
+from utils.model import CloudflareConfig
+
+
+def get_provider(config: CloudflareConfig) -> cloudflare.Provider:
+    return cloudflare.Provider(
+        'cloudflare',
+        api_key=config.api_key.value,
+        email=config.email,
+    )
+
 
 def get_zone(
     name: str, cloudflare_provider: cloudflare.Provider
