@@ -4,8 +4,6 @@ import pydantic
 
 import utils.model
 
-REPO_PREFIX = 'deploy-'
-
 
 class StrictBaseModel(pydantic.BaseModel):
     model_config = {'extra': 'forbid'}

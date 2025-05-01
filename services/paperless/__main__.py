@@ -1,9 +1,10 @@
-import deploy_base.postgres
 import pulumi as p
 import pulumi_kubernetes as k8s
 
 from paperless.config import ComponentConfig
 from paperless.paperless import Paperless
+
+import utils.postgres
 
 config = p.Config()
 component_config = ComponentConfig.model_validate(config.get_object('config'))
@@ -21,7 +22,7 @@ namespace = k8s.core.v1.Namespace(
 )
 
 # Create postgres database
-postgres_provider, postgres_service, postgres_port = deploy_base.postgres.create_postgres(
+postgres_provider, postgres_service, postgres_port = utils.postgres.create_postgres(
     component_config.postgres.version,
     namespace.metadata.name,
     k8s_provider,

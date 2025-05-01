@@ -1,10 +1,11 @@
 import json
 
-import deploy_base.opnsense.unbound.host_override
 import pulumi as p
 import pulumi_kubernetes as k8s
 import pulumi_postgresql as postgresql
 import pulumi_random as random
+
+import utils.opnsense.unbound.host_override
 
 from paperless.config import ComponentConfig
 
@@ -301,7 +302,7 @@ class Paperless(p.ComponentResource):
         traefic_service = k8s.core.v1.Service.get(
             'traefik-service', 'traefik/traefik', opts=k8s_opts
         )
-        record = deploy_base.opnsense.unbound.host_override.HostOverride(
+        record = utils.opnsense.unbound.host_override.HostOverride(
             'paperless',
             host='paperless',
             domain=component_config.cloudflare.zone,
