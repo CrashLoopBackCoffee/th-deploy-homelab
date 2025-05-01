@@ -8,7 +8,7 @@ config:
       insecure: true
     cert-manager:
       # renovate: datasource=github-releases packageName=cert-manager/cert-manager versioning=semver
-      version: v1.17.1
+      version: v1.17.2
       use_staging: true
     cloudflare:
       api-key:
