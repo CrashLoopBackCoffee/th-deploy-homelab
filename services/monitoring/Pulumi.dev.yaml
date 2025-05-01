@@ -13,7 +13,7 @@ config:
     cloudflare:
       email: tobias_henkel@gmx.de
       api-key:
-        secure: AAABALe4Qr4aorGoZh0sbY8/NjirWvF6C7zeq5i9EhjWd60gUwvGR7IM+ONNyE3UxPtU2u0Yh2O0kcLWXiiW0MDQi5bu
+        ref: op://Pulumi/Cloudflare Global API Key/password
       zone: tobiash.net
     grafana:
       # renovate: datasource=github-releases packageName=grafana/grafana versioning=semver
