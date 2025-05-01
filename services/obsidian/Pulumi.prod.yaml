@@ -14,5 +14,5 @@ config:
       version: 2025.4.2
     couchdb:
       # renovate: datasource=docker packageName=registry-1.docker.io/couchdb versioning=semver
-      version: 3.4.2
+      version: 3.4.3
       username: tobias
