@@ -1,26 +1,14 @@
-[tool.poetry]
+[project]
 name = "obsidian"
 version = "0.1.0"
-description = ""
-authors = ["Tobias Henkel <tobias.henkel@bmw.de>"]
-readme = "README.md"
+requires-python = ">=3.11"
 
-[tool.poetry.dependencies]
-python = "^3.11"
-pulumi = "3.153.1"
-pulumi-docker = "4.6.1"
-pulumi-command = "1.0.2"
-pulumi-random = "4.18.0"
-pyyaml = "^6.0.1"
-pulumi-cloudflare = "5.49.1"
-ruff = "^0.9.0"
-
-[tool.poetry.dev-dependencies]
-black = "^25.0.0"
-isort = "^5.13.2"
-pylint = "^3.0.3"
-flake8 = "^7.0.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+dependencies = [
+    "pulumi-cloudflare==5.49.1",
+    "pulumi-command>=1.0.2",
+    "pulumi-docker>=4.6.1",
+    "pulumi-random>=4.18.0",
+    "pulumi>=3.153.1",
+    "pyyaml>=6.0.1",
+    "utils",
+]
