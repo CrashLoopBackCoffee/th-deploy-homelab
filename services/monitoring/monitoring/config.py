@@ -1,21 +1,6 @@
-import pathlib
-
 import pydantic
 
 import utils.model
-
-REPO_PREFIX = 'deploy-'
-
-
-def get_pulumi_project():
-    repo_dir = pathlib.Path().resolve()
-
-    while not repo_dir.name.startswith(REPO_PREFIX):
-        if not repo_dir.parents:
-            raise ValueError('Could not find repo root')
-
-        repo_dir = repo_dir.parent
-    return repo_dir.name[len(REPO_PREFIX) :]
 
 
 class PulumiSecret(utils.model.LocalBaseModel):

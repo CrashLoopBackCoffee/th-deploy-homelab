@@ -8,6 +8,7 @@ members = [
     "kubernetes",
     "monitoring",
     "obsidian",
+    "paperless",
     "unifi",
     "utils",
 ]
@@ -196,6 +197,7 @@ dependencies = [
     { name = "kubernetes" },
     { name = "monitoring" },
     { name = "obsidian" },
+    { name = "paperless" },
     { name = "pulumi" },
     { name = "pulumi-cloudflare" },
     { name = "pulumi-command" },
@@ -223,6 +225,7 @@ requires-dist = [
     { name = "kubernetes", virtual = "services/kubernetes" },
     { name = "monitoring", virtual = "services/monitoring" },
     { name = "obsidian", virtual = "services/obsidian" },
+    { name = "paperless", virtual = "services/paperless" },
     { name = "pulumi", specifier = "==3.166.0" },
     { name = "pulumi-cloudflare", specifier = "==5.49.1" },
     { name = "pulumi-command", specifier = "==1.0.2" },
@@ -316,6 +319,21 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "pyyaml", specifier = ">=6.0.1" },
+    { name = "utils", editable = "utils" },
+]
+
+[[package]]
+name = "paperless"
+version = "0.1.0"
+source = { virtual = "services/paperless" }
+dependencies = [
+    { name = "pulumi-postgresql" },
+    { name = "utils" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pulumi-postgresql", specifier = ">=3.15.0" },
     { name = "utils", editable = "utils" },
 ]
 
