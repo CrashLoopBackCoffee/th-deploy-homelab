@@ -1,37 +1,44 @@
 #!/usr/bin/env python3
 
+import dataclasses
 import importlib
 import os
+import pathlib
+import sys
 import textwrap
 import tomllib
 
 from pathlib import Path
 
 
-def get_config_root_model():
+@dataclasses.dataclass
+class ConfigModel:
+    name: str
+    root: str
+    model: str
+
+
+def get_configs() -> list[ConfigModel]:
     with open('pyproject.toml', 'rb') as f:
         data = tomllib.load(f)
+    configs = data.get('tool', {}).get('config-models', {})
+    return [ConfigModel(name=key, **value) for key, value in configs.items()]
 
-    config_root_model_str = data.get('tool', {}).get('pulumi', {}).get('config-root-model')
 
-    if not config_root_model_str:
-        return None
-
-    module_name, class_name = config_root_model_str.rsplit(':', 1)
+def get_config_root_model(config: ConfigModel):
+    sys.path.append(config.root)
+    module_name, class_name = config.model.rsplit(':', 1)
     module = importlib.import_module(module_name)
     return getattr(module, class_name)
 
 
-def generate_json_schema():
-    if os.environ.get('PULUMI_CI_SYSTEM'):
-        return
-
+def generate_json_schema(config: ConfigModel):
     import json
 
     # Discover root model class
-    root_model_class = get_config_root_model()
+    root_model_class = get_config_root_model(config)
     if not root_model_class:
-        return
+        raise ValueError(f'Could not find model class {config.model} in {config.root}')
 
     if hasattr(root_model_class, 'model_json_schema'):
         # Pydantic v2
@@ -39,7 +46,9 @@ def generate_json_schema():
     else:
         # Fallback to Pydantic v1
         schema = root_model_class.schema_json()
-    with open('.config-schema.json', 'w') as f:
+
+    schema_file = pathlib.Path(config.root) / '.config-schema.json'
+    with open(schema_file, 'w') as f:
         f.write(schema)
 
     # Validate if schema is used in settings.json
@@ -47,7 +56,7 @@ def generate_json_schema():
     if not settings_file.exists():
         # No VSCode settings file found, we can safely create one
         Path('.vscode').mkdir(exist_ok=True)
-        settings = {'yaml.schemas': {'.config-schema.json': 'Pulumi.*.yaml'}}
+        settings = {'yaml.schemas': {str(schema_file): f'{config.root}/Pulumi.*.yaml'}}
         with open(settings_file, 'w') as f:
             f.write(json.dumps(settings, indent=4))
         return
@@ -55,21 +64,31 @@ def generate_json_schema():
     with open(settings_file, 'r') as f:
         settings = json.load(f)
 
-    schema_config = settings.get('yaml.schemas', {}).get('.config-schema.json')
+    schema_config = settings.get('yaml.schemas', {}).get(str(schema_file))
     if not schema_config:
         print(
             'No schema found in .vscode/settings.json. Please add the following lines to the file:'
         )
         print(
             textwrap.dedent(
-                """
-                "yaml.schemas": {
-                    ".config-schema.json": "Pulumi.*.yaml"
-                }
+                f"""
+                "yaml.schemas": {{
+                    "{str(schema_file)}": "{config.root}/Pulumi.*.yaml"
+                }}
                 """
             )
         )
 
 
+def main():
+    if os.environ.get('PULUMI_CI_SYSTEM'):
+        return
+
+    configs = get_configs()
+    for config in configs:
+        print(f'Generating JSON schema for {config.name}...')
+        generate_json_schema(config)
+
+
 if __name__ == '__main__':
-    generate_json_schema()
+    main()

@@ -8,7 +8,7 @@ import yaml
 import utils.opnsense.unbound.host_override
 
 from unifi.config import ComponentConfig
-from unifi.utils import stack_is_prod
+from utils.utils import stack_is_prod
 
 
 def _get_cloud_config(hostname: str, username: str, ssh_public_key: str) -> str:
