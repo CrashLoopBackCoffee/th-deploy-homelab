@@ -7,7 +7,8 @@ import pulumi_cloudflare as cloudflare
 import pulumi_command
 import pulumi_docker as docker
 
-from monitoring.cloudflare import create_cloudflare_cname
+import utils.cloudflare
+
 from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path
 
@@ -42,7 +43,7 @@ def create_alloy(
     alloy_path = get_assets_path() / 'alloy'
 
     # Create alloy DNS record
-    dns_record = create_cloudflare_cname(
+    dns_record = utils.cloudflare.create_cloudflare_cname(
         'alloy', component_config.cloudflare.zone, cloudflare_provider
     )
 

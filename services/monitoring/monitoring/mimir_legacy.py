@@ -9,7 +9,8 @@ import pulumi_docker as docker
 import pulumi_minio as minio
 import yaml
 
-from monitoring.cloudflare import create_cloudflare_cname
+import utils.cloudflare
+
 from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path
 
@@ -32,7 +33,9 @@ def create_mimir(
     target_user = component_config.target.user
 
     # Create mimir DNS record
-    create_cloudflare_cname('mimir', component_config.cloudflare.zone, cloudflare_provider)
+    utils.cloudflare.create_cloudflare_cname(
+        'mimir', component_config.cloudflare.zone, cloudflare_provider
+    )
 
     # Create minio provider
     minio_opts = p.ResourceOptions(
