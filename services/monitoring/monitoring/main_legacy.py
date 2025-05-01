@@ -32,6 +32,6 @@ def main_legacy():
     network = docker.Network('monitoring', opts=opts)
 
     # Create node-exporter container
-    create_cadvisor(network, opts)
+    create_cadvisor(component_config, network, opts)
     create_alloy(component_config, network, cloudflare_provider, opts)
     create_mimir(component_config, network, cloudflare_provider, minio_stack_ref, opts)
