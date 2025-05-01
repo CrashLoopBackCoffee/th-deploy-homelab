@@ -138,7 +138,7 @@ def create_cloudflared(
     )
 
     for ingress in component_config.cloudflared.ingress:
-        cloudflare.Record(
+        cloudflare.DnsRecord(
             ingress.hostname,
             proxied=True,
             name=ingress.hostname.split('.')[0],
