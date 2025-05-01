@@ -25,14 +25,8 @@ class SpeedtestExporterConfig(utils.model.LocalBaseModel):
     version: str
 
 
-class TargetConfig(utils.model.LocalBaseModel):
-    host: str
-    user: str
-    root_dir: str
-
-
 class ComponentConfig(utils.model.LocalBaseModel):
-    target: TargetConfig | None = None
+    target: utils.model.TargetConfig | None = None
     alloy: AlloyConfig | None = None
     cadvisor: CAdvisorConfig | None = None
     cloudflare: utils.model.CloudflareConfig | None = None

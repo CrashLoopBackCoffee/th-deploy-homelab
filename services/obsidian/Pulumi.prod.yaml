@@ -1,0 +1,18 @@
+config:
+  obsidian:config:
+    target:
+      host: synology
+      user: tobias
+      root-dir: /volume2/docker
+    cloudflare:
+      email: tobias_henkel@gmx.de
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      zone: tobiash.net
+    cloudflared:
+      # renovate: datasource=github-releases packageName=cloudflare/cloudflared versioning=semver
+      version: 2025.4.2
+    couchdb:
+      # renovate: datasource=github-releases packageName=apache/couchdb versioning=semver
+      version: 3.4.2
+      username: tobias

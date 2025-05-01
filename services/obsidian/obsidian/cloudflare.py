@@ -4,32 +4,31 @@ Create a Cloudflare tunnel for CouchDB
 
 import base64
 
-import pulumi
+import pulumi as p
 import pulumi_cloudflare
 import pulumi_docker as docker
 import pulumi_random
 
-from obsidian.utils import get_image
-from pulumi import InvokeOptions, ResourceOptions
+from obsidian.config import ComponentConfig
 
 import utils.cloudflare
 
 
-def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
+def create_cloudflare_tunnel(
+    component_config: ComponentConfig, network: docker.Network, opts: p.ResourceOptions
+):
     """
     Create a Cloudflare tunnel for CouchDB
     """
-    config = pulumi.Config()
-
-    public_hostname = config.require('public-hostname')
+    public_hostname = f'obsidian.{component_config.cloudflare.zone}'
 
     cloudflare_provider = pulumi_cloudflare.Provider(
         'cloudflare',
-        api_key=config.require('cloudflare-api-key'),
-        email=config.require('cloudflare-email'),
+        api_key=component_config.cloudflare.api_key.value,
+        email=component_config.cloudflare.email,
     )
-    cloudflare_opts = ResourceOptions(provider=cloudflare_provider)
-    cloudflare_invoke_opts = InvokeOptions(provider=cloudflare_provider)
+    cloudflare_opts = p.ResourceOptions(provider=cloudflare_provider)
+    cloudflare_invoke_opts = p.InvokeOptions(provider=cloudflare_provider)
 
     cloudflare_accounts = pulumi_cloudflare.get_accounts_output(opts=cloudflare_invoke_opts)
     cloudflare_account_id = cloudflare_accounts.results.apply(lambda results: results[0].id)
@@ -59,12 +58,12 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
         name=public_hostname.split('.')[0],
         type='CNAME',
         content=tunnel.id.apply(lambda _id: f'{_id}.cfargotunnel.com'),
-        ttl=60,
+        ttl=1,
         zone_id=zone.zone_id,
         opts=cloudflare_opts,
     )
 
-    public_hostname = pulumi.Output.format('{}.{}', record.name, zone.name)
+    public_hostname = p.Output.format('{}.{}', record.name, zone.name)
 
     pulumi_cloudflare.ZeroTrustTunnelCloudflaredConfig(
         'couchdb',
@@ -86,7 +85,7 @@ def create_cloudflare_tunnel(network: docker.Network, opts: ResourceOptions):
 
     image = docker.RemoteImage(
         'cloudflared',
-        name=get_image('cloudflared'),
+        name=f'cloudflare/cloudflared:{component_config.cloudflared.version}',
         keep_locally=True,
         opts=opts,
     )

@@ -1,14 +1,20 @@
 import utils.model
 
 
-class MinioConfig(utils.model.LocalBaseModel):
+class CloudflaredConfig(utils.model.LocalBaseModel):
+    version: str
+
+
+class CouchDBConfig(utils.model.LocalBaseModel):
+    username: str
     version: str
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig
     cloudflare: utils.model.CloudflareConfig
-    minio: MinioConfig
+    couchdb: CouchDBConfig
+    cloudflared: CloudflaredConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

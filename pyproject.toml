@@ -132,6 +132,10 @@ model = "kubernetes.config:PulumiConfigRoot"
 root = "services/monitoring"
 model = "monitoring.config:PulumiConfigRoot"
 
+[tool.config-models.obsidian]
+root = "services/obsidian"
+model = "obsidian.config:PulumiConfigRoot"
+
 [tool.config-models.paperless]
 root = "services/paperless"
 model = "paperless.config:PulumiConfigRoot"
