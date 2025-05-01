@@ -7,6 +7,10 @@ class AlloyConfig(utils.model.LocalBaseModel):
     token: utils.model.PulumiSecret | str
 
 
+class CAdvisorConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class GrafanaConfig(utils.model.LocalBaseModel):
     version: str
 
@@ -30,6 +34,7 @@ class TargetConfig(utils.model.LocalBaseModel):
 class ComponentConfig(utils.model.LocalBaseModel):
     target: TargetConfig | None = None
     alloy: AlloyConfig | None = None
+    cadvisor: CAdvisorConfig | None = None
     cloudflare: utils.model.CloudflareConfig | None = None
     grafana: GrafanaConfig | None = None
     mimir: MimirConfig | None = None

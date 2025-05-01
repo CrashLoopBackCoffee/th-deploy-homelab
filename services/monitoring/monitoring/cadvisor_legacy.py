@@ -5,16 +5,19 @@ Deploys cadvisor to the target host.
 import pulumi as p
 import pulumi_docker as docker
 
-from monitoring.utils import get_image
+from monitoring.config import ComponentConfig
 
 
-def create_cadvisor(network: docker.Network, opts: p.ResourceOptions):
+def create_cadvisor(
+    component_config: ComponentConfig, network: docker.Network, opts: p.ResourceOptions
+):
     """
     Deploys cadvisor to the target host.
     """
+    assert component_config.cadvisor
     image = docker.RemoteImage(
         'cadvisor',
-        name=get_image('cadvisor'),
+        name=f'gcr.io/cadvisor/cadvisor:v{component_config.cadvisor.version}',
         keep_locally=True,
         opts=opts,
     )
