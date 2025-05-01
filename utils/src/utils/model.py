@@ -1,5 +1,6 @@
 import pathlib
 
+import pulumi as p
 import pydantic
 
 
@@ -38,7 +39,7 @@ class OnePasswordRef(LocalBaseModel):
     ref: str
 
     @property
-    def value(self):
+    def value(self) -> p.Output[str]:
         # Lazy import to avoid importing pulumi_onepassword in the model
         from utils.onepassword import resolve_secret_ref
 

@@ -15,7 +15,7 @@ opts = p.ResourceOptions(provider=provider)
 
 cloudflare_provider = cloudflare.Provider(
     'cloudflare',
-    api_key=str(component_config.cloudflare.api_key),
+    api_key=component_config.cloudflare.api_key.value,
     email=component_config.cloudflare.email,
 )
 

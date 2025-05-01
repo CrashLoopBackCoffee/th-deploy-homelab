@@ -7,6 +7,6 @@ component_config = ComponentConfig.model_validate(p.Config().get_object('config'
 
 cloudflare_provider = cloudflare.Provider(
     'cloudflare',
-    api_key=str(component_config.cloudflare.api_key),
+    api_key=component_config.cloudflare.api_key.value,
     email=component_config.cloudflare.email,
 )
