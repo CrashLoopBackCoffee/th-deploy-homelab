@@ -1,4 +1,4 @@
-name: deploy-obsidian
+name: obsidian
 runtime:
   name: python
   options:

@@ -1,0 +1,13 @@
+config:
+  obsidian:config:
+    target:
+      host: synology
+      user: tobias
+      root-dir: /volume2/docker
+    cloudflare:
+      email: tobias_henkel@gmx.de
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      zone: tobiash.net
+    couchdb:
+      username: tobias

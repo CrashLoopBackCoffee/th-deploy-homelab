@@ -7,21 +7,22 @@ import pulumi_command
 import pulumi_docker as docker
 import pulumi_random
 
+from obsidian.config import ComponentConfig
 from obsidian.utils import get_assets_path, get_image
 from pulumi import Output, ResourceOptions
 
 
-def create_couchdb(network: docker.Network, opts: ResourceOptions):
+def create_couchdb(
+    component_config: ComponentConfig, network: docker.Network, opts: ResourceOptions
+):
     """
     Deploy CouchDB server
     """
-    config = pulumi.Config()
+    target_root_dir = component_config.target.root_dir
+    target_host = component_config.target.host
+    target_user = component_config.target.user
 
-    target_root_dir = config.get('root-dir')
-    target_host = config.require('target-host')
-    target_user = config.get('target-user')
-
-    couchdb_user = config.get('couchdb-user')
+    couchdb_user = component_config.couchdb.username
     couchdb_password = pulumi_random.RandomPassword('couchdb-password', length=36)
     pulumi.export('couchdb-user', couchdb_user)
     pulumi.export('couchdb-password', couchdb_password.result)

@@ -57,3 +57,12 @@ class ProxmoxConfig(LocalBaseModel):
     api_endpoint: str = pydantic.Field(alias='api-endpoint')
     node_name: str = pydantic.Field(alias='node-name')
     insecure: bool = False
+
+
+class TargetConfig(LocalBaseModel):
+    """
+    Target config for remote commands"""
+
+    host: str
+    user: str
+    root_dir: str

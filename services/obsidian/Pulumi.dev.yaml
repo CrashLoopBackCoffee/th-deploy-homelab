@@ -1,9 +1,0 @@
-config:
-  deploy-obsidian:cloudflare-api-key:
-    secure: AAABALI0RPgt5a5/3won3uuSoxAaGTVo6DaS0HJ8zse/MG9qgv+EHY4bNy6kgd6iY4J5cdjbCvA3xlCMWBhvNknnAxty
-  deploy-obsidian:cloudflare-email: tobias_henkel@gmx.de
-  deploy-obsidian:couchdb-user: tobias
-  deploy-obsidian:public-hostname: obsidian.tobiash.cc
-  deploy-obsidian:root-dir: /volume2/docker
-  deploy-obsidian:target-host: synology
-  deploy-obsidian:target-user: tobias
