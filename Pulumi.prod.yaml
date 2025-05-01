@@ -3,6 +3,26 @@ config:
   iot:config:
     kubeconfig:
       ref: op://Pulumi/Kubeconfig prod/password
+
+    proxmox:
+      username: root@pam
+      password:
+        ref: op://Pulumi/7se4f6wpe6pxnayudrtkcfs4am/password
+      api-endpoint: https://pve.tobiash.net:8006
+      node-name: pve
+
+    zwave_controller:
+      address: 192.168.20.21/24
+      hostname: zwave-controller.tobiash.net
+      ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ
+      vlan: 20
+      # renovate: datasource=github-releases packageName=zwave-js/zwave-js-ui versioning=semver
+      version: 9.29.0
+      zwave-adapter:
+        usb-id: 1a86:55d4
+        serial-id: usb-Zooz_800_Z-Wave_Stick_533D004242-if00
+
+
     mosquitto:
       # renovate: datasource=github-releases packageName=eclipse-mosquitto/mosquitto versioning=semver
       version: 2.0.19
