@@ -3,7 +3,7 @@ import typing as t
 import pulumi as p
 import requests
 
-from deploy_base.opnsense.base import OpnSenseBaseProvider
+from utils.opnsense.base import OpnSenseBaseProvider
 
 
 def _unbound_override_payload(props: dict[str, t.Any]) -> dict[str, t.Any]:

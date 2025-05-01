@@ -3,8 +3,8 @@ import pulumi_kubernetes as k8s
 import pulumi_postgresql as postgresql
 import pulumi_random
 
-import deploy_base
-import deploy_base.port_forward
+import utils
+import utils.port_forward
 
 
 def create_postgres(
@@ -38,10 +38,10 @@ def create_postgres(
         lambda names: [name for name in names['Service/v1'] if name.endswith('postgresql')][0]  # type: ignore
     ).apply(lambda name: name.split('/')[-1])
 
-    postgres_port = deploy_base.port_forward.ensure_port_forward(
+    postgres_port = utils.port_forward.ensure_port_forward(
         local_port=local_port,
         namespace=namespace_name,
-        resource_type=deploy_base.port_forward.ResourceType.SERVICE,
+        resource_type=utils.port_forward.ResourceType.SERVICE,
         resource_name=postgres_service,
         target_port='tcp-postgresql',
         k8s_provider=k8s_provider,

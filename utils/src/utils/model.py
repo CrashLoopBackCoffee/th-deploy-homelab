@@ -20,7 +20,7 @@ class OnePasswordRef(LocalBaseModel):
     @property
     def value(self):
         # Lazy import to avoid importing pulumi_onepassword in the model
-        from deploy_base.onepassword import resolve_secret_ref
+        from utils.onepassword import resolve_secret_ref
 
         return resolve_secret_ref(self.ref)
 
