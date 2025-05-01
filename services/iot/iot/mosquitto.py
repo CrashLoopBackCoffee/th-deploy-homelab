@@ -1,9 +1,9 @@
 import textwrap
 
-import deploy_base
-import deploy_base.opnsense.unbound.host_override
 import pulumi as p
 import pulumi_kubernetes as k8s
+
+import utils.opnsense.unbound.host_override
 
 from iot.config import ComponentConfig
 
@@ -168,7 +168,7 @@ class Mosquitto(p.ComponentResource):
             opts=k8s_opts,
         )
 
-        deploy_base.opnsense.unbound.host_override.HostOverride(
+        utils.opnsense.unbound.host_override.HostOverride(
             'mosquitto',
             host=component_config.mosquitto.hostname.split('.')[0],
             domain=component_config.mosquitto.hostname.split('.', 1)[1],

@@ -1,10 +1,11 @@
-import deploy_base.opnsense.unbound.host_override
-import deploy_base.utils
 import pulumi as p
 import pulumi_docker as docker
 import pulumi_proxmoxve as proxmoxve
 import pulumi_random
 import yaml
+
+import utils.opnsense.unbound.host_override
+import utils.utils
 
 from iot.config import ComponentConfig
 
@@ -67,7 +68,7 @@ class ZwaveeController(p.ComponentResource):
         proxmox_opts = p.ResourceOptions(provider=proxmox_provider, parent=self)
 
         # Create local DNS record
-        deploy_base.opnsense.unbound.host_override.HostOverride(
+        utils.opnsense.unbound.host_override.HostOverride(
             'zwave-controller',
             host=component_config.zwave_controller.hostname.split('.', 1)[0],
             domain=component_config.zwave_controller.hostname.split('.', 1)[1],
@@ -165,8 +166,8 @@ class ZwaveeController(p.ComponentResource):
                 'user_data_file_id': cloud_config.id,
             },
             stop_on_destroy=True,
-            on_boot=deploy_base.utils.stack_is_prod(),
-            protection=deploy_base.utils.stack_is_prod(),
+            on_boot=utils.utils.stack_is_prod(),
+            protection=utils.utils.stack_is_prod(),
             machine='q35',
             opts=p.ResourceOptions.merge(proxmox_opts, p.ResourceOptions(ignore_changes=['cdrom'])),
         )

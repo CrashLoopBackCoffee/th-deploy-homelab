@@ -1,22 +1,9 @@
 import ipaddress
-import pathlib
 import typing as t
 
-import deploy_base.model
 import pydantic
 
-REPO_PREFIX = 'deploy-'
-
-
-def get_pulumi_project():
-    repo_dir = pathlib.Path().resolve()
-
-    while not repo_dir.name.startswith(REPO_PREFIX):
-        if not repo_dir.parents:
-            raise ValueError('Could not find repo root')
-
-        repo_dir = repo_dir.parent
-    return repo_dir.name[len(REPO_PREFIX) :]
+import utils.model
 
 
 class StrictBaseModel(pydantic.BaseModel):
@@ -25,7 +12,7 @@ class StrictBaseModel(pydantic.BaseModel):
 
 class ProxmoxConfig(StrictBaseModel):
     username: str
-    password: deploy_base.model.OnePasswordRef
+    password: utils.model.OnePasswordRef
     api_endpoint: str = pydantic.Field(alias='api-endpoint')
     node_name: str = pydantic.Field(alias='node-name')
     insecure: bool = False
@@ -46,8 +33,8 @@ class MqttPrometheusInstanceConfig(StrictBaseModel):
 
 class MqttPrometheusConfig(StrictBaseModel):
     version: str
-    username: deploy_base.model.OnePasswordRef
-    password: deploy_base.model.OnePasswordRef
+    username: utils.model.OnePasswordRef
+    password: utils.model.OnePasswordRef
     instances: list[MqttPrometheusInstanceConfig] = []
 
 
@@ -74,17 +61,19 @@ class ZwaveControllerConfig(StrictBaseModel):
 
 
 class ComponentConfig(StrictBaseModel):
-    kubeconfig: deploy_base.model.OnePasswordRef
+    kubeconfig: utils.model.OnePasswordRef
     proxmox: ProxmoxConfig
 
-    cloudflare: deploy_base.model.CloudflareConfig | None = None
+    cloudflare: utils.model.CloudflareConfig | None = None
     mosquitto: MosquittoConfig
     mqtt2prometheus: MqttPrometheusConfig
     zwave_controller: ZwaveControllerConfig
 
 
 class StackConfig(StrictBaseModel):
-    model_config = {'alias_generator': lambda field_name: f'{get_pulumi_project()}:{field_name}'}
+    model_config = {
+        'alias_generator': lambda field_name: f'{utils.model.get_pulumi_project(__file__)}:{field_name}'
+    }
     config: ComponentConfig
 
 

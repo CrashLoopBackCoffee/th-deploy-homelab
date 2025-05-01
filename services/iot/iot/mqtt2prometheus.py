@@ -1,9 +1,10 @@
 import copy
 
-import deploy_base.opnsense.unbound.host_override
 import pulumi as p
 import pulumi_kubernetes as k8s
 import yaml
+
+import utils.opnsense.unbound.host_override
 
 from iot.config import ComponentConfig
 
@@ -155,7 +156,7 @@ class Mqtt2Prometheus(p.ComponentResource):
             )
 
             # Create local DNS record
-            record = deploy_base.opnsense.unbound.host_override.HostOverride(
+            record = utils.opnsense.unbound.host_override.HostOverride(
                 f'mqtt2prometheus-{instance.name}',
                 host=f'{instance.name}',
                 domain='mqtt2prometheus.local',
