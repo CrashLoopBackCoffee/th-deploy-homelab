@@ -1,17 +1,8 @@
-import pydantic
-
 import utils.model
 
 
-class PulumiSecret(utils.model.LocalBaseModel):
-    secure: pydantic.SecretStr
-
-    def __str__(self):
-        return str(self.secure)
-
-
 class CloudflareConfig(utils.model.LocalBaseModel):
-    api_key: PulumiSecret | str
+    api_key: utils.model.PulumiSecret | str
     email: str
     zone: str
 

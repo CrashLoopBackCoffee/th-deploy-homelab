@@ -3,22 +3,15 @@ import pydantic
 import utils.model
 
 
-class PulumiSecret(utils.model.LocalBaseModel):
-    secure: pydantic.SecretStr
-
-    def __str__(self):
-        return str(self.secure)
-
-
 class EntraIdConfig(utils.model.LocalBaseModel):
     tenant_id: str = 'ac1df362-04cf-4e6e-839b-031c16ada473'
     client_id: str
-    client_secret: str | PulumiSecret
+    client_secret: str | utils.model.PulumiSecret
 
 
 class GoogleConfig(utils.model.LocalBaseModel):
     client_id: str
-    client_secret: str | PulumiSecret
+    client_secret: str | utils.model.PulumiSecret
 
 
 class RedisConfig(utils.model.LocalBaseModel):
@@ -39,7 +32,7 @@ class PostgresConfig(utils.model.LocalBaseModel):
 
 class MailConfig(utils.model.LocalBaseModel):
     client_id: str
-    client_secret: str | PulumiSecret
+    client_secret: str | utils.model.PulumiSecret
 
 
 class PaperlessConfig(utils.model.LocalBaseModel):

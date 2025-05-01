@@ -5,13 +5,6 @@ import pydantic
 import utils.model
 
 
-class PulumiSecret(utils.model.LocalBaseModel):
-    secure: pydantic.SecretStr
-
-    def __str__(self):
-        return str(self.secure)
-
-
 class ProxmoxConfig(utils.model.LocalBaseModel):
     api_token: utils.model.OnePasswordRef
     api_endpoint: str

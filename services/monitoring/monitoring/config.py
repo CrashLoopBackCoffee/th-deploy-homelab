@@ -3,17 +3,10 @@ import pydantic
 import utils.model
 
 
-class PulumiSecret(utils.model.LocalBaseModel):
-    secure: pydantic.SecretStr
-
-    def __str__(self):
-        return str(self.secure)
-
-
 class AlloyConfig(utils.model.LocalBaseModel):
     version: str
     username: str
-    token: PulumiSecret | str
+    token: utils.model.PulumiSecret | str
 
 
 class GrafanaConfig(utils.model.LocalBaseModel):
@@ -23,7 +16,7 @@ class GrafanaConfig(utils.model.LocalBaseModel):
 
 
 class CloudflareConfig(utils.model.LocalBaseModel):
-    api_key: PulumiSecret | str = pydantic.Field(alias='api-key')
+    api_key: utils.model.PulumiSecret | str = pydantic.Field(alias='api-key')
     email: str
     zone: str
 

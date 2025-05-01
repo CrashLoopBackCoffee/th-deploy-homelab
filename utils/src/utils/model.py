@@ -27,6 +27,13 @@ class LocalBaseModel(pydantic.BaseModel):
     }
 
 
+class PulumiSecret(LocalBaseModel):
+    secure: pydantic.SecretStr
+
+    def __str__(self):
+        return str(self.secure)
+
+
 class OnePasswordRef(LocalBaseModel):
     ref: str
 
