@@ -1,0 +1,113 @@
+//===========================================================
+// Syslog receiver
+//===========================================================
+loki.source.syslog "default_udp" {
+	listener {
+		address               = "0.0.0.0:514"
+		protocol              = "udp"
+		label_structured_data = true
+		labels                = {component = "loki.source.syslog"}
+		syslog_format         = "rfc3164"
+	}
+	forward_to    = [otelcol.receiver.loki.default.receiver]
+	relabel_rules = loki.relabel.syslog.rules
+}
+
+// build the relabel rules used by the source.syslog component
+loki.relabel "syslog" {
+	forward_to = [otelcol.receiver.loki.default.receiver]
+
+	rule {
+		source_labels = ["__syslog_message_severity"]
+		target_label  = "level"
+	}
+
+	rule {
+		source_labels = ["__syslog_message_hostname"]
+		target_label  = "hostname"
+	}
+
+	rule {
+		source_labels = ["__syslog_message_app_name"]
+		target_label  = "application"
+	}
+
+	rule {
+		source_labels = ["__syslog_connection_ip_address"]
+		target_label  = "remote_ip"
+	}
+}
+
+//===========================================================
+// Docker logs
+//===========================================================
+
+discovery.docker "linux" {
+	host             = "unix:///var/run/docker.sock"
+	refresh_interval = "5s"
+}
+
+loki.source.docker "default" {
+	host             = "unix:///var/run/docker.sock"
+	targets          = discovery.docker.linux.targets
+	labels           = {"app" = "docker"}
+	forward_to       = [otelcol.receiver.loki.default.receiver]
+	relabel_rules    = loki.relabel.docker.rules
+	refresh_interval = "5s"
+}
+
+loki.relabel "docker" {
+	forward_to = [otelcol.receiver.loki.default.receiver]
+
+	rule {
+		source_labels = ["__meta_docker_container_name"]
+		regex         = "/(.*)"
+		target_label  = "container"
+	}
+
+	rule {
+		source_labels = ["__meta_docker_container_log_stream"]
+		target_label  = "stream"
+	}
+}
+
+//===========================================================
+// Synology logs
+//===========================================================
+
+local.file_match "logs" {
+	path_targets = [
+		{__path__ = "/mnt/var/log/*.log"},
+		{__path__ = "/mnt/var/log/**/*.log"},
+	]
+}
+
+loki.source.file "logs" {
+	targets    = local.file_match.logs.targets
+	forward_to = [loki.relabel.logs.receiver]
+}
+
+loki.relabel "logs" {
+	forward_to = [otelcol.receiver.loki.default.receiver]
+
+	rule {
+		source_labels = ["filename"]
+		regex         = "/mnt(.*)"
+		target_label  = "filename"
+	}
+
+	rule {
+		source_labels = ["log_file_path"]
+		regex         = "/mnt(.*)"
+		target_label  = "log_file_path"
+	}
+}
+
+//===========================================================
+// Convert to Otel
+//===========================================================
+otelcol.receiver.loki "default" {
+	output {
+		logs = [otelcol.processor.resourcedetection.default.input]
+	}
+}

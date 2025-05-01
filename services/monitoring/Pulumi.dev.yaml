@@ -1,0 +1,29 @@
+config:
+  monitoring:config:
+    target:
+      host: synology
+      user: tobias
+      root-dir: /volume2/docker
+    alloy:
+      # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
+      version: v1.7.1
+      username: "1115202"
+      token:
+        secure: AAABAOZ6n4t+I59nxfY/LfACwYAfMKz/kSwKBrW/7aaiXk6b6GA7WdHSLab4UVfSxpU/vabQa94v8V8Slu+HKamtm3jVjzKp1WeOMg6MOk9L3A6B4ll0nW6Si8qMg+gkmGF7Ju8/gruVlMrZ3ugk1j2aNfFEQCi+HBHbUB8fAiHeFaHSt/co30vDg4uqBG1i5WYY7oebCy8K+R0AVZEpv4ojHP6q4I4G07A9JNA7F7Y=
+    cloudflare:
+      email: tobias_henkel@gmx.de
+      api-key:
+        secure: AAABALe4Qr4aorGoZh0sbY8/NjirWvF6C7zeq5i9EhjWd60gUwvGR7IM+ONNyE3UxPtU2u0Yh2O0kcLWXiiW0MDQi5bu
+      zone: tobiash.net
+    grafana:
+      # renovate: datasource=github-releases packageName=grafana/grafana versioning=semver
+      version: 11.5.2
+    mimir:
+      # renovate: datasource=github-releases packageName=grafana/mimir versioning=semver
+      version: 2.14.1
+    prometheus:
+      # renovate: datasource=github-releases packageName=prometheus/prometheus versioning=loose
+      version: 3.2.1
+    speedtest-exporter:
+      # renovate: datasource=github-releases packageName=billimek/prometheus-speedtest-exporter versioning=semver
+      version: 1.3.1

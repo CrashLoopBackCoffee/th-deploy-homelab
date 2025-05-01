@@ -1,0 +1,39 @@
+//===========================================================
+// Blackbox targets
+//===========================================================
+
+prometheus.exporter.blackbox "default" {
+	config = "{ modules: {icmp_ipv4: {prober: icmp, icmp: {preferred_ip_protocol: ip4 } }, http_2xx: { prober: http, timeout: 5s } } }"
+
+	target {
+		name    = "router"
+		address = "192.168.2.1"
+		module  = "icmp_ipv4"
+	}
+
+	target {
+		name    = "heise.de"
+		address = "heise.de"
+		module  = "icmp_ipv4"
+	}
+
+	target {
+		name    = "google.de"
+		address = "google.de"
+		module  = "icmp_ipv4"
+	}
+}
+
+discovery.relabel "blackbox" {
+	targets = prometheus.exporter.blackbox.default.targets
+
+	rule {
+		source_labels = ["__param_target"]
+		target_label  = "instance"
+	}
+
+	rule {
+		replacement  = "blackbox"
+		target_label = "job"
+	}
+}

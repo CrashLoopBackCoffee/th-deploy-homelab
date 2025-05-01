@@ -1,0 +1,15 @@
+//===========================================================
+// Collect Otel data
+//===========================================================
+otelcol.receiver.otlp "default" {
+	// configures the default grpc endpoint "0.0.0.0:4317"
+	grpc { }
+	// configures the default http/protobuf endpoint "0.0.0.0:4318"
+	http { }
+
+	output {
+		metrics = [otelcol.processor.resourcedetection.default.input]
+		logs    = [otelcol.processor.resourcedetection.default.input]
+		traces  = [otelcol.processor.resourcedetection.default.input]
+	}
+}

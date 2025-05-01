@@ -33,3 +33,8 @@ repos:
         entry: ./.venv/bin/yamllint --strict -c=.yamllint
         language: system
         types: [yaml]
+      - id: alloy-format
+        name: alloy-format
+        entry: ./scripts/alloy-fmt
+        language: system
+        files: \.alloy$

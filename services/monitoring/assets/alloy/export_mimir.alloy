@@ -1,0 +1,9 @@
+otelcol.exporter.prometheus "mimir" {
+	forward_to = [prometheus.remote_write.mimir.receiver]
+}
+
+prometheus.remote_write "mimir" {
+	endpoint {
+		url = "http://localhost:9009/api/v1/push"
+	}
+}

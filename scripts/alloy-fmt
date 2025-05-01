@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# Loop through all arguments
+for arg in "$@"; do
+    echo "Formatting ${arg}"
+    alloy fmt -w ${arg}
+done
