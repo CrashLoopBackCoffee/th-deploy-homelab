@@ -5,7 +5,8 @@ import pulumi_docker as docker
 import pulumi_minio
 import pulumi_random
 
-from s3.cloudflare import create_cloudflare_cname
+import utils.cloudflare
+
 from s3.config import ComponentConfig
 from s3.pulumi import create_pulumi_bucket
 
@@ -24,8 +25,12 @@ def create_minio(
     target_user = component_config.target.user
 
     # Create s3 DNS record
-    create_cloudflare_cname('s3', component_config.cloudflare.zone, cloudflare_provider)
-    create_cloudflare_cname('minio-console', component_config.cloudflare.zone, cloudflare_provider)
+    utils.cloudflare.create_cloudflare_cname(
+        's3', component_config.cloudflare.zone, cloudflare_provider
+    )
+    utils.cloudflare.create_cloudflare_cname(
+        'minio-console', component_config.cloudflare.zone, cloudflare_provider
+    )
 
     # Create data dir
     minio_data_dir_resource = pulumi_command.remote.Command(
