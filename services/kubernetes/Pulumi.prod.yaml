@@ -16,7 +16,7 @@ config:
       zone: tobiash.net
     csi-nfs-driver:
       # renovate: datasource=github-releases packageName=kubernetes-csi/csi-driver-nfs versioning=semver
-      version: v4.10.0
+      version: v4.11.0
     microk8s:
       version: 1.31/stable
       vlan: 40
