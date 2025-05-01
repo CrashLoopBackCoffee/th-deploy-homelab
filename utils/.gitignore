@@ -1,0 +1,4 @@
+*.pyc
+venv/
+.config-schema.json
+.last-fetched

@@ -1,0 +1,25 @@
+# top-most EditorConfig file
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+charset = utf-8
+
+[*.py]
+indent_size = 4
+max_line_length = 100
+quote_type = single
+
+[*.json]
+indent_size = 2
+
+[*.{yml,yaml}]
+indent_size = 2
+quote_type = double
+
+[*.alloy]
+indent_style = tab
+tab_width = 4
