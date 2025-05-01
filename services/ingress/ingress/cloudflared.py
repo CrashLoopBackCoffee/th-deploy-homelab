@@ -19,15 +19,19 @@ def create_cloudflared(
 
     # Create a Cloudflared tunnel
     cloudflare_accounts = cloudflare.get_accounts_output(opts=cloudflare_invoke_opts)
-    cloudflare_account_id = cloudflare_accounts.accounts.apply(lambda accounts: accounts[0].id)
+    cloudflare_account_id = cloudflare_accounts.results.apply(lambda results: results[0].id)
     tunnel_password = pulumi_random.RandomPassword('cloudflared', length=64)
     tunnel = cloudflare.ZeroTrustTunnelCloudflared(
         'tunnel',
         account_id=cloudflare_account_id,
         name='cloudflared-k8s',
-        secret=tunnel_password.result.apply(lambda p: base64.b64encode(p.encode()).decode()),
+        tunnel_secret=tunnel_password.result.apply(lambda p: base64.b64encode(p.encode()).decode()),
         config_src='cloudflare',
         opts=cloudflare_opts,
+    )
+
+    tunnel_token = cloudflare.get_zero_trust_tunnel_cloudflared_token_output(
+        account_id=cloudflare_account_id, tunnel_id=tunnel.id, opts=cloudflare_invoke_opts
     )
 
     namespace = k8s.core.v1.Namespace(
@@ -41,7 +45,7 @@ def create_cloudflared(
         'cloudflared',
         metadata={'namespace': namespace.metadata['name']},
         string_data={
-            'token': tunnel.tunnel_token,
+            'token': tunnel_token.token,
         },
         opts=k8s_opts,
     )
@@ -104,7 +108,7 @@ def create_cloudflared(
     # Configure the Cloudflared tunnel
     ingress_rules = []
     for ingress in component_config.cloudflared.ingress:
-        rule: cloudflare.ZeroTrustTunnelCloudflaredConfigConfigIngressRuleArgsDict = {
+        rule: cloudflare.ZeroTrustTunnelCloudflaredConfigConfigIngressArgsDict = {
             'service': ingress.service,
             'hostname': ingress.hostname,
         }
@@ -118,7 +122,7 @@ def create_cloudflared(
         account_id=cloudflare_account_id,
         tunnel_id=tunnel.id,
         config={
-            'ingress_rules': [
+            'ingresses': [
                 *ingress_rules,
                 # Catch all rule
                 {'service': 'http_status:404'},
@@ -129,8 +133,7 @@ def create_cloudflared(
 
     # Create DNS records
     zone = cloudflare.get_zone_output(
-        account_id=cloudflare_account_id,
-        name=component_config.cloudflare.zone,
+        filter={'match': 'all', 'name': component_config.cloudflare.zone},
         opts=cloudflare_invoke_opts,
     )
 
@@ -141,6 +144,7 @@ def create_cloudflared(
             name=ingress.hostname.split('.')[0],
             type='CNAME',
             content=p.Output.format('{}.cfargotunnel.com', tunnel.id),
-            zone_id=zone.id,
+            ttl=60,
+            zone_id=zone.zone_id,
             opts=cloudflare_opts,
         )

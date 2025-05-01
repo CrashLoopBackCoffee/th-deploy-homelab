@@ -137,6 +137,6 @@ def create_alloy(
             print(f'Error reloading alloy config:\n{e.read().decode()}')
             raise
 
-    p.Output.all(dns_record.hostname, alloy_config_dir_resource.id, container.id).apply(
-        reload_alloy
-    )
+    alloy_hostname = p.Output.format('{}.{}', dns_record.name, component_config.cloudflare.zone)
+    p.Output.all(alloy_hostname, alloy_config_dir_resource.id, container.id).apply(reload_alloy)
+    p.export('alloy_url', alloy_hostname)
