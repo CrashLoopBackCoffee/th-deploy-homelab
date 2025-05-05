@@ -366,7 +366,7 @@ requires-dist = [
     { name = "pulumi-cloudflare", specifier = "==6.1.2" },
     { name = "pulumi-command", specifier = "==1.0.3" },
     { name = "pulumi-docker", specifier = "==4.6.2" },
-    { name = "pulumi-kubernetes", specifier = "==4.22.2" },
+    { name = "pulumi-kubernetes", specifier = "==4.23.0" },
     { name = "pulumi-minio", specifier = "==0.16.4" },
     { name = "pulumi-onepassword", specifier = "==1.1.3" },
     { name = "pulumi-proxmoxve", specifier = "==7.0.0" },
@@ -738,7 +738,7 @@ wheels = [
 
 [[package]]
 name = "pulumi-kubernetes"
-version = "4.22.2"
+version = "4.23.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
@@ -746,9 +746,9 @@ dependencies = [
     { name = "requests" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e8/60/6676e182e42c41b0a3c41b64155a40de15380ff726c07125082a154eb348/pulumi_kubernetes-4.22.2.tar.gz", hash = "sha256:b9c9653ce7b1207eb8785bb029c99773cffef623c850b033d56ac47cd1669f61", size = 1669684, upload-time = "2025-04-15T18:50:19.432Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7b/9f/23dc36a2982faf8bc66e48e55f5cb44a6580a3e81e1849e0732462982531/pulumi_kubernetes-4.23.0.tar.gz", hash = "sha256:6b697146039d7367f397db77dc1d2b23d918202f4276071bfa105652bb5e5fd4", size = 1775394, upload-time = "2025-05-02T17:34:12.813Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/86/49/c417998b66cb42c41f52f805a44ba0c372514a1515b491db2dab0d7be21f/pulumi_kubernetes-4.22.2-py3-none-any.whl", hash = "sha256:b215abaaaa3acbb7ac13b631f893c6862a666d7462e19c67233426899faaa5dc", size = 2629497, upload-time = "2025-04-15T18:50:15.526Z" },
+    { url = "https://files.pythonhosted.org/packages/cc/00/983975f1bcf02601f12b4afb60a4dfdf9f81ab11cbf2493aa349781684ae/pulumi_kubernetes-4.23.0-py3-none-any.whl", hash = "sha256:4866c00259170e5e1604c0a3335063036e80c29000bf9b88a380cd600fe44c4e", size = 2794243, upload-time = "2025-05-02T17:34:10.082Z" },
 ]
 
 [[package]]
