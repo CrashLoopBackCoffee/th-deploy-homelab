@@ -362,9 +362,9 @@ requires-dist = [
     { name = "obsidian", virtual = "services/obsidian" },
     { name = "paperless", virtual = "services/paperless" },
     { name = "proxmox", virtual = "services/proxmox" },
-    { name = "pulumi", specifier = "==3.171.0" },
-    { name = "pulumi-cloudflare", specifier = "==6.2.0" },
-    { name = "pulumi-command", specifier = "==1.0.5" },
+    { name = "pulumi", specifier = "==3.177.0" },
+    { name = "pulumi-cloudflare", specifier = "==6.3.0" },
+    { name = "pulumi-command", specifier = "==1.1.0" },
     { name = "pulumi-docker", specifier = "==4.7.0" },
     { name = "pulumi-kubernetes", specifier = "==4.23.0" },
     { name = "pulumi-minio", specifier = "==0.16.4" },
@@ -679,7 +679,7 @@ requires-dist = [
 
 [[package]]
 name = "pulumi"
-version = "3.171.0"
+version = "3.177.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "debugpy" },
@@ -691,35 +691,35 @@ dependencies = [
     { name = "semver" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7b/1b/14d5e7a76b21c5f168634f9ba05a39efc8239f0f9c120314ab2acf56cde6/pulumi-3.171.0-py3-none-any.whl", hash = "sha256:4092439e01a42509132c2ef837e09317eaf3fd38a4d12faa2b826015e58df094", size = 353578, upload-time = "2025-05-21T16:15:31.019Z" },
+    { url = "https://files.pythonhosted.org/packages/6e/0a/538b24de53c5d0b720c679a9e37f763ddddf1d10e85748c7813baa4e9954/pulumi-3.177.0-py3-none-any.whl", hash = "sha256:f5665304b9ad28fe629c9c77e7230cc3d332e9d675b78f180bd2e147e24f77c9", size = 354564, upload-time = "2025-06-13T11:27:43.486Z" },
 ]
 
 [[package]]
 name = "pulumi-cloudflare"
-version = "6.2.0"
+version = "6.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6a/36/3d83b738c58f7a61bb6d7cd07f3614287107d904ac4edf4ea08bf7c6ee38/pulumi_cloudflare-6.2.0.tar.gz", hash = "sha256:22fd9f02a77ccdc5359ce8e2675b3a7b758dacb2ef8efb7d3188bb443b781bb3", size = 1270107, upload-time = "2025-05-15T09:25:03.831Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/61/4c6a879a94af78543fcef28f3e2875c4e874338484859a3d1b71c1251846/pulumi_cloudflare-6.3.0.tar.gz", hash = "sha256:054e3cdf6bdbc1ad6861e09748a640bc806fdcd48a6af5d557dd9aa4117a32b4", size = 1287036, upload-time = "2025-06-10T18:52:04.969Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/86/e4/a02f23f2f477eb6f3c99940fae673b46490493da28987744e301a4e6bab8/pulumi_cloudflare-6.2.0-py3-none-any.whl", hash = "sha256:306b8b5f3e2edc77f89db963c2068e95e41fbef6424d596c09766ca422ced6e4", size = 1970916, upload-time = "2025-05-15T09:25:00.182Z" },
+    { url = "https://files.pythonhosted.org/packages/3e/03/9745547a67fdf10d12eedb36cb79965051b10ff1d2dc94f3d2823914fbf2/pulumi_cloudflare-6.3.0-py3-none-any.whl", hash = "sha256:46fa808e258c26b8988b15ad5506744017f2b22470d89513c766b73c33531519", size = 1985275, upload-time = "2025-06-10T18:52:02.214Z" },
 ]
 
 [[package]]
 name = "pulumi-command"
-version = "1.0.5"
+version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4f/10/053a21b379a5157c85265491d2e912dbe1ef4eac5e4be88d2a43ccb0cf91/pulumi_command-1.0.5.tar.gz", hash = "sha256:f8f6327c2b6c3789dab3a48346183675aba34f5be9e17c79dd8f6153b0b17169", size = 32435, upload-time = "2025-05-16T19:55:35.83Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/96/b4/03d37a61e49b636b7cd5ba72a28996f07a18d815e6ba2343f6071b77fc51/pulumi_command-1.1.0.tar.gz", hash = "sha256:509b2709938aacfb13717b7b537d728375cd90b409093bf24dacab17d9294a4a", size = 33072, upload-time = "2025-05-27T18:25:11.671Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f7/98/608db04f18e36d90101efd3caf3938c17afd03e278775ba659d8c94e5cb6/pulumi_command-1.0.5-py3-none-any.whl", hash = "sha256:808a6eb2e8028afe9a56b0e094a99fb762cd2152739832a9234a90088519a9f2", size = 36145, upload-time = "2025-05-16T19:55:33.923Z" },
+    { url = "https://files.pythonhosted.org/packages/99/f4/c89295ca63e2555cda4b4e16069200cf04262ac87ae263c48562f8297cc8/pulumi_command-1.1.0-py3-none-any.whl", hash = "sha256:d6a62444a1a9a26ded354b668a9cf88c0becd4faacabe4adafbc8dbb65af96c4", size = 36859, upload-time = "2025-05-27T18:25:10.401Z" },
 ]
 
 [[package]]
