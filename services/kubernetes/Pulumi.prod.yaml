@@ -7,7 +7,7 @@ config:
       node-name: pve
     cert-manager:
       # renovate: datasource=github-releases packageName=cert-manager/cert-manager versioning=semver
-      version: v1.17.2
+      version: v1.18.2
       use-staging: false
     cloudflare:
       api-key:
