@@ -2,6 +2,7 @@
 
 import dataclasses
 import importlib
+import json
 import os
 import pathlib
 import sys
@@ -33,8 +34,6 @@ def get_config_root_model(config: ConfigModel):
 
 
 def generate_json_schema(config: ConfigModel):
-    import json
-
     # Discover root model class
     root_model_class = get_config_root_model(config)
     if not root_model_class:
