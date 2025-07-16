@@ -39,13 +39,19 @@
     packageRules: [
         {
             groupName: 'pulumi',
-            schedule: [
-                'before 10am on Monday',
-            ],
             matchPackageNames: [
                 '/pulumi/',
             ],
+            schedule: [
+                'before 10am on Monday',
+            ],
         },
+        {
+            matchPackageNames: [
+                'grafana/grafana',
+            ],
+            extractVersion: '^v?(?<version>.*)$',
+        }
     ],
     prHourlyLimit: 10,
     rangeStrategy: 'replace',
