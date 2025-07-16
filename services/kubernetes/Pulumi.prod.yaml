@@ -23,7 +23,7 @@ config:
       ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ
       metallb:
         # renovate: datasource=github-releases packageName=metallb/metallb versioning=semver
-        version: 0.14.9
+        version: 0.15.2
         start: 192.168.40.70
         end: 192.168.40.99
       master-nodes:
