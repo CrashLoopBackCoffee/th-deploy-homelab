@@ -47,9 +47,9 @@ def create_certmanager(
                 'effect': 'allow',
                 'permission_groups': [
                     # Zone Read
-                    'c8fed203ed3043cba015a93ad1616f1f',
+                    {'id': 'c8fed203ed3043cba015a93ad1616f1f'},
                     # DNS Write
-                    '4755a26eedb94da69e1066d98aa820be',
+                    {'id': '4755a26eedb94da69e1066d98aa820be'},
                 ],
                 'resources': {'com.cloudflare.api.account.zone.*': '*'},
             },
