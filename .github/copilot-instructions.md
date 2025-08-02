@@ -197,8 +197,9 @@ The project uses the following Pulumi providers:
    - Include deployment and troubleshooting guides
 
 6. **Shell Commands**:
-   - Never use `cd foo && command` patterns as this changes the current working directory of the shell
-   - Use subshells instead: `(cd foo && command)` to isolate directory changes
+   - **NEVER** use `cd foo && command` patterns as this changes the current working directory of the shell
+   - **ALWAYS** use subshells instead: `(cd foo && command)` to isolate directory changes
+   - This is critical: `cd services/iot && pulumi stack ls` is WRONG, use `(cd services/iot && pulumi stack ls)` instead
    - Alternatively, use explicit paths or tools that support working directory arguments
 
 7. **Terminal Usage**:
@@ -219,12 +220,17 @@ uv run ./scripts/generate-config-schema
 # Run all checks
 uv run ./scripts/run-all-checks.sh
 
-# Deploy a service
-cd services/{service-name}
-pulumi up --stack {stack-name}
+# Deploy a service (using subshell to isolate directory change)
+(cd services/{service-name} && pulumi up --stack {stack-name})
 
-# Preview changes
-pulumi preview --stack {stack-name}
+# Preview changes (using subshell to isolate directory change)
+(cd services/{service-name} && pulumi preview --stack {stack-name})
+
+# List available stacks for a service
+(cd services/{service-name} && pulumi stack ls)
+
+# Check stack configuration
+(cd services/{service-name} && pulumi config --stack {stack-name})
 ```
 
 ## AI Assistant Guidelines
