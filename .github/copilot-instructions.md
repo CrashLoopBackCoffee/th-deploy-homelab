@@ -201,6 +201,11 @@ The project uses the following Pulumi providers:
    - Use subshells instead: `(cd foo && command)` to isolate directory changes
    - Alternatively, use explicit paths or tools that support working directory arguments
 
+7. **Terminal Usage**:
+   - Always use the `run_in_terminal` tool instead of trying to reference specific terminal IDs
+   - Avoid using `get_terminal_output` with specific IDs as they may become invalid
+   - Let VS Code manage terminal sessions automatically
+
 ## Common Commands
 
 ```bash
