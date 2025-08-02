@@ -221,6 +221,7 @@ The project uses the following Pulumi providers:
    - **ALWAYS** use subshells instead: `(cd foo && command)` to isolate directory changes
    - This is critical: `cd services/iot && pulumi stack ls` is WRONG, use `(cd services/iot && pulumi stack ls)` instead
    - Alternatively, use explicit paths or tools that support working directory arguments
+   - **VIOLATION OF THIS RULE IS CRITICAL** - changing working directory breaks the shell session for other commands
 
 7. **Terminal Usage**:
    - **NEVER** use `get_terminal_output` with hardcoded terminal IDs as they frequently become invalid
@@ -245,6 +246,9 @@ uv run ./scripts/run-all-checks.sh
 
 # Preview changes (using subshell to isolate directory change)
 (cd services/{service-name} && pulumi preview --stack {stack-name})
+
+# Preview changes with diff to see actual modifications
+(cd services/{service-name} && pulumi preview -s {stack-name} --diff)
 
 # List available stacks for a service
 (cd services/{service-name} && pulumi stack ls)
