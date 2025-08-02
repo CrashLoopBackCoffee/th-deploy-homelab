@@ -7,9 +7,10 @@ import pulumi_command
 import pulumi_docker as docker
 import pulumi_random
 
+from pulumi import Output, ResourceOptions
+
 from obsidian.config import ComponentConfig
 from obsidian.utils import get_assets_path
-from pulumi import Output, ResourceOptions
 
 
 def create_couchdb(

@@ -9,9 +9,9 @@ import pulumi_cloudflare
 import pulumi_docker as docker
 import pulumi_random
 
-from obsidian.config import ComponentConfig
-
 import utils.cloudflare
+
+from obsidian.config import ComponentConfig
 
 
 def create_cloudflare_tunnel(
