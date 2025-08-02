@@ -96,9 +96,29 @@ services/
 
 ### Pulumi Stacks
 
-- `dev`: Development environment
-- `test`: Testing environment
-- `prod`: Production environment
+The homelab uses different stack configurations based on service requirements:
+
+**Production Stack (`prod`)** - Primary homelab environment:
+- **Standard services**: `ingress`, `iot`, `obsidian`, `paperless`, `unifi`
+- **Lower-level services**: `kubernetes`, `monitoring` (also has `prod`)
+- Used for stable, production-ready deployments
+
+**Development Stack (`dev`)** - Legacy from Synology migration:
+- **Legacy services**: `monitoring`, `proxmox`, `s3`
+- Contains configurations migrated from the previous Synology-based homelab
+- Used for services that haven't been fully migrated to production patterns
+
+**Test Stack (`test`)** - Experimental environment:
+- **Experimental services**: `kubernetes`
+- Used for testing new configurations without affecting production services
+- Allows safe experimentation on lower-level infrastructure components
+
+### Stack Selection Guidelines
+
+- **Most services**: Use `prod` stack for standard homelab operations
+- **Infrastructure experimentation**: Use `test` stack for kubernetes changes
+- **Legacy components**: Use `dev` stack for services still being migrated
+- **New services**: Should typically start with `prod` stack unless experimental
 
 ### Configuration
 
