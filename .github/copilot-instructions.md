@@ -120,6 +120,49 @@ services/
 - `scripts/run-all-checks.sh`: Run linting, type checking, and tests
 - `scripts/alloy-fmt`: Format Grafana Alloy configurations
 
+## Documentation Links
+
+### Pulumi Core
+
+- [Pulumi Documentation](https://www.pulumi.com/docs/) - Main documentation hub
+- [Pulumi Python SDK](https://www.pulumi.com/docs/languages-sdks/python/) - Python-specific guides and reference
+- [Pulumi Configuration](https://www.pulumi.com/docs/concepts/config/) - Configuration and secrets management
+- [Pulumi Stacks](https://www.pulumi.com/docs/concepts/stack/) - Stack management and environments
+- [Pulumi Outputs](https://www.pulumi.com/docs/concepts/inputs-outputs/) - Working with inputs and outputs
+
+### Pulumi Providers
+
+The project uses the following Pulumi providers:
+
+- [Cloudflare Provider](https://www.pulumi.com/registry/packages/cloudflare/) - DNS, tunnels, and CDN management
+- [Command Provider](https://www.pulumi.com/registry/packages/command/) - Execute shell commands and scripts
+- [Docker Provider](https://www.pulumi.com/registry/packages/docker/) - Container and image management
+- [Kubernetes Provider](https://www.pulumi.com/registry/packages/kubernetes/) - Kubernetes resource management
+- [MinIO Provider](https://www.pulumi.com/registry/packages/minio/) - S3-compatible object storage
+- [1Password Provider](https://www.pulumi.com/registry/packages/onepassword/) - Secret management integration
+- [PostgreSQL Provider](https://www.pulumi.com/registry/packages/postgresql/) - Database management
+- [Proxmox VE Provider](https://www.pulumi.com/registry/packages/proxmoxve/) - Virtual machine and container management
+- [Random Provider](https://www.pulumi.com/registry/packages/random/) - Generate random values and passwords
+- [TLS Provider](https://www.pulumi.com/registry/packages/tls/) - Certificate and key management
+
+### Service-Specific Documentation
+
+- [MicroK8s Documentation](https://microk8s.io/docs) - Lightweight Kubernetes distribution
+- [Proxmox VE Documentation](https://pve.proxmox.com/pve-docs/) - Virtualization platform
+- [Cloudflare Tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) - Secure ingress tunneling
+- [Grafana Documentation](https://grafana.com/docs/) - Monitoring and observability
+- [Prometheus Documentation](https://prometheus.io/docs/) - Metrics collection and alerting
+- [Mosquitto Documentation](https://mosquitto.org/documentation/) - MQTT broker
+- [Traefik Documentation](https://doc.traefik.io/traefik/) - Reverse proxy and load balancer
+- [cert-manager Documentation](https://cert-manager.io/docs/) - Certificate management for Kubernetes
+- [MetalLB Documentation](https://metallb.universe.tf/) - Load balancer for bare metal Kubernetes
+
+### Development Tools
+
+- [UV Documentation](https://docs.astral.sh/uv/) - Python package and project manager
+- [Pydantic Documentation](https://docs.pydantic.dev/) - Data validation and settings management
+- [Ansible Documentation](https://docs.ansible.com/) - Configuration management and automation
+
 ## Best Practices
 
 1. **Git Workflow**:
