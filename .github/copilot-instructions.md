@@ -223,20 +223,25 @@ The project uses the following Pulumi providers:
    - Alternatively, use explicit paths or tools that support working directory arguments
    - **VIOLATION OF THIS RULE IS CRITICAL** - changing working directory breaks the shell session for other commands
 
-7. **Terminal Usage**:
-   - **NEVER** use `get_terminal_output` with hardcoded terminal IDs as they frequently become invalid
-   - Always use the `run_in_terminal` tool for executing commands - it creates new terminal sessions as needed
-   - If you need to check terminal output, use `run_in_terminal` again rather than trying to reference old terminal IDs
-   - Let VS Code manage terminal sessions automatically - don't try to track or reuse specific terminal instances
-
 8. **Pulumi Commands**:
    - **ALWAYS** use `--non-interactive` flag with Pulumi commands to prevent interactive mode from breaking terminal integration
    - This applies to `pulumi up`, `pulumi preview`, and other commands that might prompt for user input
    - Interactive mode can cause VS Code terminal sessions to hang or become unresponsive
 
+9. **Terminal Initialization**:
+   - **CRITICAL**: Every new Copilot session gets a fresh terminal that must be initialized before use
+   - The first terminal command in any session triggers extensive direnv loading (package resolution, schema generation, pre-commit setup, etc.)
+   - **ALWAYS** run a dummy initialization command before executing the actual intended command
+   - Use `echo "Initializing terminal..."` or similar as the first command in any new session
+   - Wait for the direnv loading to complete before running subsequent commands
+   - This prevents the actual command from being interrupted or failing due to environment setup
+
 ## Common Commands
 
 ```bash
+# ALWAYS initialize terminal first in new sessions
+echo "Initializing terminal..."
+
 # Install dependencies
 uv sync
 
@@ -266,9 +271,11 @@ uv run ./scripts/run-all-checks.sh
 
 When working on this project:
 
-1. **Understand the Service Context**: Each service is self-contained but may depend on others
-2. **Follow Pulumi Patterns**: Use the established patterns for providers, resources, and configuration
-3. **Maintain Type Safety**: Always use proper type hints and Pydantic models
-4. **Consider Dependencies**: Be aware of inter-service dependencies and deployment order
-5. **Environment Awareness**: Consider which stack/environment changes affect
-6. **Security First**: Handle secrets properly and follow security best practices
+1. **🚨 CRITICAL - Terminal Initialization**: **ALWAYS** run a dummy command (`echo "Initializing terminal..."`) as the very first command in any new Copilot session, then wait for direnv loading to complete before running actual commands. This prevents commands from being interrupted by environment setup.
+
+2. **Understand the Service Context**: Each service is self-contained but may depend on others
+3. **Follow Pulumi Patterns**: Use the established patterns for providers, resources, and configuration
+4. **Maintain Type Safety**: Always use proper type hints and Pydantic models
+5. **Consider Dependencies**: Be aware of inter-service dependencies and deployment order
+6. **Environment Awareness**: Consider which stack/environment changes affect
+7. **Security First**: Handle secrets properly and follow security best practices
