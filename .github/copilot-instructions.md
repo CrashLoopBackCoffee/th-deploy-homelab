@@ -229,6 +229,11 @@ The project uses the following Pulumi providers:
    - If you need to check terminal output, use `run_in_terminal` again rather than trying to reference old terminal IDs
    - Let VS Code manage terminal sessions automatically - don't try to track or reuse specific terminal instances
 
+8. **Pulumi Commands**:
+   - **ALWAYS** use `--non-interactive` flag with Pulumi commands to prevent interactive mode from breaking terminal integration
+   - This applies to `pulumi up`, `pulumi preview`, and other commands that might prompt for user input
+   - Interactive mode can cause VS Code terminal sessions to hang or become unresponsive
+
 ## Common Commands
 
 ```bash
@@ -242,13 +247,13 @@ uv run ./scripts/generate-config-schema
 uv run ./scripts/run-all-checks.sh
 
 # Deploy a service (using subshell to isolate directory change)
-(cd services/{service-name} && pulumi up --stack {stack-name})
+(cd services/{service-name} && pulumi up --stack {stack-name} --non-interactive)
 
 # Preview changes (using subshell to isolate directory change)
-(cd services/{service-name} && pulumi preview --stack {stack-name})
+(cd services/{service-name} && pulumi preview --stack {stack-name} --non-interactive)
 
 # Preview changes with diff to see actual modifications
-(cd services/{service-name} && pulumi preview -s {stack-name} --diff)
+(cd services/{service-name} && pulumi preview -s {stack-name} --diff --non-interactive)
 
 # List available stacks for a service
 (cd services/{service-name} && pulumi stack ls)
