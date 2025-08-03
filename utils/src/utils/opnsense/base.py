@@ -13,7 +13,6 @@ class OpnSenseBaseProvider(p.dynamic.ResourceProvider):
         self.api_key = os.environ['OPNSENSE_API_KEY']
         self.api_secret = os.environ['OPNSENSE_API_SECRET']
         self.endpoint = os.environ['OPNSENSE_ENDPOINT']
-        print(self.api_key, self.api_secret)
 
     def get_client(self) -> requests.Session:
         client = requests.Session()
