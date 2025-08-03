@@ -239,6 +239,20 @@ The project uses the following Pulumi providers:
    - Alternatively, use explicit paths or tools that support working directory arguments
    - **VIOLATION OF THIS RULE IS CRITICAL** - changing working directory breaks the shell session for other commands
 
+7. **Linting and Code Quality**:
+   - **ALWAYS** run `uv run ./scripts/run-all-checks.sh` before making any commit to ensure code quality
+   - **CRITICAL**: Run linting checks BEFORE manually fixing any code issues - many linters auto-fix problems automatically
+   - The project uses multiple linting tools configured via pre-commit:
+     - **Ruff**: Python code formatting (`ruff format`) and linting (`ruff check --fix`) with auto-fixes for import ordering, code style, etc.
+     - **Pyright**: Python type checking for type safety validation
+     - **Yamllint**: YAML file linting with strict validation
+     - **Pre-commit hooks**: Various file checks (TOML validation, whitespace trimming, end-of-file fixing, etc.)
+     - **Alloy format**: Grafana Alloy configuration file formatting
+   - **Auto-fix capabilities**: Many tools automatically fix issues including code formatting, import ordering, whitespace, and file endings
+   - **NEVER** commit code that fails linting checks - always ensure `run-all-checks.sh` succeeds
+   - If linting fails, run the script again as it often fixes issues on multiple passes
+   - Use `uv run ./scripts/run-all-checks.sh` (not just `./scripts/run-all-checks.sh`) to ensure proper dependency management
+
 8. **Pulumi Commands**:
    - **ALWAYS** use `--non-interactive` flag with Pulumi commands to prevent interactive mode from breaking terminal integration
    - This applies to `pulumi up`, `pulumi preview`, and other commands that might prompt for user input
@@ -264,7 +278,8 @@ uv sync
 # Generate configuration schemas
 uv run ./scripts/generate-config-schema
 
-# Run all checks
+# CRITICAL: Run all linting and code quality checks
+# ALWAYS run this before committing - many tools auto-fix issues automatically
 uv run ./scripts/run-all-checks.sh
 
 # Deploy a service (using subshell to isolate directory change)
@@ -293,9 +308,11 @@ When working on this project:
 
 2. **🚨 CRITICAL - Pulumi Safety**: **ALWAYS** run `pulumi preview` with `--diff` flag before any `pulumi up` command to check for unexpected changes. Never deploy without reviewing the preview first.
 
-3. **Understand the Service Context**: Each service is self-contained but may depend on others
-4. **Follow Pulumi Patterns**: Use the established patterns for providers, resources, and configuration
-5. **Maintain Type Safety**: Always use proper type hints and Pydantic models
-6. **Consider Dependencies**: Be aware of inter-service dependencies and deployment order
-7. **Environment Awareness**: Consider which stack/environment changes affect
-8. **Security First**: Handle secrets properly and follow security best practices
+3. **🚨 CRITICAL - Code Quality**: **ALWAYS** run `uv run ./scripts/run-all-checks.sh` before making any changes to ensure all linting and code quality checks pass. Many tools auto-fix issues automatically, so run this first before manually editing code.
+
+4. **Understand the Service Context**: Each service is self-contained but may depend on others
+5. **Follow Pulumi Patterns**: Use the established patterns for providers, resources, and configuration
+6. **Maintain Type Safety**: Always use proper type hints and Pydantic models
+7. **Consider Dependencies**: Be aware of inter-service dependencies and deployment order
+8. **Environment Awareness**: Consider which stack/environment changes affect
+9. **Security First**: Handle secrets properly and follow security best practices
