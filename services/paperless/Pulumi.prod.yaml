@@ -27,6 +27,8 @@ config:
     backup:
       # renovate: datasource=github-releases packageName=restic/restic versioning=semver
       restic-version: 0.17.3
+      # renovate: datasource=github-releases packageName=rclone/rclone versioning=semver
+      rclone-version: 1.68.2
       # renovate: datasource=github-releases packageName=kubernetes/kubernetes versioning=semver
       kubectl-version: 1.33.3
       repository-path: paperless
