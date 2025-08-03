@@ -48,6 +48,22 @@ services/
    - Prefer composition over inheritance for Pulumi components
    - Use dataclasses or Pydantic models for structured data
 
+4. **Container Image Management**:
+   - **NEVER** hardcode image tags in Python code
+   - **ALWAYS** include image versions in the configuration model with appropriate field names (e.g., `redis_version`, `restic_version`)
+   - **ALWAYS** verify version numbers against the actual releases before using them - don't rely on prior knowledge or assumptions
+   - **PREFER official container images** over runtime tool downloads when available (e.g., `registry.k8s.io/conformance` for kubectl instead of downloading kubectl binaries)
+   - **ALWAYS** add renovate comments above version fields in `Pulumi.{stack}.yaml` using the format:
+     ```yaml
+     # renovate: datasource=github-releases packageName=<owner>/<repo> versioning=semver
+     <service>-version: <version>
+     ```
+   - **Prefer `github-releases` datasource** when the component has proper GitHub releases for better changelog information in Renovate PRs
+   - **Fall back to `docker` datasource** only when GitHub releases are not available or don't match the image versions
+   - **IMPORTANT**: Verify that GitHub release versions exactly match Docker image tag versions before switching datasources
+   - **Best Practice**: When adding a new service, pick one version below the current latest to validate Renovate configuration quickly after merge
+   - Use the config value in Python code: `f'{image_name}:{component_config.service.version}'`
+
 ### File Naming Conventions
 
 - `__main__.py`: Main Pulumi program entry point for each service
@@ -252,7 +268,9 @@ uv run ./scripts/generate-config-schema
 uv run ./scripts/run-all-checks.sh
 
 # Deploy a service (using subshell to isolate directory change)
-(cd services/{service-name} && pulumi up --stack {stack-name} --non-interactive)
+# IMPORTANT: ALWAYS run preview first to check for unexpected changes
+(cd services/{service-name} && pulumi preview -s {stack-name} --diff --non-interactive)
+(cd services/{service-name} && pulumi up --stack {stack-name} --non-interactive --skip-preview)
 
 # Preview changes (using subshell to isolate directory change)
 (cd services/{service-name} && pulumi preview --stack {stack-name} --non-interactive)
@@ -273,9 +291,11 @@ When working on this project:
 
 1. **🚨 CRITICAL - Terminal Initialization**: **ALWAYS** run a dummy command (`echo "Initializing terminal..."`) as the very first command in any new Copilot session, then wait for direnv loading to complete before running actual commands. This prevents commands from being interrupted by environment setup.
 
-2. **Understand the Service Context**: Each service is self-contained but may depend on others
-3. **Follow Pulumi Patterns**: Use the established patterns for providers, resources, and configuration
-4. **Maintain Type Safety**: Always use proper type hints and Pydantic models
-5. **Consider Dependencies**: Be aware of inter-service dependencies and deployment order
-6. **Environment Awareness**: Consider which stack/environment changes affect
-7. **Security First**: Handle secrets properly and follow security best practices
+2. **🚨 CRITICAL - Pulumi Safety**: **ALWAYS** run `pulumi preview` with `--diff` flag before any `pulumi up` command to check for unexpected changes. Never deploy without reviewing the preview first.
+
+3. **Understand the Service Context**: Each service is self-contained but may depend on others
+4. **Follow Pulumi Patterns**: Use the established patterns for providers, resources, and configuration
+5. **Maintain Type Safety**: Always use proper type hints and Pydantic models
+6. **Consider Dependencies**: Be aware of inter-service dependencies and deployment order
+7. **Environment Awareness**: Consider which stack/environment changes affect
+8. **Security First**: Handle secrets properly and follow security best practices
