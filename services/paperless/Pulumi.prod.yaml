@@ -24,6 +24,29 @@ config:
       version: 2.17.1
       consume-server: synology.tobiash.net
       consume-share: /volume2/paperless
+    backup:
+      # renovate: datasource=github-releases packageName=restic/restic versioning=semver
+      restic-version: 0.17.3
+      # renovate: datasource=github-releases packageName=kubernetes/kubernetes versioning=semver
+      kubectl-version: 1.33.3
+      repository-path: paperless
+      schedule: "0 2 * * *"
+      retention-daily: 7
+      retention-weekly: 4
+      retention-monthly: 6
+      restic-password:
+        ref: "op://Pulumi/Paperless Backup/password"
+      google-drive:
+        client-id:
+          ref: "op://Pulumi/Google Drive Rclone/Client ID"
+        client-secret:
+          ref: "op://Pulumi/Google Drive Rclone/Client Secret"
+        access-token:
+          ref: "op://Pulumi/Google Drive Rclone/Access Token"
+        refresh-token:
+          ref: "op://Pulumi/Google Drive Rclone/Refresh Token"
+        token-expiry: "2025-08-03T11:40:33.396532175+02:00"
+        root-folder-id: 1bGQ8Uemiv57zzQIQR0g6TyTwPkCy1lkE
     postgres:
       # renovate: datasource=docker packageName=registry-1.docker.io/bitnamicharts/postgresql versioning=semver
       version: 16.7.21

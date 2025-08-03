@@ -1,4 +1,5 @@
 import json
+import textwrap
 
 import pulumi as p
 import pulumi_kubernetes as k8s
@@ -7,6 +8,7 @@ import pulumi_random as random
 
 import utils.opnsense.unbound.host_override
 
+from paperless.backup import create_backup_cronjob
 from paperless.config import ComponentConfig
 
 REDIS_PORT = 6379
@@ -208,6 +210,34 @@ class Paperless(p.ComponentResource):
             opts=k8s_opts,
         )
 
+        # Generate rclone config dynamically
+        rclone_config = p.Output.format(
+            textwrap.dedent("""\
+                [gdrive]
+                type = drive
+                client_id = {0}
+                client_secret = {1}
+                scope = drive
+                token = {{"access_token":"{2}","token_type":"Bearer","refresh_token":"{3}","expiry":"{4}"}}
+                root_folder_id = {5}
+                """),
+            component_config.backup.google_drive.client_id.value,
+            component_config.backup.google_drive.client_secret.value,
+            component_config.backup.google_drive.access_token.value,
+            component_config.backup.google_drive.refresh_token.value,
+            component_config.backup.google_drive.token_expiry,
+            component_config.backup.google_drive.root_folder_id,
+        )
+
+        backup_secret = k8s.core.v1.Secret(
+            'paperless-backup-secrets',
+            string_data={
+                'restic-password': component_config.backup.restic_password.value,
+                'rclone.conf': rclone_config,
+            },
+            opts=k8s_opts,
+        )
+
         app_labels = {'app': 'paperless'}
         sts = k8s.apps.v1.StatefulSet(
             'paperless',
@@ -219,6 +249,60 @@ class Paperless(p.ComponentResource):
                 'template': {
                     'metadata': {'labels': app_labels},
                     'spec': {
+                        'init_containers': [
+                            {
+                                'name': 'install-rclone',
+                                'image': 'alpine:latest',
+                                'command': ['/bin/sh'],
+                                'args': [
+                                    '-c',
+                                    textwrap.dedent("""\
+                                        set -e
+                                        echo "Installing rclone..."
+                                        apk add --no-cache curl unzip
+                                        cd /tmp
+                                        curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
+                                        unzip rclone-current-linux-amd64.zip
+                                        cp rclone-*/rclone /shared-bin/
+                                        chmod +x /shared-bin/rclone
+                                        echo "rclone installed successfully"
+                                        """),
+                                ],
+                                'volume_mounts': [
+                                    {
+                                        'name': 'shared-bin',
+                                        'mount_path': '/shared-bin',
+                                    },
+                                ],
+                            },
+                            {
+                                'name': 'setup-rclone-config',
+                                'image': 'alpine:latest',
+                                'command': ['/bin/sh'],
+                                'args': [
+                                    '-c',
+                                    textwrap.dedent("""\
+                                        set -e
+                                        echo "Setting up writable rclone config..."
+                                        mkdir -p /rclone-config
+                                        cp /rclone-config-source/rclone.conf /rclone-config/rclone.conf
+                                        chmod 644 /rclone-config/rclone.conf
+                                        echo "Writable rclone config ready"
+                                        """),
+                                ],
+                                'volume_mounts': [
+                                    {
+                                        'name': 'rclone-config-source',
+                                        'mount_path': '/rclone-config-source',
+                                        'read_only': True,
+                                    },
+                                    {
+                                        'name': 'rclone-config-writable',
+                                        'mount_path': '/rclone-config',
+                                    },
+                                ],
+                            },
+                        ],
                         'containers': [
                             {
                                 'name': 'paperless',
@@ -247,10 +331,63 @@ class Paperless(p.ComponentResource):
                                         'name': 'consume',
                                         'mount_path': '/usr/src/paperless/consume',
                                     },
+                                    {
+                                        'name': 'export',
+                                        'mount_path': '/usr/src/paperless/export',
+                                    },
+                                ],
+                            },
+                            {
+                                'name': 'restic',
+                                'image': f'restic/restic:{component_config.backup.restic_version}',
+                                'command': ['/bin/sh'],
+                                'args': ['-c', 'sleep infinity'],
+                                'env': [
+                                    {
+                                        'name': 'RESTIC_REPOSITORY',
+                                        'value': f'rclone:gdrive:{component_config.backup.repository_path}',
+                                    },
+                                    {
+                                        'name': 'RESTIC_PASSWORD',
+                                        'value_from': {
+                                            'secret_key_ref': {
+                                                'name': backup_secret.metadata.name,
+                                                'key': 'restic-password',
+                                            }
+                                        },
+                                    },
+                                    {
+                                        'name': 'RCLONE_CONFIG',
+                                        'value': '/rclone-config/rclone.conf',
+                                    },
+                                    {
+                                        'name': 'PATH',
+                                        'value': '/shared-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+                                    },
+                                ],
+                                'volume_mounts': [
+                                    {
+                                        'name': 'shared-bin',
+                                        'mount_path': '/shared-bin',
+                                        'read_only': True,
+                                    },
+                                    {
+                                        'name': 'export',
+                                        'mount_path': '/usr/src/paperless/export',
+                                        'read_only': True,
+                                    },
+                                    {
+                                        'name': 'rclone-config-writable',
+                                        'mount_path': '/rclone-config',
+                                    },
                                 ],
                             },
                         ],
                         'volumes': [
+                            {
+                                'name': 'shared-bin',
+                                'empty_dir': {},
+                            },
                             {
                                 'name': 'consume',
                                 'csi': {
@@ -261,6 +398,16 @@ class Paperless(p.ComponentResource):
                                         'mount_options': component_config.paperless.consume_mount_options,
                                     },
                                 },
+                            },
+                            {
+                                'name': 'rclone-config-source',
+                                'secret': {
+                                    'secret_name': backup_secret.metadata.name,
+                                },
+                            },
+                            {
+                                'name': 'rclone-config-writable',
+                                'empty_dir': {},
                             },
                         ],
                         'security_context': {
@@ -278,6 +425,13 @@ class Paperless(p.ComponentResource):
                     },
                     {
                         'metadata': {'name': 'media'},
+                        'spec': {
+                            'access_modes': ['ReadWriteOnce'],
+                            'resources': {'requests': {'storage': '100Gi'}},
+                        },
+                    },
+                    {
+                        'metadata': {'name': 'export'},
                         'spec': {
                             'access_modes': ['ReadWriteOnce'],
                             'resources': {'requests': {'storage': '100Gi'}},
@@ -343,6 +497,9 @@ class Paperless(p.ComponentResource):
             'paperless_url',
             p.Output.format('https://{}.{}', record.host, record.domain),
         )
+
+        # Create backup CronJob
+        create_backup_cronjob(component_config, k8s_opts)
 
         self.register_outputs({})
 
