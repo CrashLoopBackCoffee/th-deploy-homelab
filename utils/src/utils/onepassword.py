@@ -48,4 +48,25 @@ def _fetch_item(item_ref: OnePasswordItem):
 def resolve_secret_ref(secret_ref: str) -> p.Output[str]:
     item_ref = _parse_op_ref(secret_ref)
     item = _fetch_item(item_ref)
-    return p.Output.secret(getattr(item, item_ref.field))
+
+    # Standard 1Password fields that can be accessed directly
+    standard_fields = {'password', 'username', 'title', 'url', 'notes'}
+
+    if item_ref.field in standard_fields:
+        return p.Output.secret(getattr(item, item_ref.field))
+
+    # For custom fields, search in sections[0]['fields']
+    def find_custom_field(item_data):
+        if not item_data.sections:
+            raise ValueError(f"No sections found in 1Password item '{item_ref.item}'")
+
+        # Look through all sections, not just the first one
+        for section in item_data.sections:
+            if section.get('fields'):
+                for field in section['fields']:
+                    if field.get('label') == item_ref.field:
+                        return field.get('value', '')
+
+        raise ValueError(f"Field '{item_ref.field}' not found in 1Password item '{item_ref.item}'")
+
+    return p.Output.secret(item.apply(find_custom_field))
