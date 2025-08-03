@@ -25,7 +25,7 @@ def create_cnpg_postgres(
 ) -> tuple[postgresql.Provider, p.Output[str], int]:
     """
     Create PostgreSQL cluster using CloudNativePG operator.
-    
+
     Args:
         postgres_version: PostgreSQL version to deploy (e.g., "16")
         namespace_name: Kubernetes namespace for deployment
@@ -33,7 +33,7 @@ def create_cnpg_postgres(
         storage_size: Size of persistent storage (default: "20Gi")
         storage_class: Storage class for persistent volumes (default: "local-path")
         local_port: Local port for port forwarding (default: 15432)
-        
+
     Returns:
         Tuple of (PostgreSQL provider, service name, target port)
     """
@@ -72,7 +72,7 @@ def create_cnpg_postgres(
         spec={
             'instances': 1,
             'imageName': f'postgres:{postgres_version}',
-            
+
             # PostgreSQL configuration
             'postgresql': {
                 'parameters': {
@@ -86,7 +86,7 @@ def create_cnpg_postgres(
                     'default_statistics_target': '100',
                     'random_page_cost': '1.1',
                     'effective_io_concurrency': '200',
-                    
+
                     # Logging configuration
                     'log_min_duration_statement': '1000',
                     'log_line_prefix': '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h ',
@@ -96,7 +96,7 @@ def create_cnpg_postgres(
                     'log_lock_waits': 'on',
                 }
             },
-            
+
             # Bootstrap configuration
             'bootstrap': {
                 'initdb': {
@@ -112,13 +112,13 @@ def create_cnpg_postgres(
                     ]
                 }
             },
-            
+
             # Storage configuration
             'storage': {
                 'size': storage_size,
                 'storageClass': storage_class
             },
-            
+
             # Monitoring configuration
             'monitoring': {
                 'enabled': True,
@@ -126,7 +126,7 @@ def create_cnpg_postgres(
                     'app': 'paperless-postgres'
                 }
             },
-            
+
             # Backup configuration (for future use with S3/MinIO)
             'backup': {
                 'retentionPolicy': '7d',
@@ -137,7 +137,7 @@ def create_cnpg_postgres(
                             'key': 'access-key-id'
                         },
                         'secretAccessKey': {
-                            'name': 'backup-credentials', 
+                            'name': 'backup-credentials',
                             'key': 'secret-access-key'
                         }
                     },
@@ -189,16 +189,16 @@ def create_cnpg_operator(
 ) -> k8s.apiextensions.CustomResource:
     """
     Deploy CloudNativePG operator if not already present.
-    
+
     Args:
         k8s_provider: Kubernetes provider instance
         operator_version: CloudNativePG operator version
-        
+
     Returns:
         CloudNativePG operator deployment
     """
     k8s_opts = p.ResourceOptions(provider=k8s_provider)
-    
+
     # Create namespace for operator
     operator_namespace = k8s.core.v1.Namespace(
         'cnpg-system',
@@ -207,7 +207,7 @@ def create_cnpg_operator(
         ),
         opts=k8s_opts,
     )
-    
+
     # Deploy operator using Helm chart
     operator = k8s.helm.v3.Release(
         'cloudnative-pg',
@@ -237,5 +237,5 @@ def create_cnpg_operator(
             depends_on=[operator_namespace]
         ),
     )
-    
+
     return operator

@@ -108,15 +108,15 @@ def create_cnpg_postgres(
     local_port: int = 15432,
 ) -> tuple[postgresql.Provider, p.Output[str], int]:
     """Create PostgreSQL using CloudNativePG operator"""
-    
+
     k8s_opts = p.ResourceOptions(provider=k8s_provider)
-    
+
     # Create credentials secret
     root_password = pulumi_random.RandomPassword(
         'postgres-password',
         length=24,
     )
-    
+
     credentials_secret = k8s.core.v1.Secret(
         'paperless-postgres-credentials',
         metadata=k8s.meta.v1.ObjectMetaArgs(
@@ -129,7 +129,7 @@ def create_cnpg_postgres(
         },
         opts=k8s_opts,
     )
-    
+
     # Create PostgreSQL cluster
     cluster = k8s.apiextensions.CustomResource(
         'paperless-postgres',
@@ -170,10 +170,10 @@ def create_cnpg_postgres(
             depends_on=[credentials_secret]
         ),
     )
-    
+
     # Service name for CloudNativePG
     postgres_service = p.Output.concat(cluster.metadata.name, '-rw')
-    
+
     # Port forwarding setup
     postgres_port = utils.port_forward.ensure_port_forward(
         local_port=local_port,
@@ -183,7 +183,7 @@ def create_cnpg_postgres(
         target_port='5432',
         k8s_provider=k8s_provider,
     )
-    
+
     return (
         postgresql.Provider(
             'postgres',
@@ -289,14 +289,14 @@ def create_postgres_statefulset(
     local_port: int = 15432,
 ) -> tuple[postgresql.Provider, p.Output[str], int]:
     """Create PostgreSQL using StatefulSet"""
-    
+
     k8s_opts = p.ResourceOptions(provider=k8s_provider)
-    
+
     root_password = pulumi_random.RandomPassword(
         'postgres-password',
         length=24,
     )
-    
+
     # Create credentials secret
     credentials_secret = k8s.core.v1.Secret(
         'postgres-credentials',
@@ -309,7 +309,7 @@ def create_postgres_statefulset(
         },
         opts=k8s_opts,
     )
-    
+
     # Create StatefulSet
     statefulset = k8s.apps.v1.StatefulSet(
         'postgres',
@@ -337,7 +337,7 @@ def create_postgres_statefulset(
                                 value='paperless'
                             ),
                             k8s.core.v1.EnvVarArgs(
-                                name='POSTGRES_USER', 
+                                name='POSTGRES_USER',
                                 value='paperless'
                             ),
                             k8s.core.v1.EnvVarArgs(
@@ -377,7 +377,7 @@ def create_postgres_statefulset(
             depends_on=[credentials_secret]
         ),
     )
-    
+
     # Create service
     service = k8s.core.v1.Service(
         'postgres-service',
@@ -394,9 +394,9 @@ def create_postgres_statefulset(
         ),
         opts=k8s_opts,
     )
-    
+
     postgres_service = service.metadata.name
-    
+
     # Port forwarding setup
     postgres_port = utils.port_forward.ensure_port_forward(
         local_port=local_port,
@@ -406,7 +406,7 @@ def create_postgres_statefulset(
         target_port=5432,
         k8s_provider=k8s_provider,
     )
-    
+
     return (
         postgresql.Provider(
             'postgres',
@@ -452,9 +452,9 @@ def create_postgres_statefulset(
 3. **Verify Migration**
    ```sql
    -- Check table counts
-   SELECT schemaname, tablename, n_tup_ins, n_tup_upd, n_tup_del 
+   SELECT schemaname, tablename, n_tup_ins, n_tup_upd, n_tup_del
    FROM pg_stat_user_tables;
-   
+
    -- Verify specific Paperless tables
    SELECT COUNT(*) FROM documents_document;
    SELECT COUNT(*) FROM documents_tag;

@@ -25,7 +25,7 @@ def create_statefulset_postgres(
 ) -> tuple[postgresql.Provider, p.Output[str], int]:
     """
     Create PostgreSQL using StatefulSet with official PostgreSQL image.
-    
+
     Args:
         postgres_version: PostgreSQL version to deploy (e.g., "16")
         namespace_name: Kubernetes namespace for deployment
@@ -33,7 +33,7 @@ def create_statefulset_postgres(
         storage_size: Size of persistent storage (default: "20Gi")
         storage_class: Storage class for persistent volumes (default: "local-path")
         local_port: Local port for port forwarding (default: 15432)
-        
+
     Returns:
         Tuple of (PostgreSQL provider, service name, target port)
     """
