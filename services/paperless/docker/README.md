@@ -51,7 +51,7 @@ Both base components are automatically updated via Renovate:
 ARG RESTIC_VERSION=0.17.3
 
 # renovate: datasource=github-releases packageName=rclone/rclone versioning=semver
-ARG RCLONE_VERSION=1.68.2
+ARG BUILD_RCLONE_VERSION=1.68.2
 ```
 
 ## Local Development
@@ -62,7 +62,7 @@ To build locally:
 cd services/paperless/docker
 docker build \
   --build-arg RESTIC_VERSION=0.17.3 \
-  --build-arg RCLONE_VERSION=1.68.2 \
+  --build-arg BUILD_RCLONE_VERSION=1.68.2 \
   -t local/restic-rclone .
 ```
 
