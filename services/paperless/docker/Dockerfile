@@ -4,7 +4,7 @@
 # renovate: datasource=github-releases packageName=restic/restic versioning=semver
 ARG RESTIC_VERSION=0.17.3
 
-# renovate: datasource=github-releases packageName=rclone/rclone versioning=semver  
+# renovate: datasource=github-releases packageName=rclone/rclone versioning=semver
 ARG RCLONE_VERSION=1.68.2
 
 FROM restic/restic:${RESTIC_VERSION}
