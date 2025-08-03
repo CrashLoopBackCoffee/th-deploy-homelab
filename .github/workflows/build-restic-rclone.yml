@@ -34,8 +34,9 @@ jobs:
           RCLONE_VERSION=$(grep '^ARG BUILD_RCLONE_VERSION=' services/paperless/docker/Dockerfile | cut -d'=' -f2)
           echo "restic_version=${RESTIC_VERSION}" >> $GITHUB_OUTPUT
           echo "rclone_version=${RCLONE_VERSION}" >> $GITHUB_OUTPUT
-          # Create a composite version tag
+          # Create composite version tags
           echo "image_tag=restic-${RESTIC_VERSION}-rclone-${RCLONE_VERSION}" >> $GITHUB_OUTPUT
+          echo "renovate_tag=${RESTIC_VERSION}_${RCLONE_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -56,6 +57,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=${{ steps.versions.outputs.image_tag }}
+            type=raw,value=${{ steps.versions.outputs.renovate_tag }}
             type=ref,event=pr
 
       - name: Build and push Docker image
