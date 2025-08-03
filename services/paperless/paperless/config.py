@@ -55,7 +55,8 @@ class RcloneGoogleDriveConfig(utils.model.LocalBaseModel):
 
 
 class BackupConfig(utils.model.LocalBaseModel):
-    restic_rclone_version: str = pydantic.Field(alias='restic-rclone-version')
+    restic_version: str = pydantic.Field(alias='restic-version')
+    rclone_version: str = pydantic.Field(alias='rclone-version')
     kubectl_version: str = pydantic.Field(alias='kubectl-version')
     restic_password: utils.model.OnePasswordRef = pydantic.Field(alias='restic-password')
     repository_path: str = pydantic.Field(alias='repository-path', default='paperless')

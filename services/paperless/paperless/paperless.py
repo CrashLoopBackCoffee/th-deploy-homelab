@@ -314,7 +314,7 @@ class Paperless(p.ComponentResource):
                             },
                             {
                                 'name': 'restic',
-                                'image': f'ghcr.io/crashloopbackcoffee/restic-rclone:{component_config.backup.restic_rclone_version}',
+                                'image': f'ghcr.io/crashloopbackcoffee/restic-rclone:restic-{component_config.backup.restic_version}-rclone-{component_config.backup.rclone_version}',
                                 'command': ['/bin/sh'],
                                 'args': ['-c', 'sleep infinity'],
                                 'env': [

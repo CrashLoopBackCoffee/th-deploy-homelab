@@ -25,8 +25,10 @@ config:
       consume-server: synology.tobiash.net
       consume-share: /volume2/paperless
     backup:
-      # renovate: datasource=docker packageName=ghcr.io/crashloopbackcoffee/restic-rclone versioning=docker
-      restic-rclone-version: restic-0.18.0-rclone-1.68.2
+      # renovate: datasource=github-releases packageName=restic/restic versioning=semver
+      restic-version: 0.18.0
+      # renovate: datasource=github-releases packageName=rclone/rclone versioning=semver
+      rclone-version: 1.68.2
       # renovate: datasource=github-releases packageName=kubernetes/kubernetes versioning=semver
       kubectl-version: 1.33.3
       repository-path: paperless
