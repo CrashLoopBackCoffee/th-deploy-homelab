@@ -8,6 +8,7 @@ import utils.utils
 import yaml
 
 from kubernetes.certmanager import create_certmanager
+from kubernetes.cloudnativepg import create_cloudnative_pg
 from kubernetes.config import ComponentConfig
 from kubernetes.csi_nfs import create_csi_nfs
 from kubernetes.metallb import create_metallb
@@ -265,6 +266,9 @@ def create_microk8s(
     issuer = create_certmanager(component_config, cloudflare_provider, k8s_provider)
 
     create_traefik(component_config, issuer, k8s_provider)
+
+    # Install CloudNativePG operator
+    create_cloudnative_pg(component_config, k8s_provider)
 
     # export to kube config with
     # p stack output --show-secrets k8s-master-0-dev-kube-config > ~/.kube/config
