@@ -18,16 +18,19 @@ repos:
         entry: ./.venv/bin/pyright --warnings
         language: system
         types: [python]
+        pass_filenames: false
       - id: ruff-format
         name: ruff-format
         entry: ./.venv/bin/ruff format
         language: system
         types: [python]
+        pass_filenames: false
       - id: ruff-check
         name: ruff-check
         entry: ./.venv/bin/ruff check --fix
         language: system
         types: [python]
+        pass_filenames: false
       - id: yamllint
         name: yamllint
         entry: ./.venv/bin/yamllint --strict -c=.yamllint
