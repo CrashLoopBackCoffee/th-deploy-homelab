@@ -251,31 +251,6 @@ class Paperless(p.ComponentResource):
                     'spec': {
                         'init_containers': [
                             {
-                                'name': 'install-rclone',
-                                'image': 'alpine:latest',
-                                'command': ['/bin/sh'],
-                                'args': [
-                                    '-c',
-                                    textwrap.dedent("""\
-                                        set -e
-                                        echo "Installing rclone..."
-                                        apk add --no-cache curl unzip
-                                        cd /tmp
-                                        curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
-                                        unzip rclone-current-linux-amd64.zip
-                                        cp rclone-*/rclone /shared-bin/
-                                        chmod +x /shared-bin/rclone
-                                        echo "rclone installed successfully"
-                                        """),
-                                ],
-                                'volume_mounts': [
-                                    {
-                                        'name': 'shared-bin',
-                                        'mount_path': '/shared-bin',
-                                    },
-                                ],
-                            },
-                            {
                                 'name': 'setup-rclone-config',
                                 'image': 'alpine:latest',
                                 'command': ['/bin/sh'],
@@ -339,7 +314,7 @@ class Paperless(p.ComponentResource):
                             },
                             {
                                 'name': 'restic',
-                                'image': f'restic/restic:{component_config.backup.restic_version}',
+                                'image': f'ghcr.io/crashloopbackcoffee/restic-rclone:restic-{component_config.backup.restic_version}-rclone-{component_config.backup.rclone_version}',
                                 'command': ['/bin/sh'],
                                 'args': ['-c', 'sleep infinity'],
                                 'env': [
@@ -360,17 +335,8 @@ class Paperless(p.ComponentResource):
                                         'name': 'RCLONE_CONFIG',
                                         'value': '/rclone-config/rclone.conf',
                                     },
-                                    {
-                                        'name': 'PATH',
-                                        'value': '/shared-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-                                    },
                                 ],
                                 'volume_mounts': [
-                                    {
-                                        'name': 'shared-bin',
-                                        'mount_path': '/shared-bin',
-                                        'read_only': True,
-                                    },
                                     {
                                         'name': 'export',
                                         'mount_path': '/usr/src/paperless/export',
@@ -384,10 +350,6 @@ class Paperless(p.ComponentResource):
                             },
                         ],
                         'volumes': [
-                            {
-                                'name': 'shared-bin',
-                                'empty_dir': {},
-                            },
                             {
                                 'name': 'consume',
                                 'csi': {
