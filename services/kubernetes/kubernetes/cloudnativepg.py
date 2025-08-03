@@ -20,7 +20,7 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
     k8s_opts = p.ResourceOptions(provider=namespaced_k8s_provider)
 
     # Install CloudNativePG operator using Helm chart
-    return k8s.helm.v3.Release(
+    return k8s.helm.v4.Chart(
         'cloudnative-pg',
         chart='cloudnative-pg',
         version=component_config.cloudnative_pg.version,
