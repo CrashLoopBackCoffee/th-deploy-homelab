@@ -70,6 +70,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             RESTIC_VERSION=${{ steps.versions.outputs.restic_version }}
-            RCLONE_VERSION=${{ steps.versions.outputs.rclone_version }}
+            BUILD_RCLONE_VERSION=${{ steps.versions.outputs.rclone_version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
