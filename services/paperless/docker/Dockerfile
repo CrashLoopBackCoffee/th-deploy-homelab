@@ -10,13 +10,14 @@ ARG BUILD_RCLONE_VERSION=1.68.2
 FROM restic/restic:${RESTIC_VERSION}
 
 ARG BUILD_RCLONE_VERSION
+ARG TARGETARCH
 
 # Install rclone and clean up in single layer to minimize image size
 RUN apk add --no-cache wget unzip && \
     cd /tmp && \
-    wget -O rclone.zip "https://github.com/rclone/rclone/releases/download/v${BUILD_RCLONE_VERSION}/rclone-v${BUILD_RCLONE_VERSION}-linux-amd64.zip" && \
+    wget -O rclone.zip "https://github.com/rclone/rclone/releases/download/v${BUILD_RCLONE_VERSION}/rclone-v${BUILD_RCLONE_VERSION}-linux-${TARGETARCH}.zip" && \
     unzip rclone.zip && \
-    mv "rclone-v${BUILD_RCLONE_VERSION}-linux-amd64/rclone" /usr/local/bin/ && \
+    mv "rclone-v${BUILD_RCLONE_VERSION}-linux-${TARGETARCH}/rclone" /usr/local/bin/ && \
     chmod +x /usr/local/bin/rclone && \
     rm -rf /tmp/rclone* && \
     apk del wget unzip
