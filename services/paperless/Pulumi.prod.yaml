@@ -26,7 +26,7 @@ config:
       consume-share: /volume2/paperless
     backup:
       # renovate: datasource=docker packageName=ghcr.io/crashloopbackcoffee/restic-rclone versioning=loose
-      restic-rclone-version: restic-0.18.0-rclone-1.68.2
+      restic-rclone-version: 0.18.0_1.68.2
       # renovate: datasource=github-releases packageName=kubernetes/kubernetes versioning=semver
       kubectl-version: 1.33.3
       repository-path: paperless
