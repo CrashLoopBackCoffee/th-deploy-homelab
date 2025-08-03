@@ -11,6 +11,3 @@ jobs:
 
       - name: Setup project for Copilot
         uses: ./.github/actions/setup-project
-        with:
-          # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
-          alloy-version: v1.10.0
