@@ -15,7 +15,7 @@
         {
             customType: 'regex',
             managerFilePatterns: [
-                '/^Dockerfile$/',
+                '/(^|\/)(Dockerfile(\\..*)?)$/'
             ],
             matchStrings: [
                 '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z0-9-]+?))?\\sARG \\S+?=(?<currentValue>\\S+)',
