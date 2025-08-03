@@ -15,7 +15,7 @@ The custom image eliminates the need for runtime downloads of rclone, providing 
 ## Components
 
 - **Base image**: `restic/restic:0.17.3` (configurable via Renovate)
-- **Added component**: `rclone v1.68.2` (configurable via Renovate) 
+- **Added component**: `rclone v1.68.2` (configurable via Renovate)
 - **Architecture**: `linux/amd64` and `linux/arm64`
 
 ## Build Process
@@ -50,7 +50,7 @@ Both base components are automatically updated via Renovate:
 # renovate: datasource=github-releases packageName=restic/restic versioning=semver
 ARG RESTIC_VERSION=0.17.3
 
-# renovate: datasource=github-releases packageName=rclone/rclone versioning=semver  
+# renovate: datasource=github-releases packageName=rclone/rclone versioning=semver
 ARG RCLONE_VERSION=1.68.2
 ```
 
