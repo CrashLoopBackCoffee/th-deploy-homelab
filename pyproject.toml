@@ -64,7 +64,7 @@ build-backend = "hatchling.build"
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-exclude = [".venv"]
+extend-exclude = ["docs/examples"]
 
 [tool.ruff.lint]
 extend-select = [
@@ -102,13 +102,13 @@ quote-style = "single"
 [tool.pyright]
 deprecateTypingAliases = true
 useLibraryCodeForTypes = true
-include = ["src"]
 exclude = [
     "__pycache__",
     ".venv",
     ".vscode",
     "build",
     "dist",
+    "docs/examples",
     "node_modules",
     "venv",
 ]
