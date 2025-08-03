@@ -15,25 +15,25 @@ repos:
     hooks:
       - id: pyright
         name: pyright
-        entry: ./.venv/bin/pyright --warnings
+        entry: uv run pyright --warnings
         language: system
         types: [python]
         pass_filenames: false
       - id: ruff-format
         name: ruff-format
-        entry: ./.venv/bin/ruff format
+        entry: uv run ruff format
         language: system
         types: [python]
         pass_filenames: false
       - id: ruff-check
         name: ruff-check
-        entry: ./.venv/bin/ruff check --fix
+        entry: uv run ruff check --fix
         language: system
         types: [python]
         pass_filenames: false
       - id: yamllint
         name: yamllint
-        entry: ./.venv/bin/yamllint --strict -c=.yamllint
+        entry: uv run yamllint --strict -c=.yamllint
         language: system
         types: [yaml]
       - id: alloy-format

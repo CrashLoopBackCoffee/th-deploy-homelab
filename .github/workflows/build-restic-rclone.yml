@@ -4,14 +4,12 @@ on:
   push:
     paths:
       - 'services/paperless/docker/**'
-      - 'services/paperless/Pulumi.prod.yaml'
       - '.github/workflows/build-restic-rclone.yml'
     branches:
       - main
   pull_request:
     paths:
       - 'services/paperless/docker/**'
-      - 'services/paperless/Pulumi.prod.yaml'
       - '.github/workflows/build-restic-rclone.yml'
 
 env:
@@ -29,11 +27,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract versions from config
+      - name: Extract versions from Dockerfile
         id: versions
         run: |
-          RESTIC_VERSION=$(grep 'restic-version:' services/paperless/Pulumi.prod.yaml | awk '{print $2}')
-          RCLONE_VERSION=$(grep 'rclone-version:' services/paperless/Pulumi.prod.yaml | awk '{print $2}')
+          RESTIC_VERSION=$(grep '^ARG RESTIC_VERSION=' services/paperless/docker/Dockerfile | cut -d'=' -f2)
+          RCLONE_VERSION=$(grep '^ARG BUILD_RCLONE_VERSION=' services/paperless/docker/Dockerfile | cut -d'=' -f2)
           echo "restic_version=${RESTIC_VERSION}" >> $GITHUB_OUTPUT
           echo "rclone_version=${RCLONE_VERSION}" >> $GITHUB_OUTPUT
           # Create a composite version tag

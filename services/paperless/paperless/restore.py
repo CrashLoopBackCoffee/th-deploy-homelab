@@ -90,12 +90,7 @@ def create_restore_job(
     restore_script = k8s.core.v1.ConfigMap(
         'paperless-restore-script',
         metadata={'name': f'paperless-restore-script-{timestamp}'},
-        data={
-            'restore.sh': RESTORE_SCRIPT.format(
-                restic_version=component_config.backup.restic_version,
-                repository_path=component_config.backup.repository_path,
-            )
-        },
+        data={'restore.sh': RESTORE_SCRIPT},
         opts=k8s_opts,
     )
 
