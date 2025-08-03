@@ -8,6 +8,7 @@ inputs:
   alloy-version:
     description: 'Grafana Alloy version to install'
     required: false
+    # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
     default: 'v1.10.0'
 
 runs:

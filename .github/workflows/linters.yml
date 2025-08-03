@@ -16,7 +16,6 @@ jobs:
       - name: Setup project
         uses: ./.github/actions/setup-project
         with:
-          python-version: ${{ matrix.python-version }}
           # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
           alloy-version: v1.10.0
 
