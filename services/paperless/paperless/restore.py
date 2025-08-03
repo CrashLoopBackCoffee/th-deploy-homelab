@@ -91,10 +91,7 @@ def create_restore_job(
         'paperless-restore-script',
         metadata={'name': f'paperless-restore-script-{timestamp}'},
         data={
-            'restore.sh': RESTORE_SCRIPT.format(
-                restic_version=component_config.backup.restic_version,
-                repository_path=component_config.backup.repository_path,
-            )
+            'restore.sh': RESTORE_SCRIPT
         },
         opts=k8s_opts,
     )
