@@ -1,0 +1,16 @@
+name: Setup Steps for GitHub Copilot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup project for Copilot
+        uses: ./.github/actions/setup-project
+        with:
+          # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
+          alloy-version: v1.10.0
