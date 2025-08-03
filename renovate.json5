@@ -18,7 +18,7 @@
                 '/^Dockerfile$/',
             ],
             matchStrings: [
-                '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\sARG \\S+?=(?<currentValue>\\S+)',
+                '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z0-9-]+?))?\\sARG \\S+?=(?<currentValue>\\S+)',
             ],
             versioningTemplate: '{{#if versioning}}{{versioning}}{{else}}semver{{/if}}',
         },
@@ -31,7 +31,7 @@
                 '/.*.(yaml|yml)$/',
             ],
             matchStrings: [
-                '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s+[a-zA-Z_]+:\\s+(?<currentValue>\\S+)',
+                '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z0-9-]+?))?\\s+[a-zA-Z_]+:\\s+(?<currentValue>\\S+)',
             ],
             versioningTemplate: '{{#if versioning}}{{versioning}}{{else}}semver{{/if}}',
         },
