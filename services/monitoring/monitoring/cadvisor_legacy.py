@@ -17,7 +17,7 @@ def create_cadvisor(
     assert component_config.cadvisor
     image = docker.RemoteImage(
         'cadvisor',
-        name=f'gcr.io/cadvisor/cadvisor:v{component_config.cadvisor.version}',
+        name=f'ghcr.io/google/cadvisor:v{component_config.cadvisor.version}',
         keep_locally=True,
         opts=opts,
     )
