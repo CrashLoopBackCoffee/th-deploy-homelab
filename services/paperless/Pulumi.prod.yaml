@@ -49,7 +49,7 @@ config:
         root-folder-id: 1bGQ8Uemiv57zzQIQR0g6TyTwPkCy1lkE
     postgres:
       # renovate: datasource=docker packageName=registry-1.docker.io/bitnamicharts/postgresql versioning=semver
-      version: 16.7.21
+      version: 16.7.24
     redis:
       # renovate: datasource=github-releases packageName=redis/redis versioning=semver
       version: 8.2.0
