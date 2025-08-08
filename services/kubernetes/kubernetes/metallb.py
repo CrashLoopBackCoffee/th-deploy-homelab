@@ -54,8 +54,5 @@ def create_metallb(component_config: ComponentConfig, k8s_provider: k8s.Provider
         api_version='metallb.io/v1beta1',
         kind='L2Advertisement',
         metadata={'name': 'default-advertise-all-pools'},
-        opts=p.ResourceOptions.merge(
-            k8s_opts,
-            p.ResourceOptions(aliases=[p.Alias(name='l2-advertissment')]),
-        ),
+        opts=k8s_opts,
     )
