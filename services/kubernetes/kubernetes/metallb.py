@@ -50,9 +50,12 @@ def create_metallb(component_config: ComponentConfig, k8s_provider: k8s.Provider
     )
 
     k8s.apiextensions.CustomResource(
-        'l2-advertissment',
+        'l2-advertisement',
         api_version='metallb.io/v1beta1',
         kind='L2Advertisement',
         metadata={'name': 'default-advertise-all-pools'},
-        opts=k8s_opts,
+        opts=p.ResourceOptions.merge(
+            k8s_opts,
+            p.ResourceOptions(aliases=[p.Alias(name='l2-advertissment')]),
+        ),
     )
