@@ -35,6 +35,7 @@ services/
 1. **Pulumi Resources**:
 
    - Always use typed configuration models for Pulumi configs
+   - When renaming a resource, preserve state with aliases via `pulumi.ResourceOptions(aliases=[pulumi.Alias(name='old-name')])` to avoid recreation
 
 2. **Configuration Management**:
 
@@ -47,6 +48,7 @@ services/
    - Follow PEP 8 style guidelines
    - Prefer composition over inheritance for Pulumi components
    - Use dataclasses or Pydantic models for structured data
+   - Keep dependency lists in `pyproject.toml` sorted alphabetically for readability and smaller diffs
 
 4. **Container Image Management**:
    - **NEVER** hardcode image tags in Python code

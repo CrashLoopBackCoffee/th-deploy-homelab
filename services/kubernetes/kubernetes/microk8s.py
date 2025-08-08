@@ -16,7 +16,12 @@ from kubernetes.snap import get_snap_version
 from kubernetes.traefik import create_traefik
 
 
-def _get_cloud_config(hostname: str, username: str, ssh_public_key: str) -> str:
+def _get_cloud_config(
+    hostname: str,
+    username: str,
+    ssh_public_key: str,
+    component_config: ComponentConfig,
+) -> str:
     PACKAGES = ' '.join(
         [
             'apt-transport-https',
@@ -74,13 +79,12 @@ def _get_cloud_config(hostname: str, username: str, ssh_public_key: str) -> str:
                 f'usermod -a -G microk8s {username}',
                 'microk8s status --wait-ready',
                 f'mkdir -p /home/{username}/.kube',
-                f'chown -f -R {username}:{username} /home/{username}/.kube',
                 'microk8s config > /home/ubuntu/.kube/config',
+                f'chown -f -R {username}:{username} /home/{username}/.kube',
                 # Start guest agent to keep Pulumi waiting until all of the above is ready
                 'DEBIAN_FRONTEND=noninteractive apt-get install -y qemu-guest-agent',
                 'systemctl enable qemu-guest-agent',
                 'systemctl start qemu-guest-agent',
-                'echo "done" /tmp/cloud-config.done',
             ],
         }
     )
@@ -112,11 +116,14 @@ def create_microk8s(
         content_type='snippets',
         source_raw={
             'data': _get_cloud_config(
-                vm_config.name, 'ubuntu', component_config.microk8s.ssh_public_key
+                vm_config.name, 'ubuntu', component_config.microk8s.ssh_public_key, component_config
             ),
             'file_name': f'{vm_config.name}.yaml',
         },
-        opts=p.ResourceOptions.merge(proxmox_opts, p.ResourceOptions(delete_before_replace=True)),
+        opts=p.ResourceOptions.merge(
+            proxmox_opts,
+            p.ResourceOptions(delete_before_replace=True, ignore_changes=['source_raw']),
+        ),
     )
 
     tags = [f'microk8s-{p.get_stack()}']
@@ -124,7 +131,9 @@ def create_microk8s(
         {'vlan_id': component_config.microk8s.vlan} if component_config.microk8s.vlan else {}
     )
 
-    p.export('microk8s-version', get_snap_version('microk8s', '1.31/stable', 'amd64'))
+    p.export(
+        'microk8s-version', get_snap_version('microk8s', component_config.microk8s.version, 'amd64')
+    )
 
     gateway_address = str(vm_config.address.network.network_address + 1)
     master_vm = proxmoxve.vm.VirtualMachine(
@@ -197,6 +206,7 @@ def create_microk8s(
     )
 
     # Use discovered ip address to get an implicit dependency on the VM
+    # Revert to the original addressing to avoid replacement of children during preview/apply.
     connection_args = command.remote.ConnectionArgs(
         host=master_vm.ipv4_addresses[1][0],
         user='ubuntu',
