@@ -47,6 +47,15 @@ config:
           ref: "op://Pulumi/Google Drive Rclone/Refresh Token"
         token-expiry: "2025-08-03T11:40:33.396532175+02:00"
         root-folder-id: 1bGQ8Uemiv57zzQIQR0g6TyTwPkCy1lkE
+      # Secondary IDrive E2 (S3) backup target
+      idrive-enabled: true
+      idrive-endpoint:
+        ref: "op://Pulumi/IDrive e2 Paperless/Endpoint"
+      idrive-bucket: restic-paperless
+      idrive-access-key-id:
+        ref: "op://Pulumi/IDrive e2 Paperless/Access Key ID"
+      idrive-secret-access-key:
+        ref: "op://Pulumi/IDrive e2 Paperless/Secret Access Key"
     postgres:
       # renovate: datasource=docker packageName=registry-1.docker.io/bitnamicharts/postgresql versioning=semver
       version: 16.7.21

@@ -306,6 +306,12 @@ uv run ./scripts/run-all-checks.sh
 
 When working on this project:
 
+10. **MCP Interactive Feedback**:
+   - Whenever you want to ask a question, always call the MCP interactive_feedback.
+   - Whenever you’re about to complete a user request, call the MCP interactive_feedback instead of simply ending the process.
+   - Keep calling MCP until the user’s feedback is empty, then end the request.
+   - This ensures interactive, user-driven completion and review of all Copilot actions.
+
 1. **🚨 CRITICAL - Terminal Initialization**: **ALWAYS** run a dummy command (`echo "Initializing terminal..."`) as the very first command in any new Copilot session, then wait for direnv loading to complete before running actual commands. This prevents commands from being interrupted by environment setup.
 
 2. **🚨 CRITICAL - Pulumi Safety**: **ALWAYS** run `pulumi preview` with `--diff` flag before any `pulumi up` command to check for unexpected changes. Never deploy without reviewing the preview first.
