@@ -8,7 +8,7 @@ config:
 
     cloudflared:
       # renovate: datasource=github-releases packageName=cloudflare/cloudflared versioning=semver
-      version: 2025.7.0
+      version: 2025.8.0
       ingress:
         - service: https://grafana.grafana
           hostname: grafana.tobiash.net

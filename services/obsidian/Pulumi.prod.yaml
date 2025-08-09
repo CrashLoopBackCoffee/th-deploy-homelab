@@ -11,7 +11,7 @@ config:
       zone: tobiash.net
     cloudflared:
       # renovate: datasource=github-releases packageName=cloudflare/cloudflared versioning=semver
-      version: 2025.7.0
+      version: 2025.8.0
     couchdb:
       # renovate: datasource=docker packageName=registry-1.docker.io/couchdb versioning=semver
       version: 3.5.0
