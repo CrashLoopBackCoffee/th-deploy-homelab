@@ -64,6 +64,14 @@ class BackupConfig(utils.model.LocalBaseModel):
     retention_weekly: int = pydantic.Field(alias='retention-weekly', default=4)
     retention_monthly: int = pydantic.Field(alias='retention-monthly', default=6)
     google_drive: RcloneGoogleDriveConfig = pydantic.Field(alias='google-drive')
+    # Optional secondary S3-compatible repository (IDrive E2) for redundancy.
+    # When enabled, a second restic repository will be configured pointing at the
+    # provided bucket. Backups will be pushed to both remote locations.
+    idrive_enabled: bool = False
+    idrive_endpoint: utils.model.OnePasswordRef | None = None
+    idrive_bucket: str | None = None
+    idrive_access_key_id: utils.model.OnePasswordRef | None = None
+    idrive_secret_access_key: utils.model.OnePasswordRef | None = None
 
 
 class ComponentConfig(utils.model.LocalBaseModel):

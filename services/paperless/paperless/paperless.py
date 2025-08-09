@@ -28,7 +28,6 @@ class Paperless(p.ComponentResource):
         postgres_port: p.Input[int],
     ):
         super().__init__('paperless', 'paperless')
-
         # Configure database
         postgres_opts = p.ResourceOptions(provider=postgres_provider)
         postgres_password = random.RandomPassword(
@@ -49,23 +48,19 @@ class Paperless(p.ComponentResource):
             owner=postgres_user.name,
             opts=postgres_opts,
         )
-
         admin_username = 'admin'
         admin_password = random.RandomPassword('admin-password', length=32, special=False).result
         p.export('admin_username', admin_username)
         p.export('admin_password', admin_password)
-
         namespaced_provider = k8s.Provider(
             'paperless-provider',
             kubeconfig=k8s_provider.kubeconfig,  # type: ignore
             namespace=namespace,
         )
-
         k8s_opts = p.ResourceOptions(
             parent=self,
             provider=namespaced_provider,
         )
-
         redis_service = create_redis(component_config, k8s_opts)
         tika_service = create_tika(component_config, k8s_opts)
         gotenberg_service = create_gotenberg(component_config, k8s_opts)
@@ -348,6 +343,75 @@ class Paperless(p.ComponentResource):
                                     },
                                 ],
                             },
+                            # Optional secondary restic sidecar for IDrive E2 (S3-compatible)
+                            *(
+                                [
+                                    {
+                                        'name': 'restic-idrive',
+                                        'image': f'ghcr.io/crashloopbackcoffee/restic-rclone:{component_config.backup.restic_rclone_version}',
+                                        'command': ['/bin/sh'],
+                                        'args': ['-c', 'sleep infinity'],
+                                        'env': [
+                                            *(
+                                                [
+                                                    {
+                                                        'name': 'RESTIC_REPOSITORY',
+                                                        'value': p.Output.from_input(
+                                                            component_config.backup.idrive_endpoint.value
+                                                        ).apply(
+                                                            lambda ep: (
+                                                                f's3:{ep if ep.startswith("http") else "https://" + ep}/'
+                                                                f'{component_config.backup.idrive_bucket}/'
+                                                                f'{component_config.backup.repository_path}'
+                                                            )
+                                                        ),
+                                                    }
+                                                ]
+                                                if component_config.backup.idrive_endpoint
+                                                and component_config.backup.idrive_bucket
+                                                else []
+                                            ),
+                                            {
+                                                'name': 'RESTIC_PASSWORD',
+                                                'value_from': {
+                                                    'secret_key_ref': {
+                                                        'name': backup_secret.metadata.name,
+                                                        'key': 'restic-password',
+                                                    }
+                                                },
+                                            },
+                                            *(
+                                                [
+                                                    {
+                                                        'name': 'AWS_ACCESS_KEY_ID',
+                                                        'value': component_config.backup.idrive_access_key_id.value,
+                                                    },
+                                                    {
+                                                        'name': 'AWS_SECRET_ACCESS_KEY',
+                                                        'value': component_config.backup.idrive_secret_access_key.value,
+                                                    },
+                                                ]
+                                                if component_config.backup.idrive_access_key_id
+                                                and component_config.backup.idrive_secret_access_key
+                                                else []
+                                            ),
+                                            {
+                                                'name': 'RESTIC_PROGRESS_FPS',
+                                                'value': '0',
+                                            },
+                                        ],
+                                        'volume_mounts': [
+                                            {
+                                                'name': 'export',
+                                                'mount_path': '/usr/src/paperless/export',
+                                                'read_only': True,
+                                            },
+                                        ],
+                                    }
+                                ]
+                                if component_config.backup.idrive_enabled
+                                else []
+                            ),
                         ],
                         'volumes': [
                             {
