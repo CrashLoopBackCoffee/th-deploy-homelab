@@ -2,7 +2,7 @@ config:
   monitoring:config:
     grafana:
       # renovate: datasource=github-releases packageName=grafana/grafana versioning=semver
-      version: 12.1.0
+      version: 12.1.1
       hostname: grafana.tobiash.net
     speedtest-exporter:
       # renovate: datasource=github-releases packageName=billimek/prometheus-speedtest-exporter versioning=semver
