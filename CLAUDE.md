@@ -86,3 +86,6 @@ service-version: "1.0.0"
 - **Infrastructure**: Pulumi providers (cloudflare, kubernetes, proxmoxve, docker, etc.)
 - **Configuration**: Pydantic models with JSON schema generation
 - **Deployment**: Multiple providers with proper dependency management
+
+- Never set cpu limits on pods
+- Remember to configure python runtime options in `Pulumi.yaml` using uv and the venv in the root of the repository.

@@ -1,0 +1,7 @@
+name: ollama
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: ../../.venv
+description: Ollama LLM server deployment
