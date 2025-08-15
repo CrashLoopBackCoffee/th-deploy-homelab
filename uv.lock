@@ -10,6 +10,7 @@ members = [
     "kubernetes",
     "monitoring",
     "obsidian",
+    "ollama",
     "paperless",
     "proxmox",
     "s3",
@@ -327,6 +328,7 @@ dependencies = [
     { name = "kubernetes" },
     { name = "monitoring" },
     { name = "obsidian" },
+    { name = "ollama" },
     { name = "paperless" },
     { name = "proxmox" },
     { name = "pulumi" },
@@ -360,6 +362,7 @@ requires-dist = [
     { name = "kubernetes", editable = "services/kubernetes" },
     { name = "monitoring", editable = "services/monitoring" },
     { name = "obsidian", editable = "services/obsidian" },
+    { name = "ollama", editable = "services/ollama" },
     { name = "paperless", editable = "services/paperless" },
     { name = "proxmox", editable = "services/proxmox" },
     { name = "pulumi", specifier = "==3.187.0" },
@@ -567,6 +570,17 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0.1" },
     { name = "utils", editable = "utils" },
 ]
+
+[[package]]
+name = "ollama"
+version = "0.1.0"
+source = { editable = "services/ollama" }
+dependencies = [
+    { name = "utils" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "utils", editable = "utils" }]
 
 [[package]]
 name = "packaging"

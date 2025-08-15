@@ -22,6 +22,7 @@ dependencies = [
     "kubernetes",
     "monitoring",
     "obsidian",
+    "ollama",
     "paperless",
     "proxmox",
     "s3",
@@ -45,6 +46,7 @@ iot = { workspace = true }
 kubernetes = { workspace = true }
 monitoring = { workspace = true }
 obsidian = { workspace = true }
+ollama = { workspace = true }
 paperless = { workspace = true }
 proxmox = { workspace = true }
 s3 = { workspace = true }
@@ -147,6 +149,10 @@ model = "proxmox.config:PulumiConfigRoot"
 [tool.config-models.s3]
 root = "services/s3"
 model = "s3.config:PulumiConfigRoot"
+
+[tool.config-models.ollama]
+root = "services/ollama"
+model = "ollama.config:PulumiConfigRoot"
 
 [tool.config-models.unifi]
 root = "services/unifi"

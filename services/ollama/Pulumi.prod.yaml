@@ -1,0 +1,14 @@
+config:
+  ollama:config:
+    cloudflare:
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      email: tobias_henkel@gmx.de
+      zone: tobiash.net
+    ollama:
+      # renovate: datasource=github-releases packageName=ollama/ollama versioning=semver
+      version: 0.11.3
+      hostname: ollama.tobiash.net
+      resources:
+        memory: 8Gi
+        cpu: "4"
