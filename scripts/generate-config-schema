@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 
+import concurrent.futures
 import dataclasses
 import importlib
 import json
 import os
 import pathlib
 import sys
-import textwrap
 import tomllib
-
-from pathlib import Path
+import typing as t
 
 
 @dataclasses.dataclass
@@ -19,64 +18,121 @@ class ConfigModel:
     model: str
 
 
+# Module cache to avoid repeated imports
+_module_cache: dict[str, t.Any] = {}
+
+
 def get_configs() -> list[ConfigModel]:
-    with open('pyproject.toml', 'rb') as f:
-        data = tomllib.load(f)
+    data = tomllib.loads(pathlib.Path('pyproject.toml').read_text(encoding='utf-8'))
     configs = data.get('tool', {}).get('config-models', {})
     return [ConfigModel(name=key, **value) for key, value in configs.items()]
 
 
 def get_config_root_model(config: ConfigModel):
+    cache_key = f'{config.root}:{config.model}'
+
+    if cache_key in _module_cache:
+        return _module_cache[cache_key]
+
     sys.path.append(config.root)
     module_name, class_name = config.model.rsplit(':', 1)
     module = importlib.import_module(module_name)
-    return getattr(module, class_name)
+    model_class = getattr(module, class_name)
+
+    # Cache the result
+    _module_cache[cache_key] = model_class
+    return model_class
 
 
-def generate_json_schema(config: ConfigModel):
-    # Discover root model class
-    root_model_class = get_config_root_model(config)
-    if not root_model_class:
-        raise ValueError(f'Could not find model class {config.model} in {config.root}')
-
-    if hasattr(root_model_class, 'model_json_schema'):
-        # Pydantic v2
-        schema = json.dumps(root_model_class.model_json_schema())
-    else:
-        # Fallback to Pydantic v1
-        schema = root_model_class.schema_json()
-
+def should_regenerate_schema(config: ConfigModel) -> bool:
+    """Check if schema needs regeneration based on file timestamps."""
     schema_file = pathlib.Path(config.root) / '.config-schema.json'
-    with open(schema_file, 'w') as f:
-        f.write(schema)
 
-    # Validate if schema is used in settings.json
-    settings_file = Path('.vscode/settings.json')
+    if not schema_file.exists():
+        return True
+
+    # Check if any Python files in the config directory are newer than schema
+    config_dir = pathlib.Path(config.root)
+    schema_mtime = schema_file.stat().st_mtime
+
+    for py_file in config_dir.rglob('*.py'):
+        if py_file.stat().st_mtime > schema_mtime:
+            return True
+
+    return False
+
+
+def generate_json_schema(config: ConfigModel) -> tuple[str, bool]:
+    """Generate JSON schema for a config. Returns (config_name, success)."""
+    try:
+        # Skip if schema is up to date
+        if not should_regenerate_schema(config):
+            return (config.name, True)
+
+        # Discover root model class
+        root_model_class = get_config_root_model(config)
+        if not root_model_class:
+            return (config.name, False)
+
+        if hasattr(root_model_class, 'model_json_schema'):
+            # Pydantic v2
+            schema = json.dumps(root_model_class.model_json_schema())
+        else:
+            # Fallback to Pydantic v1
+            schema = root_model_class.schema_json()
+
+        schema_file = pathlib.Path(config.root) / '.config-schema.json'
+        schema_file.write_text(schema, encoding='utf-8')
+
+        return (config.name, True)
+    except Exception as e:
+        print(f'Error generating schema for {config.name}: {e}')
+        return (config.name, False)
+
+
+def collect_vscode_settings_updates(configs: list[ConfigModel]) -> dict[str, str]:
+    """Collect all VSCode settings updates that need to be made."""
+    updates = {}
+    for config in configs:
+        schema_file = pathlib.Path(config.root) / '.config-schema.json'
+        if schema_file.exists():
+            updates[str(schema_file)] = f'{config.root}/Pulumi.*.yaml'
+    return updates
+
+
+def update_vscode_settings(schema_updates: dict[str, str]):
+    """Update VSCode settings with all schema mappings at once."""
+    settings_file = pathlib.Path('.vscode/settings.json')
+
     if not settings_file.exists():
-        # No VSCode settings file found, we can safely create one
-        Path('.vscode').mkdir(exist_ok=True)
-        settings = {'yaml.schemas': {str(schema_file): f'{config.root}/Pulumi.*.yaml'}}
-        with open(settings_file, 'w') as f:
-            f.write(json.dumps(settings, indent=4))
+        # No VSCode settings file found, create one
+        pathlib.Path('.vscode').mkdir(exist_ok=True)
+        settings = {'yaml.schemas': schema_updates}
+        settings_file.write_text(json.dumps(settings, indent=4), encoding='utf-8')
         return
 
-    with open(settings_file, 'r') as f:
-        settings = json.load(f)
+    # Load existing settings
+    settings = json.loads(settings_file.read_text(encoding='utf-8'))
 
-    schema_config = settings.get('yaml.schemas', {}).get(str(schema_file))
-    if not schema_config:
-        print(
-            'No schema found in .vscode/settings.json. Please add the following lines to the file:'
-        )
-        print(
-            textwrap.dedent(
-                f"""
-                "yaml.schemas": {{
-                    "{str(schema_file)}": "{config.root}/Pulumi.*.yaml"
-                }}
-                """
-            )
-        )
+    # Update schema settings
+    if 'yaml.schemas' not in settings:
+        settings['yaml.schemas'] = {}
+
+    missing_schemas = []
+    for schema_file, pattern in schema_updates.items():
+        if schema_file not in settings['yaml.schemas']:
+            missing_schemas.append((schema_file, pattern))
+            settings['yaml.schemas'][schema_file] = pattern
+
+    # Write back if there were updates
+    if missing_schemas:
+        settings_file.write_text(json.dumps(settings, indent=4), encoding='utf-8')
+
+    # Print any schemas that were missing
+    if missing_schemas:
+        print('Added missing schema mappings to .vscode/settings.json:')
+        for schema_file, pattern in missing_schemas:
+            print(f'  "{schema_file}": "{pattern}"')
 
 
 def main():
@@ -84,9 +140,33 @@ def main():
         return
 
     configs = get_configs()
-    for config in configs:
-        print(f'Generating JSON schema for {config.name}...')
-        generate_json_schema(config)
+
+    # Use parallel processing for schema generation
+    successful_configs = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(configs), 4)) as executor:
+        # Submit all tasks
+        future_to_config = {
+            executor.submit(generate_json_schema, config): config for config in configs
+        }
+
+        # Collect results as they complete
+        for future in concurrent.futures.as_completed(future_to_config):
+            config = future_to_config[future]
+            config_name, success = future.result()
+
+            if success:
+                print(f'✓ Generated JSON schema for {config_name}')
+                successful_configs.append(config)
+            else:
+                print(f'✗ Failed to generate schema for {config_name}')
+
+    # Batch update VSCode settings for all successful configs
+    if successful_configs:
+        schema_updates = collect_vscode_settings_updates(successful_configs)
+        update_vscode_settings(schema_updates)
+
+    # Clean up module cache to free memory
+    _module_cache.clear()
 
 
 if __name__ == '__main__':
