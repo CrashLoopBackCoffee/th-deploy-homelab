@@ -67,6 +67,7 @@ build-backend = "hatchling.build"
 line-length = 100
 target-version = "py312"
 extend-exclude = ["docs/examples"]
+extend-include = ["scripts/generate-config-schema"]
 
 [tool.ruff.lint]
 extend-select = [
@@ -104,6 +105,7 @@ quote-style = "single"
 [tool.pyright]
 deprecateTypingAliases = true
 useLibraryCodeForTypes = true
+include = ["scripts", "services", "utils", "*.py"]
 exclude = [
     "__pycache__",
     ".venv",

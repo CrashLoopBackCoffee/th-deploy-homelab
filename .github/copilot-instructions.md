@@ -49,6 +49,15 @@ services/
    - Prefer composition over inheritance for Pulumi components
    - Use dataclasses or Pydantic models for structured data
    - Keep dependency lists in `pyproject.toml` sorted alphabetically for readability and smaller diffs
+   - **Import Style**: Follow project import conventions:
+     - Use `import ...` for external libraries (e.g., `import json`, `import os`)
+     - Use `from ... import ...` for internal/project imports
+     - Use standard abbreviations (and ONLY these):
+       - `import typing as t`
+       - `import pulumi as p`
+       - `import pulumi_kubernetes as k8s`
+       - `import collections.abc as c`
+     - Use full module names for other imports: `import pathlib`, `import concurrent.futures`
 
 4. **Container Image Management**:
    - **NEVER** hardcode image tags in Python code
