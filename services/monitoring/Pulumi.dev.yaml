@@ -1,7 +1,7 @@
 config:
   monitoring:config:
     target:
-      host: synology
+      host: synology.tobiash.net
       user: tobias
       root-dir: /volume2/docker
     alloy:
