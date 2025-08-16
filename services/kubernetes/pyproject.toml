@@ -9,7 +9,7 @@ requires-python = ">=3.11"
 
 dependencies = [
     "pulumiverse-talos==0.6.0",
-    "pulumiverse_acme==0.13.0",
+    "pulumiverse_acme==0.13.1",
     "requests>=2.31.0",
     "utils",
 ]
