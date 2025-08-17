@@ -57,9 +57,6 @@ def create_ollama(component_config: ComponentConfig, k8s_provider: k8s.Provider)
                                     'memory': component_config.ollama.resources.memory,
                                     'cpu': component_config.ollama.resources.cpu,
                                 },
-                                'limits': {
-                                    'memory': component_config.ollama.resources.memory,
-                                },
                             },
                             'readiness_probe': {
                                 'http_get': {
