@@ -84,8 +84,8 @@ otelcol.processor.transform "add_resource_attributes_as_metric_attributes" {
 	metric_statements {
 		context    = "datapoint"
 		statements = [
-			"set(attributes[\"deployment.environment\"], resource.attributes[\"deployment.environment\"])",
-			"set(attributes[\"service.version\"], resource.attributes[\"service.version\"])",
+			"set(attributes[\"deployment.environment\"], resource.attributes[\"deployment.environment\"]) where resource.attributes[\"deployment.environment\"] != nil",
+			"set(attributes[\"service.version\"], resource.attributes[\"service.version\"]) where resource.attributes[\"service.version\"] != nil",
 		]
 	}
 
