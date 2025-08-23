@@ -1,0 +1,14 @@
+//===========================================================
+// Unix metrics
+//===========================================================
+
+prometheus.exporter.unix "default" { /* use defaults */ }
+
+discovery.relabel "unix" {
+	targets = prometheus.exporter.unix.default.targets
+
+	rule {
+		replacement  = "synology"
+		target_label = "instance"
+	}
+}
