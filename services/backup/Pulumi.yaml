@@ -1,0 +1,6 @@
+name: backup
+runtime:
+  name: python
+  options:
+    virtualenv: ../../.venv
+description: Backup service for NFS volumes using restic

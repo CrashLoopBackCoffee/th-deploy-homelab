@@ -33,9 +33,10 @@ repos:
         pass_filenames: false
       - id: yamllint
         name: yamllint
-        entry: uv run yamllint --strict -c=.yamllint
+        entry: uv run yamllint --strict -c=.yamllint .
         language: system
         types: [yaml]
+        pass_filenames: false
       - id: alloy-format
         name: alloy-format
         entry: ./scripts/alloy-fmt

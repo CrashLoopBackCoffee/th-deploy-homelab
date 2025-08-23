@@ -4,6 +4,7 @@ requires-python = ">=3.13"
 
 [manifest]
 members = [
+    "backup",
     "homelab",
     "ingress",
     "iot",
@@ -113,6 +114,17 @@ sdist = { url = "https://files.pythonhosted.org/packages/5a/b0/1367933a8532ee6ff
 wheels = [
     { url = "https://files.pythonhosted.org/packages/77/06/bb80f5f86020c4551da315d78b3ab75e8228f89f0162f2c3a819e407941a/attrs-25.3.0-py3-none-any.whl", hash = "sha256:427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3", size = 63815, upload-time = "2025-03-13T11:10:21.14Z" },
 ]
+
+[[package]]
+name = "backup"
+version = "0.1.0"
+source = { editable = "services/backup" }
+dependencies = [
+    { name = "jinja2" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "jinja2", specifier = ">=3.1.6" }]
 
 [[package]]
 name = "black"
@@ -333,6 +345,7 @@ name = "homelab"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "backup" },
     { name = "ingress" },
     { name = "iot" },
     { name = "kubernetes" },
@@ -367,6 +380,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "backup", editable = "services/backup" },
     { name = "ingress", editable = "services/ingress" },
     { name = "iot", editable = "services/iot" },
     { name = "kubernetes", editable = "services/kubernetes" },

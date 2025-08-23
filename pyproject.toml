@@ -17,6 +17,7 @@ dependencies = [
     "pulumi==3.190.0",
 
     # Workspaces
+    "backup",
     "ingress",
     "iot",
     "kubernetes",
@@ -41,6 +42,7 @@ dev = [
 ]
 
 [tool.uv.sources]
+backup = { workspace = true }
 ingress = { workspace = true }
 iot = { workspace = true }
 kubernetes = { workspace = true }
@@ -155,6 +157,10 @@ model = "s3.config:PulumiConfigRoot"
 [tool.config-models.ollama]
 root = "services/ollama"
 model = "ollama.config:PulumiConfigRoot"
+
+[tool.config-models.backup]
+root = "services/backup"
+model = "backup.config:PulumiConfigRoot"
 
 [tool.config-models.unifi]
 root = "services/unifi"

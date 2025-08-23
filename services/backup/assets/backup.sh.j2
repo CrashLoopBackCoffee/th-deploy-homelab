@@ -1,0 +1,46 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "Starting backup job at $(date)"
+
+# Function to backup a single volume
+backup_volume() {
+    local VOLUME_NAME="$1"
+    local MOUNT_PATH="$2"
+    local BUCKET="$3"
+
+    echo "Backing up volume: $VOLUME_NAME"
+
+    export RESTIC_REPOSITORY="s3:${AWS_S3_ENDPOINT}/${BUCKET}"
+    export RESTIC_PASSWORD_FILE="/secrets/restic-password"
+
+    # Initialize repository if it doesn't exist
+    echo "Initializing repository if needed..."
+    restic snapshots > /dev/null 2>&1 || {
+        echo "Repository does not exist, initializing..."
+        restic init
+    }
+
+    # Perform backup
+    echo "Creating backup for $VOLUME_NAME..."
+    restic backup "$MOUNT_PATH" --tag "$VOLUME_NAME" --host backup-service
+
+    # Apply retention policy
+    echo "Applying retention policy for $VOLUME_NAME..."
+    restic forget --tag "$VOLUME_NAME" \
+        --keep-daily {{ retention_daily }} \
+        --keep-weekly {{ retention_weekly }} \
+        --keep-monthly {{ retention_monthly }} \
+        --keep-yearly {{ retention_yearly }} \
+        --prune
+
+    echo "Backup completed for $VOLUME_NAME"
+}
+
+# Backup each configured volume
+{% for volume in volumes %}
+backup_volume "{{ volume.name }}" "{{ volume.mount_path }}" "{{ volume.bucket }}"
+echo
+{% endfor %}
+
+echo "All backups completed successfully at $(date)"
