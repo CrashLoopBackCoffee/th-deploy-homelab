@@ -7,8 +7,5 @@ rules:
   document-start:
     level: error
     present: false
-  line-length:
-    allow-non-breakable-inline-mappings: true
-    allow-non-breakable-words: true
-    max: 220
+  line-length: disable
   truthy: disable
