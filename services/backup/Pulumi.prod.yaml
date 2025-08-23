@@ -1,0 +1,39 @@
+config:
+  backup:config:
+    kubeconfig:
+      ref: op://Pulumi/Kubeconfig prod/password
+
+    restic:
+      # renovate: datasource=github-releases packageName=restic/restic versioning=semver
+      version: "0.17.3"
+
+    # Global backup settings
+    schedule: "0 1 * * *"  # 1 AM daily
+    retention-daily: 14
+    retention-weekly: 8
+    retention-monthly: 12
+    retention-yearly: 5
+
+    # Restic repository password (shared across all volumes)
+    restic-password:
+      ref: "op://Pulumi/Restic Backup/password"
+
+    # IDrive E2 S3 credentials
+    s3:
+      endpoint:
+        ref: "op://Pulumi/IDrive E2 Backup/Endpoint"
+      access-key-id:
+        ref: "op://Pulumi/IDrive E2 Backup/Access Key ID"
+      secret-access-key:
+        ref: "op://Pulumi/IDrive E2 Backup/Secret Access Key"
+
+    # List of volumes to backup
+    volumes:
+      - name: joplin
+        nfs-server: synology.tobiash.net
+        nfs-path: /volume2/joplin
+        bucket: restic-joplin
+      - name: schule
+        nfs-server: synology.tobiash.net
+        nfs-path: /volume2/schule
+        bucket: restic-schule

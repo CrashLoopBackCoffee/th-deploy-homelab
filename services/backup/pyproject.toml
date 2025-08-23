@@ -1,0 +1,14 @@
+[project]
+name = "backup"
+version = "0.1.0"
+description = "Backup service for NFS volumes using restic"
+dependencies = [
+    "jinja2>=3.1.6",
+]
+
+[tool.uv.sources]
+utils = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
