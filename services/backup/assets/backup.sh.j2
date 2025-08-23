@@ -13,6 +13,7 @@ backup_volume() {
 
     export RESTIC_REPOSITORY="s3:${AWS_S3_ENDPOINT}/${BUCKET}"
     export RESTIC_PASSWORD_FILE="/secrets/restic-password"
+    export RESTIC_CACHE_DIR="/tmp/.cache/restic"
 
     # Initialize repository if it doesn't exist
     echo "Initializing repository if needed..."
@@ -27,7 +28,7 @@ backup_volume() {
 
     # Apply retention policy
     echo "Applying retention policy for $VOLUME_NAME..."
-    restic forget --tag "$VOLUME_NAME" \
+    restic forget --tag "$VOLUME_NAME" --host backup-service \
         --keep-daily {{ retention_daily }} \
         --keep-weekly {{ retention_weekly }} \
         --keep-monthly {{ retention_monthly }} \
