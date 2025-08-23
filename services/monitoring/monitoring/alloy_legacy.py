@@ -29,7 +29,7 @@ def create_alloy(
     target_host = component_config.target.host
     target_user = component_config.target.user
 
-    alloy_path = get_assets_path() / 'alloy'
+    alloy_path = get_assets_path() / 'alloy_legacy'
 
     # Create alloy DNS record
     dns_record = utils.cloudflare.create_cloudflare_cname(

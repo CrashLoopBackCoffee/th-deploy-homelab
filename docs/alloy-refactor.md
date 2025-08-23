@@ -44,8 +44,6 @@ The hostname will be updated to reflect its "legacy" status.
 *   **Change:** Update the Cloudflare CNAME record to `alloy-legacy`.
     *   **From:** `dns_record = utils.cloudflare.create_cloudflare_cname('alloy', ...)`
     *   **To:** `dns_record = utils.cloudflare.create_cloudflare_cname('alloy-legacy', ...)`
-    *   **From:** `utils.cloudflare.delete_cloudflare_cname('alloy')`
-    *   **To:** `utils.cloudflare.delete_cloudflare_cname('alloy-legacy')`
 *   **File to edit:** `services/monitoring/Pulumi.dev.yaml`
 *   **Change:** The hostname is not explicitly in the config, but the DNS record change will cause the deployed URL to change. We need to run `pulumi up` on the `dev` stack to apply this change.
 
