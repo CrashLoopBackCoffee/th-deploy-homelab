@@ -156,4 +156,3 @@ These instructions should be periodically validated against the repository state
 - Check that code examples follow current project patterns
 - Update tooling versions and commands as the project evolves
 
-**Note**: Multiple copies of these instructions exist for different AI assistants (`AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`, `GEMINI.md`). Keep them synchronized when making updates.
