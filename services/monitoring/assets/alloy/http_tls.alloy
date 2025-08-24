@@ -1,0 +1,8 @@
+http {
+	tls {
+		cert_file = "/etc/alloy/certs/tls.crt"
+		key_file  = "/etc/alloy/certs/tls.key"
+
+		min_version = "TLS12"
+	}
+}
