@@ -2,13 +2,14 @@
 // Otel pipeline
 //===========================================================
 otelcol.processor.transform "set_service_name_from_container" {
-	// Map container log attribute to service.name resource attribute
+	// Map container log attribute to service.name resource attribute, or set synology for file logs
 	error_mode = "ignore"
 
 	log_statements {
 		context    = "log"
 		statements = [
 			"set(resource.attributes[\"service.name\"], attributes[\"container\"]) where attributes[\"container\"] != nil",
+			"set(resource.attributes[\"service.name\"], \"synology\") where attributes[\"container\"] == nil",
 		]
 	}
 
