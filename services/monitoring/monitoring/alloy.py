@@ -82,6 +82,66 @@ class Alloy(p.ComponentResource):
             opts=k8s_opts,
         )
 
+        # Create ServiceAccount for Alloy
+        service_account = k8s.core.v1.ServiceAccount(
+            'alloy-serviceaccount',
+            metadata={
+                'name': 'alloy',
+                'namespace': namespace.metadata.name,
+            },
+            opts=k8s_opts,
+        )
+
+        # Create ClusterRole with permissions to access Kubernetes resources for log collection
+        cluster_role = k8s.rbac.v1.ClusterRole(
+            'alloy-clusterrole',
+            metadata={'name': 'alloy'},
+            rules=[
+                {
+                    'api_groups': [''],
+                    'resources': [
+                        'pods',
+                        'nodes',
+                        'nodes/proxy',
+                        'nodes/metrics',
+                        'services',
+                        'endpoints',
+                    ],
+                    'verbs': ['get', 'list', 'watch'],
+                },
+                {
+                    'api_groups': [''],
+                    'resources': ['events'],
+                    'verbs': ['get', 'list', 'watch'],
+                },
+                {
+                    'api_groups': [''],
+                    'resources': ['namespaces'],
+                    'verbs': ['get', 'list', 'watch'],
+                },
+            ],
+            opts=p.ResourceOptions(provider=k8s_provider, parent=self),
+        )
+
+        # Create ClusterRoleBinding
+        k8s.rbac.v1.ClusterRoleBinding(
+            'alloy-clusterrolebinding',
+            metadata={'name': 'alloy'},
+            role_ref={
+                'api_group': 'rbac.authorization.k8s.io',
+                'kind': 'ClusterRole',
+                'name': cluster_role.metadata.name,
+            },
+            subjects=[
+                {
+                    'kind': 'ServiceAccount',
+                    'name': service_account.metadata.name,
+                    'namespace': namespace.metadata.name,
+                },
+            ],
+            opts=p.ResourceOptions(provider=k8s_provider, parent=self),
+        )
+
         # Create TLS certificate
         certificate = k8s.apiextensions.CustomResource(
             'certificate',
@@ -123,6 +183,7 @@ class Alloy(p.ComponentResource):
                         'labels': app_labels,
                     },
                     'spec': {
+                        'service_account_name': service_account.metadata.name,
                         'containers': [
                             {
                                 'name': 'alloy',
@@ -176,6 +237,16 @@ class Alloy(p.ComponentResource):
                                         'name': 'tls-certs',
                                         'mount_path': '/etc/alloy/certs',
                                     },
+                                    {
+                                        'name': 'var-log',
+                                        'mount_path': '/var/log',
+                                        'read_only': True,
+                                    },
+                                    {
+                                        'name': 'var-log-pods',
+                                        'mount_path': '/var/log/pods',
+                                        'read_only': True,
+                                    },
                                 ],
                                 'resources': {
                                     'requests': {
@@ -206,6 +277,20 @@ class Alloy(p.ComponentResource):
                                     'secret_name': certificate.spec.apply(  # type: ignore
                                         lambda spec: spec['secretName']
                                     ),
+                                },
+                            },
+                            {
+                                'name': 'var-log',
+                                'host_path': {
+                                    'path': '/var/log',
+                                    'type': 'Directory',
+                                },
+                            },
+                            {
+                                'name': 'var-log-pods',
+                                'host_path': {
+                                    'path': '/var/log/pods',
+                                    'type': 'DirectoryOrCreate',
                                 },
                             },
                         ],
