@@ -148,6 +148,7 @@ uv run ./scripts/run-all-checks.sh
     - When you want to ask a question, call the MCP `interactive_feedback`.
     - Before completing a request, call MCP `interactive_feedback`.
     - Keep calling MCP until the user’s feedback is empty, then end the request.
+
 ## Documentation Maintenance
 
 These instructions should be periodically validated against the repository state:
@@ -155,4 +156,3 @@ These instructions should be periodically validated against the repository state
 - Ensure all scripts and tools mentioned actually exist and work
 - Check that code examples follow current project patterns
 - Update tooling versions and commands as the project evolves
-
