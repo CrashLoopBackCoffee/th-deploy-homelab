@@ -41,27 +41,6 @@ services/
 - **`scripts/`**: Helper scripts for development and maintenance
 - **`renovate.json5`**: Automated dependency update configuration
 
-### Additional Repository Structure
-
-- **`docs/`**: Contains example code and documentation for common patterns (e.g., `cnpg_postgres.py`)
-- **`utils/`**: Shared utility modules for common functionality across services
-- **`scripts/`**: Helper scripts for development and maintenance
-- **`renovate.json5`**: Automated dependency update configuration
-
-### Additional Repository Structure
-
-- **`docs/`**: Contains example code and documentation for common patterns (e.g., `cnpg_postgres.py`)
-- **`utils/`**: Shared utility modules for common functionality across services
-- **`scripts/`**: Helper scripts for development and maintenance
-- **`renovate.json5`**: Automated dependency update configuration
-
-### Additional Repository Structure
-
-- **`docs/`**: Contains example code and documentation for common patterns (e.g., `cnpg_postgres.py`)
-- **`utils/`**: Shared utility modules for common functionality across services
-- **`scripts/`**: Helper scripts for development and maintenance
-- **`renovate.json5`**: Automated dependency update configuration
-
 ## Critical Development Rules
 
 ### 1. Shell Commands
@@ -141,15 +120,6 @@ uv run ./scripts/generate-config-schema
 uv run ./scripts/run-all-checks.sh
 
 # Deploy a service (ALWAYS preview first)
-## Documentation Maintenance
-
-These instructions should be periodically validated against the repository state:
-- Verify all services in the `services/` directory are documented
-- Ensure all scripts and tools mentioned actually exist and work
-- Check that code examples follow current project patterns
-- Update tooling versions and commands as the project evolves
-
-**Note**: Multiple copies of these instructions exist for different AI assistants (`AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`, `GEMINI.md`). Keep them synchronized when making updates.
 (cd services/{service-name} && pulumi preview -s {stack-name} --diff --non-interactive)
 (cd services/{service-name} && pulumi up --stack {stack-name} --non-interactive --skip-preview)
 
@@ -157,15 +127,6 @@ These instructions should be periodically validated against the repository state
 (cd services/{service-name} && pulumi stack ls)
 
 # Check stack configuration
-## Documentation Maintenance
-
-These instructions should be periodically validated against the repository state:
-- Verify all services in the `services/` directory are documented
-- Ensure all scripts and tools mentioned actually exist and work
-- Check that code examples follow current project patterns
-- Update tooling versions and commands as the project evolves
-
-**Note**: Multiple copies of these instructions exist for different AI assistants (`AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`, `GEMINI.md`). Keep them synchronized when making updates.
 (cd services/{service-name} && pulumi config --stack {stack-name})
 ```
 
@@ -173,15 +134,6 @@ These instructions should be periodically validated against the repository state
 
 - **Production (`prod`)**: Primary homelab environment for most services.
 - **Development (`dev`)**: Legacy services from a previous migration (`monitoring`, `proxmox`, `s3`).
-## Documentation Maintenance
-
-These instructions should be periodically validated against the repository state:
-- Verify all services in the `services/` directory are documented
-- Ensure all scripts and tools mentioned actually exist and work
-- Check that code examples follow current project patterns
-- Update tooling versions and commands as the project evolves
-
-**Note**: Multiple copies of these instructions exist for different AI assistants (`AGENTS.md`, `.github/copilot-instructions.md`, `CLAUDE.md`, `GEMINI.md`). Keep them synchronized when making updates.
 - **Test (`test`)**: Experimental environment, especially for `kubernetes` changes.
 
 ## AI Assistant Guidelines
