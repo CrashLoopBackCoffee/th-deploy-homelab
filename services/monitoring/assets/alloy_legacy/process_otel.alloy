@@ -1,6 +1,22 @@
 //===========================================================
 // Otel pipeline
 //===========================================================
+otelcol.processor.transform "set_service_name_from_container" {
+	// Map container log attribute to service.name resource attribute
+	error_mode = "ignore"
+
+	log_statements {
+		context    = "log"
+		statements = [
+			"set(resource.attributes[\"service.name\"], attributes[\"container\"]) where attributes[\"container\"] != nil",
+		]
+	}
+
+	output {
+		logs = [otelcol.processor.resourcedetection.default.input]
+	}
+}
+
 otelcol.processor.resourcedetection "default" {
 	detectors = ["env", "system"]
 

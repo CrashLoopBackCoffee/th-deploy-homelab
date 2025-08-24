@@ -68,6 +68,6 @@ loki.relabel "logs" {
 //===========================================================
 otelcol.receiver.loki "default" {
 	output {
-		logs = [otelcol.processor.resourcedetection.default.input]
+		logs = [otelcol.processor.transform.set_service_name_from_container.input]
 	}
 }
