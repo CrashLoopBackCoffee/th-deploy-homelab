@@ -1,1 +1,1 @@
-/home/tobias/repos/deploy-homelab/AGENTS.md
+../AGENTS.md
