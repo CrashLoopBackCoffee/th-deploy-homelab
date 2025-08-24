@@ -192,6 +192,7 @@ class Alloy(p.ComponentResource):
                                     'run',
                                     f'--server.http.listen-addr=0.0.0.0:{ALLOY_HTTP_PORT}',
                                     '--storage.path=/var/lib/alloy/data',
+                                    '--disable-reporting',
                                     '--stability.level=experimental',
                                     '/etc/alloy/',
                                 ],
