@@ -5,6 +5,34 @@ otelcol.processor.resourcedetection "default" {
 	detectors = ["env", "system"]
 
 	output {
+		metrics = [otelcol.processor.transform.k8s_service_name_mapping.input]
+		logs    = [otelcol.processor.transform.k8s_service_name_mapping.input]
+		traces  = [otelcol.processor.transform.k8s_service_name_mapping.input]
+	}
+}
+
+otelcol.processor.transform "k8s_service_name_mapping" {
+	error_mode = "ignore"
+
+	log_statements {
+		context    = "resource"
+		statements = [
+			// Map the service_name from resource attributes to service.name
+			"set(attributes[\"service.name\"], attributes[\"service_name\"]) where attributes[\"service_name\"] != nil",
+		]
+	}
+
+	log_statements {
+		context    = "log"
+		statements = [
+			// Move service_name from log attributes to resource attributes
+			"set(resource.attributes[\"service.name\"], attributes[\"service_name\"]) where attributes[\"service_name\"] != nil",
+			// Remove the original service_name attribute to avoid duplication
+			"delete_key(attributes, \"service_name\") where attributes[\"service_name\"] != nil",
+		]
+	}
+
+	output {
 		metrics = [otelcol.processor.transform.drop_unneeded_resource_attributes.input]
 		logs    = [otelcol.processor.transform.drop_unneeded_resource_attributes.input]
 		traces  = [otelcol.processor.transform.drop_unneeded_resource_attributes.input]
