@@ -1,24 +1,44 @@
 //===========================================================
 // Otel pipeline
 //===========================================================
-otelcol.processor.transform "set_service_name_from_container" {
-	// Map container log attribute to service.name resource attribute
+otelcol.processor.resourcedetection "default" {
+	detectors = ["env", "system"]
+
+	output {
+		metrics = [otelcol.processor.transform.set_service_name.input]
+		logs    = [otelcol.processor.transform.set_service_name.input]
+		traces  = [otelcol.processor.transform.set_service_name.input]
+	}
+}
+
+otelcol.processor.transform "set_service_name" {
+	// Set appropriate service names for different telemetry types
 	error_mode = "ignore"
 
+	// For logs: use container name if available, otherwise synology
 	log_statements {
 		context    = "log"
 		statements = [
 			"set(resource.attributes[\"service.name\"], attributes[\"container\"]) where attributes[\"container\"] != nil",
+			"set(resource.attributes[\"service.name\"], \"synology\") where attributes[\"container\"] == nil",
 		]
 	}
 
-	output {
-		logs = [otelcol.processor.resourcedetection.default.input]
+	// For metrics: set to synology (all metrics come from synology system)
+	metric_statements {
+		context    = "resource"
+		statements = [
+			"set(attributes[\"service.name\"], \"synology\") where attributes[\"service.name\"] == nil",
+		]
 	}
-}
 
-otelcol.processor.resourcedetection "default" {
-	detectors = ["env", "system"]
+	// For traces: set to synology as fallback
+	trace_statements {
+		context    = "resource"
+		statements = [
+			"set(attributes[\"service.name\"], \"synology\") where attributes[\"service.name\"] == nil",
+		]
+	}
 
 	output {
 		metrics = [otelcol.processor.transform.drop_unneeded_resource_attributes.input]
