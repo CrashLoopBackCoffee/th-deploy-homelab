@@ -1,8 +1,16 @@
 import utils.model
 
 
+class AlloyLegacyConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class AlloyConfig(utils.model.LocalBaseModel):
     version: str
+    hostname: str | None = None
+
+
+class GrafanaCloudConfig(utils.model.LocalBaseModel):
     username: str
     token: utils.model.PulumiSecret | str
 
@@ -28,9 +36,11 @@ class SpeedtestExporterConfig(utils.model.LocalBaseModel):
 class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig | None = None
     alloy: AlloyConfig | None = None
+    alloy_legacy: AlloyLegacyConfig | None = None
     cadvisor: CAdvisorConfig | None = None
     cloudflare: utils.model.CloudflareConfig | None = None
     grafana: GrafanaConfig | None = None
+    grafana_cloud: GrafanaCloudConfig | None = None
     mimir: MimirConfig | None = None
     speedtest_exporter: SpeedtestExporterConfig | None = None
 

@@ -4,23 +4,10 @@
 
 prometheus.scrape "default" {
 	targets = array.concat(
-		discovery.relabel.blackbox.output,
-		discovery.relabel.static.output,
-		prometheus.exporter.self.default.targets,
+		discovery.relabel.unix.output,
 	)
 
 	scrape_interval = "15s"
-	forward_to      = [otelcol.receiver.prometheus.default.receiver]
-}
-
-prometheus.scrape "speedtest" {
-	targets = [
-		{__address__ = "192.168.40.80:9469", job = "speedtest", instance = "speedtest-exporter:9469"},
-	]
-	metrics_path    = "/probe"
-	params          = {"script" = ["speedtest"]}
-	scrape_interval = "60m"
-	scrape_timeout  = "90s"
 	forward_to      = [otelcol.receiver.prometheus.default.receiver]
 }
 
