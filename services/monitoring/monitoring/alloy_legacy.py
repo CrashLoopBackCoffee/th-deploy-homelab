@@ -76,6 +76,7 @@ def create_alloy(
             'run',
             '--server.http.listen-addr=0.0.0.0:9091',
             '--storage.path=/var/lib/alloy/data',
+            '--disable-reporting',
             # Required for live debugging
             '--stability.level=experimental',
             '/etc/alloy/',
