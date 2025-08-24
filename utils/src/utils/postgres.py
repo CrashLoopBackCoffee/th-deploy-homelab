@@ -29,7 +29,27 @@ def create_postgres(
             'auth': {
                 'postgresPassword': root_password.result,
             },
-            'metrics': {'enabled': True},
+            # Temporary workaround for Bitnami repository changes (issue #35164)
+            # Use bitnamilegacy repository for container images
+            'image': {
+                'repository': 'bitnamilegacy/postgresql',
+            },
+            'volumePermissions': {
+                'image': {
+                    'repository': 'bitnamilegacy/os-shell',
+                },
+            },
+            'metrics': {
+                'enabled': True,
+                'image': {
+                    'repository': 'bitnamilegacy/postgres-exporter',
+                },
+            },
+            'global': {
+                'security': {
+                    'allowInsecureImages': True,
+                },
+            },
         },
         opts=k8s_opts,
     )
