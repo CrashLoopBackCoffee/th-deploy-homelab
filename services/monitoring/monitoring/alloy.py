@@ -6,7 +6,7 @@ import utils.opnsense.unbound.host_override
 from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path
 
-ALLOY_HTTP_PORT = 12345
+ALLOY_HTTP_PORT = 443
 ALLOY_OTEL_GRPC_PORT = 4317
 ALLOY_OTEL_HTTP_PORT = 4318
 
