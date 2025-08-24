@@ -4,12 +4,9 @@ config:
       host: synology.tobiash.net
       user: tobias
       root-dir: /volume2/docker
-    alloy:
+    alloy-legacy:
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
       version: v1.10.1
-      username: "1115202"
-      token:
-        secure: AAABAOZ6n4t+I59nxfY/LfACwYAfMKz/kSwKBrW/7aaiXk6b6GA7WdHSLab4UVfSxpU/vabQa94v8V8Slu+HKamtm3jVjzKp1WeOMg6MOk9L3A6B4ll0nW6Si8qMg+gkmGF7Ju8/gruVlMrZ3ugk1j2aNfFEQCi+HBHbUB8fAiHeFaHSt/co30vDg4uqBG1i5WYY7oebCy8K+R0AVZEpv4ojHP6q4I4G07A9JNA7F7Y=
     cadvisor:
       # renovate: datasource=github-releases packageName=google/cadvisor versioning=semver
       version: 0.53.0

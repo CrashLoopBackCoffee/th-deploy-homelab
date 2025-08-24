@@ -4,6 +4,6 @@ otelcol.exporter.prometheus "mimir" {
 
 prometheus.remote_write "mimir" {
 	endpoint {
-		url = "http://localhost:9009/api/v1/push"
+		url = "http://mimir.tobiash.net:9009/api/v1/push"
 	}
 }

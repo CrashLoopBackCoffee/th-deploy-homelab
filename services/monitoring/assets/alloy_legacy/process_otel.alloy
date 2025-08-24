@@ -96,8 +96,8 @@ otelcol.processor.transform "add_resource_attributes_as_metric_attributes" {
 
 otelcol.processor.batch "default" {
 	output {
-		metrics = [otelcol.exporter.prometheus.mimir.input]
-		logs    = [otelcol.exporter.otlphttp.grafana_cloud.input]
-		traces  = [otelcol.exporter.otlphttp.grafana_cloud.input]
+		metrics = [otelcol.exporter.otlp.alloy.input]
+		logs    = [otelcol.exporter.otlp.alloy.input]
+		traces  = [otelcol.exporter.otlp.alloy.input]
 	}
 }

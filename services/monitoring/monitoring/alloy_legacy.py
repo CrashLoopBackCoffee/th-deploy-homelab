@@ -24,7 +24,7 @@ def create_alloy(
     """
     assert component_config.target
     assert component_config.cloudflare
-    assert component_config.alloy
+    assert component_config.alloy_legacy
     target_root_dir = component_config.target.root_dir
     target_host = component_config.target.host
     target_user = component_config.target.user
@@ -33,7 +33,7 @@ def create_alloy(
 
     # Create alloy DNS record
     dns_record = utils.cloudflare.create_cloudflare_cname(
-        'alloy', component_config.cloudflare.zone, cloudflare_provider
+        'alloy-legacy', component_config.cloudflare.zone, cloudflare_provider
     )
 
     # Create alloy-config folder
@@ -63,7 +63,7 @@ def create_alloy(
 
     image = docker.RemoteImage(
         'alloy',
-        name=f'grafana/alloy:{component_config.alloy.version}',
+        name=f'grafana/alloy:{component_config.alloy_legacy.version}',
         keep_locally=True,
         opts=opts,
     )
@@ -80,10 +80,7 @@ def create_alloy(
             '--stability.level=experimental',
             '/etc/alloy/',
         ],
-        envs=[
-            f'GRAFANA_CLOUD_API_USER={component_config.alloy.username}',
-            f'GRAFANA_CLOUD_API_TOKEN={component_config.alloy.token}',
-        ],
+        envs=[],
         volumes=[
             {
                 'host_path': f'{target_root_dir}/alloy-config',

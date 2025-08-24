@@ -5,7 +5,6 @@
 prometheus.scrape "default" {
 	targets = array.concat(
 		discovery.relabel.blackbox.output,
-		discovery.relabel.unix.output,
 		discovery.relabel.static.output,
 		prometheus.exporter.self.default.targets,
 	)

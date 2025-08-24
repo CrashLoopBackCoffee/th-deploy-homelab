@@ -1,44 +1,4 @@
 //===========================================================
-// Syslog receiver
-//===========================================================
-loki.source.syslog "default_udp" {
-	listener {
-		address               = "0.0.0.0:514"
-		protocol              = "udp"
-		label_structured_data = true
-		labels                = {component = "loki.source.syslog"}
-		syslog_format         = "rfc3164"
-	}
-	forward_to    = [otelcol.receiver.loki.default.receiver]
-	relabel_rules = loki.relabel.syslog.rules
-}
-
-// build the relabel rules used by the source.syslog component
-loki.relabel "syslog" {
-	forward_to = [otelcol.receiver.loki.default.receiver]
-
-	rule {
-		source_labels = ["__syslog_message_severity"]
-		target_label  = "level"
-	}
-
-	rule {
-		source_labels = ["__syslog_message_hostname"]
-		target_label  = "hostname"
-	}
-
-	rule {
-		source_labels = ["__syslog_message_app_name"]
-		target_label  = "application"
-	}
-
-	rule {
-		source_labels = ["__syslog_connection_ip_address"]
-		target_label  = "remote_ip"
-	}
-}
-
-//===========================================================
 // Docker logs
 //===========================================================
 
