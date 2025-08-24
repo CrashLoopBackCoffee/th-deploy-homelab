@@ -34,6 +34,13 @@ services/
 └── unifi/            # UniFi network management
 ```
 
+### Additional Repository Structure
+
+- **`docs/`**: Contains example code and documentation for common patterns (e.g., `cnpg_postgres.py`)
+- **`utils/`**: Shared utility modules for common functionality across services
+- **`scripts/`**: Helper scripts for development and maintenance
+- **`renovate.json5`**: Automated dependency update configuration
+
 ## Critical Development Rules
 
 ### 1. Shell Commands
@@ -141,3 +148,11 @@ uv run ./scripts/run-all-checks.sh
     - When you want to ask a question, call the MCP `interactive_feedback`.
     - Before completing a request, call MCP `interactive_feedback`.
     - Keep calling MCP until the user’s feedback is empty, then end the request.
+
+## Documentation Maintenance
+
+These instructions should be periodically validated against the repository state:
+- Verify all services in the `services/` directory are documented
+- Ensure all scripts and tools mentioned actually exist and work
+- Check that code examples follow current project patterns
+- Update tooling versions and commands as the project evolves
