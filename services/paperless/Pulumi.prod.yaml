@@ -58,7 +58,7 @@ config:
         ref: "op://Pulumi/IDrive e2 Paperless/Secret Access Key"
     postgres:
       # renovate: datasource=docker packageName=registry-1.docker.io/bitnamicharts/postgresql versioning=semver
-      version: 16.7.26
+      version: 16.7.27
     redis:
       # renovate: datasource=github-releases packageName=redis/redis versioning=semver
       version: 8.2.1
