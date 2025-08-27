@@ -22,6 +22,7 @@ dependencies = [
     "iot",
     "kubernetes",
     "monitoring",
+    "n8n",
     "obsidian",
     "ollama",
     "paperless",
@@ -47,6 +48,7 @@ ingress = { workspace = true }
 iot = { workspace = true }
 kubernetes = { workspace = true }
 monitoring = { workspace = true }
+n8n = { workspace = true }
 obsidian = { workspace = true }
 ollama = { workspace = true }
 paperless = { workspace = true }
@@ -122,6 +124,10 @@ reportUnnecessaryTypeIgnoreComment = true
 venv = ".venv"
 venvPath = "."
 
+[tool.config-models.backup]
+root = "services/backup"
+model = "backup.config:PulumiConfigRoot"
+
 [tool.config-models.ingress]
 root = "services/ingress"
 model = "ingress.config:PulumiConfigRoot"
@@ -138,9 +144,17 @@ model = "kubernetes.config:PulumiConfigRoot"
 root = "services/monitoring"
 model = "monitoring.config:PulumiConfigRoot"
 
+[tool.config-models.n8n]
+root = "services/n8n"
+model = "n8n.config:PulumiConfigRoot"
+
 [tool.config-models.obsidian]
 root = "services/obsidian"
 model = "obsidian.config:PulumiConfigRoot"
+
+[tool.config-models.ollama]
+root = "services/ollama"
+model = "ollama.config:PulumiConfigRoot"
 
 [tool.config-models.paperless]
 root = "services/paperless"
@@ -153,14 +167,6 @@ model = "proxmox.config:PulumiConfigRoot"
 [tool.config-models.s3]
 root = "services/s3"
 model = "s3.config:PulumiConfigRoot"
-
-[tool.config-models.ollama]
-root = "services/ollama"
-model = "ollama.config:PulumiConfigRoot"
-
-[tool.config-models.backup]
-root = "services/backup"
-model = "backup.config:PulumiConfigRoot"
 
 [tool.config-models.unifi]
 root = "services/unifi"

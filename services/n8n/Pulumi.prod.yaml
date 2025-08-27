@@ -1,0 +1,15 @@
+config:
+  n8n:config:
+    cloudflare:
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      email: tobias_henkel@gmx.de
+      zone: tobiash.net
+    n8n:
+      # renovate: datasource=github-releases packageName=n8nio/n8n versioning=semver
+      version: 1.108.1
+      hostname: n8n.tobiash.net
+      webhook-url: https://n8n.tobiash.net
+      resources:
+        memory: 1Gi
+        cpu: 500m

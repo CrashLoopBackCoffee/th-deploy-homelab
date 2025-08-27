@@ -1,0 +1,7 @@
+name: n8n
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: ../../.venv
+description: n8n workflow automation deployment
