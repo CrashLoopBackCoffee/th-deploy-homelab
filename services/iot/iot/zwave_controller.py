@@ -87,8 +87,8 @@ class ZwaveeController(p.ComponentResource):
             opts=p.ResourceOptions.merge(proxmox_opts, p.ResourceOptions(retain_on_delete=True)),
         )
 
-        cloud_config = proxmoxve.storage.File(
-            'cloud-config',
+        cloud_init_config = proxmoxve.storage.File(
+            'cloud-init-config',
             node_name=component_config.proxmox.node_name,
             datastore_id='local',
             content_type='snippets',
@@ -98,14 +98,12 @@ class ZwaveeController(p.ComponentResource):
                     'ubuntu',
                     component_config.zwave_controller.ssh_public_key,
                 ),
-                'file_name': f'unifi-{p.get_stack()}.yaml',
+                'file_name': f'zwave-controller-{p.get_stack()}.yaml',
             },
             opts=p.ResourceOptions.merge(
                 proxmox_opts,
                 p.ResourceOptions(
                     delete_before_replace=True,
-                    # Hack since this is not really our file but updating it forces recreation of the VM
-                    retain_on_delete=True,
                 ),
             ),
         )
@@ -168,7 +166,7 @@ class ZwaveeController(p.ComponentResource):
                     'domain': 'local',
                     'servers': [gateway_address],
                 },
-                'user_data_file_id': cloud_config.id,
+                'user_data_file_id': cloud_init_config.id,
             },
             stop_on_destroy=True,
             on_boot=utils.utils.stack_is_prod(),
@@ -222,6 +220,7 @@ class ZwaveeController(p.ComponentResource):
                 {
                     'host_path': f'/dev/serial/by-id/{component_config.zwave_controller.zwave_adapter.serial_id}',
                     'container_path': '/dev/zwave',
+                    'permissions': 'rwm',
                 }
             ],
             volumes=[
