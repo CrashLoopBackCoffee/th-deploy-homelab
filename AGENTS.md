@@ -104,9 +104,6 @@ services/
 ## Common Commands
 
 ```bash
-# ALWAYS initialize terminal first in new sessions if needed
-echo "Initializing terminal..."
-
 # Install/sync dependencies
 uv sync
 
@@ -138,16 +135,15 @@ uv run ./scripts/run-all-checks.sh
 
 ## AI Assistant Guidelines
 
-1.  **🚨 CRITICAL - Terminal Initialization**: In a new session, **ALWAYS** run a dummy command (`echo "Initializing terminal..."`) and wait for `direnv` loading to complete before running actual commands to prevent interruptions.
-2.  **🚨 CRITICAL - Pulumi Safety**: **ALWAYS** run `pulumi preview --diff` before `pulumi up`.
-3.  **🚨 CRITICAL - Code Quality**: **ALWAYS** run `uv run ./scripts/run-all-checks.sh` before committing.
-4.  **Understand Service Context**: Each service in `services/` is self-contained but may have dependencies.
-5.  **Follow Patterns**: Use established patterns for Pulumi, configuration, and code style.
-6.  **Configuration**: Remember to configure python runtime options in `Pulumi.yaml` using `uv` and the `venv` in the root of the repository.
-7.  **MCP Interactive Feedback (Copilot)**:
+1.  **🚨 CRITICAL - Pulumi Safety**: **ALWAYS** run `pulumi preview --diff` before `pulumi up`.
+2.  **🚨 CRITICAL - Code Quality**: **ALWAYS** run `uv run ./scripts/run-all-checks.sh` before committing.
+3.  **Understand Service Context**: Each service in `services/` is self-contained but may have dependencies.
+4.  **Follow Patterns**: Use established patterns for Pulumi, configuration, and code style.
+5.  **Configuration**: Remember to configure python runtime options in `Pulumi.yaml` using `uv` and the `venv` in the root of the repository.
+6.  **MCP Interactive Feedback (Copilot)**:
     - When you want to ask a question, call the MCP `interactive_feedback`.
     - Before completing a request, call MCP `interactive_feedback`.
-    - Keep calling MCP until the user’s feedback is empty, then end the request.
+    - Keep calling MCP until the user's feedback is empty, then end the request.
 
 ## Documentation Maintenance
 
