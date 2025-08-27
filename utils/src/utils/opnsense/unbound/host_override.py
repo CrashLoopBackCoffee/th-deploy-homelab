@@ -68,7 +68,7 @@ class HostOverrideProvider(OpnSenseBaseProvider):
         assert data.get('result') == 'saved', 'Failed to update unbound override'
 
         # Reconfigure unbound to apply the changes
-        self._reconfigure_unbound
+        self._reconfigure_unbound(client)
 
         return p.dynamic.UpdateResult(outs=_news)
 
