@@ -101,7 +101,12 @@ class ZwaveeController(p.ComponentResource):
                 'file_name': f'unifi-{p.get_stack()}.yaml',
             },
             opts=p.ResourceOptions.merge(
-                proxmox_opts, p.ResourceOptions(delete_before_replace=True)
+                proxmox_opts,
+                p.ResourceOptions(
+                    delete_before_replace=True,
+                    # Hack since this is not really our file but updating it forces recreation of the VM
+                    retain_on_delete=True,
+                ),
             ),
         )
 
