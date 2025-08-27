@@ -236,6 +236,15 @@ def create_microk8s(
         triggers=[get_snap_version('microk8s', component_config.microk8s.version, 'amd64')],
     )
 
+    # Enable rbac
+    command.remote.Command(
+        f'{vm_config.name}-enable-rbac',
+        connection=connection_args,
+        add_previous_output_in_env=False,
+        create='microk8s enable rbac',
+        delete='microk8s disable rbac',
+    )
+
     # Install MetalLB
     create_metallb(component_config, k8s_provider)
 
