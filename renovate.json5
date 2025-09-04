@@ -51,7 +51,14 @@
         'grafana/grafana',
       ],
       extractVersion: '^v?(?<version>.*)$',
-    }
+    },
+    {
+      // Create separate PRs per minor release line for canonical/microk8s
+      matchPackageNames: [
+        'canonical/microk8s',
+      ],
+      separateMultipleMinor: true,
+    },
   ],
   prHourlyLimit: 10,
   rangeStrategy: 'replace',
