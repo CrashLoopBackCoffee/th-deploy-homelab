@@ -28,6 +28,7 @@ dependencies = [
     "paperless",
     "proxmox",
     "s3",
+    "svn",
     "unifi",
 ]
 
@@ -54,6 +55,7 @@ ollama = { workspace = true }
 paperless = { workspace = true }
 proxmox = { workspace = true }
 s3 = { workspace = true }
+svn = { workspace = true }
 unifi = { workspace = true }
 utils = { workspace = true }
 
@@ -171,3 +173,7 @@ model = "s3.config:PulumiConfigRoot"
 [tool.config-models.unifi]
 root = "services/unifi"
 model = "unifi.config:PulumiConfigRoot"
+
+[tool.config-models.svn]
+root = "services/svn"
+model = "svn.config:PulumiConfigRoot"
