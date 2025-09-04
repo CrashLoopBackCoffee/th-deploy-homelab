@@ -20,7 +20,7 @@ config:
       version: v4.11.0
     microk8s:
       # renovate: datasource=github-releases packageName=canonical/microk8s versioning=semver
-      version: 1.31/stable
+      version: "1.31"
       vlan: 40
       ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ
       metallb:
