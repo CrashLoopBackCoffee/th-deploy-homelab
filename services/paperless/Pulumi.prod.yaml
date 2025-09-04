@@ -28,7 +28,7 @@ config:
       # renovate: datasource=docker packageName=ghcr.io/crashloopbackcoffee/restic-rclone versioning=docker
       restic-rclone-version: 0.18.0-1.70.3
       # renovate: datasource=github-releases packageName=kubernetes/kubernetes versioning=semver
-      kubectl-version: 1.33.4
+      kubectl-version: 1.34.0
       repository-path: paperless
       schedule: "0 2 * * *"
       retention-daily: 7
