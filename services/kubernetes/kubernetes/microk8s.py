@@ -132,7 +132,8 @@ def create_microk8s(
     )
 
     p.export(
-        'microk8s-version', get_snap_version('microk8s', component_config.microk8s.version, 'amd64')
+        'microk8s-version',
+        get_snap_version('microk8s', f'{component_config.microk8s.version}/stable', 'amd64'),
     )
 
     gateway_address = str(vm_config.address.network.network_address + 1)
@@ -232,8 +233,10 @@ def create_microk8s(
         f'{vm_config.name}-upgrade',
         connection=connection_args,
         add_previous_output_in_env=False,
-        create=f'sudo snap refresh microk8s --channel {component_config.microk8s.version}',
-        triggers=[get_snap_version('microk8s', component_config.microk8s.version, 'amd64')],
+        create=f'sudo snap refresh microk8s --channel {component_config.microk8s.version}/stable',
+        triggers=[
+            get_snap_version('microk8s', f'{component_config.microk8s.version}/stable', 'amd64')
+        ],
     )
 
     # Enable rbac
