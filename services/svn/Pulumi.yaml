@@ -1,0 +1,7 @@
+name: svn
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: ../../.venv
+description: Subversion (httpd) deployment
