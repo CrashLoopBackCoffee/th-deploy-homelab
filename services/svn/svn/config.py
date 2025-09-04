@@ -25,6 +25,7 @@ class SvnConfig(utils.model.LocalBaseModel):
 
 class ComponentConfig(utils.model.LocalBaseModel):
     cloudflare: utils.model.CloudflareConfig
+    kubeconfig: utils.model.OnePasswordRef
     svn: SvnConfig
 
 
