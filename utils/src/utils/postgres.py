@@ -23,7 +23,7 @@ def create_postgres(
     local_port: int = 15432,
     backend: PostgresBackend = PostgresBackend.BITNAMI,
     storage_size: str = '20Gi',
-    storage_class: str = 'local-path',
+    storage_class: str = 'microk8s-hostpath',
 ) -> tuple[postgresql.Provider, p.Output[str], int]:
     """Create PostgreSQL instance using either Bitnami Helm chart or CloudNativePG operator.
 
@@ -34,7 +34,7 @@ def create_postgres(
         local_port: Local port for port forwarding (default: 15432).
         backend: PostgreSQL backend to use - 'bitnami' or 'cloudnative-pg' (default: 'bitnami').
         storage_size: Storage size for CloudNativePG backend (default: '20Gi').
-        storage_class: Storage class for CloudNativePG backend (default: 'local-path').
+        storage_class: Storage class for CloudNativePG backend (default: 'microk8s-hostpath').
 
     Returns:
         Tuple of (PostgreSQL provider, service name output, target port).
@@ -135,7 +135,7 @@ def _create_postgres_cloudnative_pg(
     namespace_name: p.Input[str],
     k8s_provider: k8s.Provider,
     storage_size: str = '20Gi',
-    storage_class: str = 'local-path',
+    storage_class: str = 'microk8s-hostpath',
     local_port: int = 15432,
 ) -> tuple[postgresql.Provider, p.Output[str], int]:
     """Create PostgreSQL using CloudNativePG operator."""
@@ -143,14 +143,14 @@ def _create_postgres_cloudnative_pg(
 
     # Generate secure password for PostgreSQL
     root_password = pulumi_random.RandomPassword(
-        'postgres-password',
+        'postgres-password-cnpg',
         length=24,
         special=True,
     )
 
     # Create secret for PostgreSQL credentials
     credentials_secret = k8s.core.v1.Secret(
-        'postgres-credentials',
+        'postgres-credentials-cnpg',
         metadata=k8s.meta.v1.ObjectMetaArgs(
             name='postgres-credentials',
             namespace=namespace_name,
@@ -163,17 +163,21 @@ def _create_postgres_cloudnative_pg(
     )
 
     # Create PostgreSQL cluster using CloudNativePG
-    _cluster = k8s.apiextensions.CustomResource(
+    cluster = k8s.apiextensions.CustomResource(
         'postgres',
         api_version='postgresql.cnpg.io/v1',
         kind='Cluster',
-        metadata=k8s.meta.v1.ObjectMetaArgs(
-            name='postgres',
-            namespace=namespace_name,
-        ),
+        metadata={
+            'name': 'postgres',
+            'namespace': namespace_name,
+            'annotations': {
+                # Wait for the cluster to be ready
+                'pulumi.com/waitFor': 'condition=Ready',
+            },
+        },
         spec={
             'instances': 1,
-            'imageName': f'postgres:{postgres_version}',
+            'imageName': f'ghcr.io/cloudnative-pg/postgresql:{postgres_version}-minimal-trixie',
             # PostgreSQL configuration
             'postgresql': {
                 'parameters': {
@@ -200,7 +204,7 @@ def _create_postgres_cloudnative_pg(
             'bootstrap': {
                 'initdb': {
                     'secret': {
-                        'name': 'postgres-credentials',
+                        'name': credentials_secret.metadata.name,
                     },
                     'options': [
                         '--encoding=UTF8',
@@ -214,23 +218,14 @@ def _create_postgres_cloudnative_pg(
                 'size': storage_size,
                 'storageClass': storage_class,
             },
-            # Monitoring configuration
-            'monitoring': {
-                'enabled': True,
-                'podMonitorLabels': {
-                    'app': 'postgres',
-                },
-            },
         },
         opts=p.ResourceOptions(
             provider=k8s_provider,
-            depends_on=[credentials_secret],
         ),
     )
 
-    # Service name follows CloudNativePG naming convention
-    # -rw suffix indicates read-write service
-    postgres_service = p.Output.from_input('postgres-rw')
+    # Introduce a data driven dependency on the cluster creation
+    postgres_service = cluster.metadata.apply(lambda _: 'postgres-rw')  # pyright: ignore[reportAttributeAccessIssue]
 
     # Set up port forwarding for local development/management
     postgres_port = utils.port_forward.ensure_port_forward(
@@ -244,7 +239,7 @@ def _create_postgres_cloudnative_pg(
 
     # Create PostgreSQL provider for database/user management
     postgres_provider = postgresql.Provider(
-        'postgres',
+        'postgres-cnpg',
         host='localhost',
         port=postgres_port,
         sslmode='disable',
