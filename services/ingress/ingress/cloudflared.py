@@ -4,7 +4,6 @@ import pulumi as p
 import pulumi_cloudflare as cloudflare
 import pulumi_kubernetes as k8s
 import pulumi_random
-
 import utils.cloudflare
 
 from ingress.config import ComponentConfig

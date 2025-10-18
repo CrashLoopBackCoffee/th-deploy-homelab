@@ -8,7 +8,6 @@ import pulumi as p
 import pulumi_cloudflare
 import pulumi_docker as docker
 import pulumi_random
-
 import utils.cloudflare
 
 from obsidian.config import ComponentConfig

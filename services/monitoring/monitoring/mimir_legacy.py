@@ -7,9 +7,8 @@ import pulumi_cloudflare as cloudflare
 import pulumi_command
 import pulumi_docker as docker
 import pulumi_minio as minio
-import yaml
-
 import utils.cloudflare
+import yaml
 
 from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path

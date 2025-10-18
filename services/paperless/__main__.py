@@ -1,10 +1,9 @@
 import pulumi as p
 import pulumi_kubernetes as k8s
+import utils.postgres
 
 from paperless.config import ComponentConfig
 from paperless.paperless import Paperless
-
-import utils.postgres
 
 config = p.Config()
 component_config = ComponentConfig.model_validate(config.get_object('config'))

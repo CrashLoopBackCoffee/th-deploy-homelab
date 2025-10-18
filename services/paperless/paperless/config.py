@@ -1,5 +1,4 @@
 import pydantic
-
 import utils.model
 
 

@@ -3,7 +3,6 @@ import textwrap
 
 import pulumi as p
 import pulumi_kubernetes as k8s
-
 import utils.opnsense.unbound.host_override
 
 from svn.config import ComponentConfig
