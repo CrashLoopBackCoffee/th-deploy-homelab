@@ -12,7 +12,7 @@ config:
       use-staging: true
     cloudnative-pg:
       # renovate: datasource=github-releases packageName=cloudnative-pg/charts versioning=semver
-      version: 0.23.0
+      version: 0.26.0
     cloudflare:
       api-key:
         ref: op://Pulumi/Cloudflare Global API Key/password
