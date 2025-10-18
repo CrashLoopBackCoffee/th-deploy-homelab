@@ -2,11 +2,10 @@
 
 import pulumi as p
 import pulumi_kubernetes as k8s
+import utils.postgres
 
 from immich.config import ComponentConfig
 from immich.immich import create_immich
-
-import utils.postgres
 
 config = p.Config()
 component_config = ComponentConfig.model_validate(config.get_object('config'))
