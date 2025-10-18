@@ -6,9 +6,14 @@ class TandoorConfig(utils.model.LocalBaseModel):
     hostname: str
 
 
+class PostgresConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     cloudflare: utils.model.CloudflareConfig
     tandoor: TandoorConfig
+    postgres: PostgresConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

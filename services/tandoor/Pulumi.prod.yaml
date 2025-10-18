@@ -9,3 +9,6 @@ config:
       # renovate: datasource=github-releases packageName=TandoorRecipes/recipes versioning=semver
       version: 2.3.2
       hostname: tandoor.tobiash.net
+    postgres:
+      # renovate: datasource=docker packageName=registry-1.docker.io/bitnamicharts/postgresql versioning=semver
+      version: 16.7.26

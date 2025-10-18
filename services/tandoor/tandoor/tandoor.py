@@ -8,7 +8,6 @@ import utils.postgres
 from tandoor.config import ComponentConfig
 
 TANDOOR_PORT = 8080
-POSTGRES_VERSION = '16.7.26'
 
 
 def create_tandoor(component_config: ComponentConfig, k8s_provider: k8s.Provider) -> None:
@@ -28,7 +27,7 @@ def create_tandoor(component_config: ComponentConfig, k8s_provider: k8s.Provider
 
     # Create postgres database
     postgres_provider, postgres_service, postgres_port = utils.postgres.create_postgres(
-        POSTGRES_VERSION,
+        component_config.postgres.version,
         namespace.metadata.name,
         k8s_provider,
     )
