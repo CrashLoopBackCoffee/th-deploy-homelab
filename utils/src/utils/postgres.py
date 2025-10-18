@@ -21,7 +21,7 @@ def create_postgres(
     namespace_name: p.Input[str],
     k8s_provider: k8s.Provider,
     local_port: int = 15432,
-    backend: PostgresBackend = PostgresBackend.BITNAMI,
+    backend: PostgresBackend = PostgresBackend.CLOUDNATIVE_PG,
     storage_size: str = '20Gi',
     storage_class: str = 'microk8s-hostpath',
 ) -> tuple[postgresql.Provider, p.Output[str], int]:
