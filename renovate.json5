@@ -52,6 +52,13 @@
       ],
       extractVersion: '^v?(?<version>.*)$',
     },
+    // Extract correct package version for cloudnative-pg charts
+    {
+      matchPackageNames: [
+        'cloudnative-pg/charts',
+      ],
+      extractVersion: '^cloudnative-pg-v(?<version>.*)$',
+    },
     {
       // Create separate PRs per minor release line for canonical/microk8s
       matchPackageNames: [

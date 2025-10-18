@@ -10,7 +10,7 @@ config:
       version: v1.19.1
       use-staging: false
     cloudnative-pg:
-      # renovate: datasource=github-releases packageName=cloudnative-pg/cloudnative-pg versioning=semver
+      # renovate: datasource=github-releases packageName=cloudnative-pg/charts versioning=semver
       version: 0.23.0
     cloudflare:
       api-key:
