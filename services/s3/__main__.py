@@ -2,12 +2,11 @@
 
 import pulumi as p
 import pulumi_docker as docker
+import utils.cloudflare
+import utils.docker
 
 from s3.config import ComponentConfig
 from s3.minio import create_minio
-
-import utils.cloudflare
-import utils.docker
 
 component_config = ComponentConfig.model_validate(p.Config().get_object('config'))
 

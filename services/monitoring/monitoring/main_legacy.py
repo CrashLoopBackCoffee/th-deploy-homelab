@@ -2,7 +2,6 @@
 
 import pulumi as p
 import pulumi_docker as docker
-
 import utils.cloudflare
 import utils.docker
 

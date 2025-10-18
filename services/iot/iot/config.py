@@ -2,7 +2,6 @@ import ipaddress
 import typing as t
 
 import pydantic
-
 import utils.model
 
 

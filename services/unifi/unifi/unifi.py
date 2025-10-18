@@ -3,12 +3,12 @@ import pulumi_command
 import pulumi_docker as docker
 import pulumi_proxmoxve as proxmoxve
 import pulumiverse_acme as acme
+import utils.opnsense.unbound.host_override
 import yaml
 
-import utils.opnsense.unbound.host_override
+from utils.utils import stack_is_prod
 
 from unifi.config import ComponentConfig
-from utils.utils import stack_is_prod
 
 
 def _get_cloud_config(hostname: str, username: str, ssh_public_key: str) -> str:

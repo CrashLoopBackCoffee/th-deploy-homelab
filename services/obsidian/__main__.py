@@ -2,12 +2,11 @@
 
 import pulumi as p
 import pulumi_docker
+import utils.docker
 
 from obsidian.cloudflare import create_cloudflare_tunnel
 from obsidian.config import ComponentConfig
 from obsidian.couchdb import create_couchdb
-
-import utils.docker
 
 component_config = ComponentConfig.model_validate(p.Config().require_object('config'))
 

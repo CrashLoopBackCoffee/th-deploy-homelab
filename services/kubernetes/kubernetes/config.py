@@ -1,7 +1,6 @@
 import ipaddress
 
 import pydantic
-
 import utils.model
 
 

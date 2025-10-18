@@ -5,7 +5,6 @@ import pulumi as p
 import pulumi_cloudflare as cloudflare
 import pulumi_command
 import pulumi_docker as docker
-
 import utils.cloudflare
 import utils.utils
 

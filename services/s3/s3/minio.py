@@ -4,7 +4,6 @@ import pulumi_command
 import pulumi_docker as docker
 import pulumi_minio
 import pulumi_random
-
 import utils.cloudflare
 
 from s3.config import ComponentConfig

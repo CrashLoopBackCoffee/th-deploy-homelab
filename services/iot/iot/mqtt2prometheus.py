@@ -2,9 +2,8 @@ import copy
 
 import pulumi as p
 import pulumi_kubernetes as k8s
-import yaml
-
 import utils.opnsense.unbound.host_override
+import yaml
 
 from iot.config import ComponentConfig
 
