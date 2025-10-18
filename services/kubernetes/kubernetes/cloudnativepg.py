@@ -29,9 +29,7 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
         values={
             'config': {
                 'create': True,
-                'secret': {
-                    'create': True,
-                },
+                'secret': False,
             },
         },
         opts=k8s_opts,
