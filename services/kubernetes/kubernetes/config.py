@@ -62,9 +62,14 @@ class CertManagerConfig(utils.model.LocalBaseModel):
         )
 
 
+class CloudNativePgConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     cert_manager: CertManagerConfig
     cloudflare: utils.model.CloudflareConfig
+    cloudnative_pg: CloudNativePgConfig
     proxmox: ProxmoxConfig
     microk8s: MicroK8sConfig
     csi_nfs_driver: NfsCsiDriverConfig

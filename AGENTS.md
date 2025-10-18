@@ -92,13 +92,24 @@ services/
   ```
 - Use the config value in Python code: `f'{image_name}:{component_config.service.version}'`.
 
-### 6. Git Workflow
+### 6. Helm Chart Management
+- **PREFER `k8s.helm.v4.Chart`** over `k8s.helm.v3.Release` when possible for better resource visibility.
+- `Chart` creates individual Pulumi resources for each Helm resource, enabling better dependency tracking and resource management.
+- `Release` creates an opaque Helm resource where Pulumi has no control over the child resources.
+- **EXCEPTION**: Use `k8s.helm.v3.Release` when the Helm chart uses hooks (pre-install, post-install, pre-delete, post-delete, etc.).
+- **ALWAYS** analyze Helm charts for hook usage before choosing between Chart and Release:
+  - Check chart templates for `"helm.sh/hook"` annotations.
+  - Common hook usage: database initialization, migration jobs, cleanup tasks.
+- Use `k8s.helm.v4.Chart` for most modern operators and simple applications.
+- Use `k8s.helm.v3.Release` for complex applications with lifecycle hooks.
+
+### 7. Git Workflow
 - Every change must happen on a feature branch and be performed via pull request.
 - Use descriptive branch names (e.g., `feature/add-prometheus-monitoring`).
 - Use `hub sync` to keep branches clean.
 - Never commit directly to the main branch.
 
-### 7. Kubernetes
+### 8. Kubernetes
 - Never set CPU limits on pods.
 
 ## Common Commands
