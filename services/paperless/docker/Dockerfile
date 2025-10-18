@@ -2,7 +2,7 @@
 # This eliminates the need for runtime downloads and improves startup time and reliability
 
 # renovate: datasource=github-releases packageName=restic/restic versioning=semver
-ARG RESTIC_VERSION=0.18.0
+ARG RESTIC_VERSION=0.18.1
 
 # renovate: datasource=github-releases packageName=rclone/rclone versioning=semver
 ARG BUILD_RCLONE_VERSION=1.71.1
