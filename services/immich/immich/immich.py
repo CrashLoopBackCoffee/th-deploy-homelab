@@ -1,35 +1,66 @@
 import pulumi as p
 import pulumi_kubernetes as k8s
+import pulumi_postgresql as postgresql
+import pulumi_random as random
 
 import utils.opnsense.unbound.host_override
 
 from immich.config import ComponentConfig
 
 IMMICH_PORT = 2283
+REDIS_PORT = 6379
 
 
-def create_immich(component_config: ComponentConfig, k8s_provider: k8s.Provider):
+def create_immich(
+    component_config: ComponentConfig,
+    namespace: p.Input[str],
+    k8s_provider: k8s.Provider,
+    postgres_provider: postgresql.Provider,
+    postgres_service: p.Input[str],
+    postgres_port: p.Input[int],
+):
     """
     Deploy Immich photo management service
     """
     assert component_config.immich
 
-    k8s_opts = p.ResourceOptions(provider=k8s_provider)
-    namespace = k8s.core.v1.Namespace(
-        'immich',
-        metadata={
-            'name': 'immich',
-        },
-        opts=k8s_opts,
+    # Configure database
+    postgres_opts = p.ResourceOptions(provider=postgres_provider)
+    postgres_password = random.RandomPassword(
+        'immich-password',
+        length=24,
     )
+    postgres_user = postgresql.Role(
+        'immich',
+        login=True,
+        password=postgres_password.result,
+        opts=postgres_opts,
+    )
+    database = postgresql.Database(
+        'immich',
+        encoding='UTF8',
+        lc_collate='C',
+        lc_ctype='C',
+        owner=postgres_user.name,
+        opts=postgres_opts,
+    )
+
+    namespaced_provider = k8s.Provider(
+        'immich-provider',
+        kubeconfig=k8s_provider.kubeconfig,  # type: ignore
+        namespace=namespace,
+    )
+    k8s_opts = p.ResourceOptions(
+        provider=namespaced_provider,
+    )
+
+    # Create Redis
+    redis_service = create_redis(component_config, k8s_opts)
 
     app_labels = {'app': 'immich'}
     sts = k8s.apps.v1.StatefulSet(
         'immich',
-        metadata={
-            'namespace': namespace.metadata.name,
-            'name': 'immich',
-        },
+        metadata={'name': 'immich'},
         spec={
             'replicas': 1,
             'selector': {'match_labels': app_labels},
@@ -45,23 +76,33 @@ def create_immich(component_config: ComponentConfig, k8s_provider: k8s.Provider)
                             'env': [
                                 {
                                     'name': 'DB_HOSTNAME',
-                                    'value': 'immich-postgres',
+                                    'value': postgres_service,
+                                },
+                                {
+                                    'name': 'DB_PORT',
+                                    'value': p.Output.from_input(postgres_port).apply(
+                                        lambda port: str(port)
+                                    ),
                                 },
                                 {
                                     'name': 'DB_DATABASE_NAME',
-                                    'value': 'immich',
+                                    'value': database.name,
                                 },
                                 {
                                     'name': 'DB_USERNAME',
-                                    'value': 'postgres',
+                                    'value': postgres_user.name,
                                 },
                                 {
                                     'name': 'DB_PASSWORD',
-                                    'value': 'postgres',
+                                    'value': postgres_password.result,
                                 },
                                 {
                                     'name': 'REDIS_HOSTNAME',
-                                    'value': 'immich-redis',
+                                    'value': redis_service.metadata.name,
+                                },
+                                {
+                                    'name': 'REDIS_PORT',
+                                    'value': str(REDIS_PORT),
                                 },
                             ],
                             'volume_mounts': [
@@ -93,10 +134,7 @@ def create_immich(component_config: ComponentConfig, k8s_provider: k8s.Provider)
 
     service = k8s.core.v1.Service(
         'immich',
-        metadata={
-            'namespace': namespace.metadata.name,
-            'name': 'immich',
-        },
+        metadata={'name': 'immich'},
         spec={
             'ports': [{'port': IMMICH_PORT}],
             'selector': sts.spec.selector.match_labels,
@@ -122,7 +160,6 @@ def create_immich(component_config: ComponentConfig, k8s_provider: k8s.Provider)
         kind='IngressRoute',
         metadata={
             'name': 'ingress',
-            'namespace': namespace.metadata.name,
         },
         spec={
             'entryPoints': ['websecure'],
@@ -147,4 +184,39 @@ def create_immich(component_config: ComponentConfig, k8s_provider: k8s.Provider)
     p.export(
         'immich_url',
         p.Output.format('https://{}.{}', record.host, record.domain),
+    )
+
+
+def create_redis(component_config: ComponentConfig, opts: p.ResourceOptions) -> k8s.core.v1.Service:
+    app_labels_redis = {'app': 'redis'}
+    redis_sts = k8s.apps.v1.StatefulSet(
+        'redis',
+        metadata={'name': 'redis'},
+        spec={
+            'replicas': 1,
+            'selector': {'match_labels': app_labels_redis},
+            'service_name': 'redis-headless',
+            'template': {
+                'metadata': {'labels': app_labels_redis},
+                'spec': {
+                    'containers': [
+                        {
+                            'name': 'redis',
+                            'image': f'docker.io/library/redis:{component_config.redis.version}',
+                            'ports': [{'container_port': REDIS_PORT}],
+                        },
+                    ],
+                },
+            },
+        },
+        opts=opts,
+    )
+    return k8s.core.v1.Service(
+        'redis',
+        metadata={'name': 'redis'},
+        spec={
+            'ports': [{'port': REDIS_PORT}],
+            'selector': redis_sts.spec.selector.match_labels,
+        },
+        opts=opts,
     )

@@ -12,10 +12,20 @@ class ImmichConfig(utils.model.LocalBaseModel):
     )
 
 
+class PostgresConfig(utils.model.LocalBaseModel):
+    version: str
+
+
+class RedisConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     kubeconfig: utils.model.OnePasswordRef
     cloudflare: utils.model.CloudflareConfig
     immich: ImmichConfig
+    postgres: PostgresConfig
+    redis: RedisConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

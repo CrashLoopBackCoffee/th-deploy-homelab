@@ -534,6 +534,8 @@ source = { editable = "services/immich" }
 dependencies = [
     { name = "pulumi" },
     { name = "pulumi-kubernetes" },
+    { name = "pulumi-postgresql" },
+    { name = "pulumi-random" },
     { name = "utils" },
 ]
 
@@ -541,6 +543,8 @@ dependencies = [
 requires-dist = [
     { name = "pulumi", specifier = ">=3.0.0,<4.0.0" },
     { name = "pulumi-kubernetes", specifier = ">=4.0.0,<5.0.0" },
+    { name = "pulumi-postgresql", specifier = ">=3.0.0,<4.0.0" },
+    { name = "pulumi-random", specifier = ">=4.0.0,<5.0.0" },
     { name = "utils", editable = "utils" },
 ]
 
