@@ -17,4 +17,4 @@ config:
       library-pvc-name: immich-library
     postgres:
       # renovate: datasource=docker packageName=ghcr.io/tensorchord/cloudnative-vectorchord versioning=loose
-      vectorchord-version: "17.5-0.5.2"
+      vectorchord-version: "17.6"
