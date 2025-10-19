@@ -4,7 +4,6 @@ import utils.postgres
 
 from paperless.config import ComponentConfig
 from paperless.paperless import Paperless
-from utils.postgres import PostgresBackend
 
 config = p.Config()
 component_config = ComponentConfig.model_validate(config.get_object('config'))
@@ -26,7 +25,6 @@ postgres_provider, postgres_service, postgres_port = utils.postgres.create_postg
     component_config.postgres.version,
     namespace.metadata.name,
     k8s_provider,
-    backend=PostgresBackend.BITNAMI,
 )
 
 Paperless(

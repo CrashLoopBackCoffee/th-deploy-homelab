@@ -69,6 +69,7 @@ services/
 - Prefer composition over inheritance for Pulumi components.
 - Use dataclasses or Pydantic models for structured data.
 - Keep dependency lists in `pyproject.toml` sorted alphabetically.
+- **Type Annotations**: Use modern Python union syntax (`Type | None`) instead of deprecated `Optional[Type]`.
 - **Import Style**: Follow project import conventions:
   - Use `import ...` for external libraries (e.g., `import json`).
   - Use `from ... import ...` for internal/project imports.
