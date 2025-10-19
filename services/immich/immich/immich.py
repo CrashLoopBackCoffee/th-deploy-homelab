@@ -129,7 +129,7 @@ def create_immich(
                                     'DB_USERNAME': {
                                         'valueFrom': {
                                             'secretKeyRef': {
-                                                'name': postgres_db.secret_name,
+                                                'name': postgres_db.superuser_secret_name,
                                                 'key': 'username',
                                             }
                                         }
@@ -137,7 +137,7 @@ def create_immich(
                                     'DB_PASSWORD': {
                                         'valueFrom': {
                                             'secretKeyRef': {
-                                                'name': postgres_db.secret_name,
+                                                'name': postgres_db.superuser_secret_name,
                                                 'key': 'password',
                                             }
                                         }

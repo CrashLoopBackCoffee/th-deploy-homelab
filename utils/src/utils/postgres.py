@@ -37,6 +37,7 @@ class PostgresDatabase(p.ComponentResource):
         local_port: int = 15432,
         storage_size: str = '20Gi',
         storage_class: str = 'microk8s-hostpath',
+        enable_superuser: bool = False,
         spec_overrides: dict | None = None,
         opts: p.ResourceOptions | None = None,
     ):
@@ -64,6 +65,7 @@ class PostgresDatabase(p.ComponentResource):
         spec = {
             'instances': 1,
             'imageName': f'ghcr.io/cloudnative-pg/postgresql:{version}-minimal-trixie',
+            'enableSuperuserAccess': enable_superuser,
             # PostgreSQL configuration
             'postgresql': {
                 'parameters': {
@@ -128,6 +130,13 @@ class PostgresDatabase(p.ComponentResource):
         # CloudNativePG creates a secret named '{cluster_name}-app' with the password
         # Derive the secret name from cluster metadata to ensure data-driven dependency
         self.secret_name = cluster.metadata.apply(lambda _: f'{cluster_name}-app')  # pyright: ignore[reportAttributeAccessIssue]
+
+        if enable_superuser:
+            self.superuser_secret_name = cluster.metadata.apply(  # pyright: ignore[reportAttributeAccessIssue]
+                lambda _: f'{cluster_name}-superuser'
+            )
+        else:
+            self.superuser_secret_name = None
 
         self.register_outputs({})
 
