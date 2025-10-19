@@ -36,6 +36,9 @@ class PostgresDatabase(p.ComponentResource):
 
         k8s_opts = p.ResourceOptions(provider=k8s_provider, parent=self)
 
+        # Use component name as cluster name to support multiple instances
+        cluster_name = name
+
         # Generate secure password for PostgreSQL
         root_password = pulumi_random.RandomPassword(
             'postgres-password',
@@ -46,7 +49,7 @@ class PostgresDatabase(p.ComponentResource):
 
         # Create secret for PostgreSQL credentials
         credentials_secret = k8s.core.v1.Secret(
-            'postgres-credentials',
+            f'{cluster_name}-credentials',
             metadata={
                 'namespace': namespace_name,
             },
@@ -59,11 +62,11 @@ class PostgresDatabase(p.ComponentResource):
 
         # Create PostgreSQL cluster using CloudNativePG
         cluster = k8s.apiextensions.CustomResource(
-            'postgres',
+            cluster_name,
             api_version='postgresql.cnpg.io/v1',
             kind='Cluster',
             metadata={
-                'name': 'postgres',
+                'name': cluster_name,
                 'namespace': namespace_name,
                 'annotations': {
                     # Wait for the cluster to be ready
@@ -118,7 +121,9 @@ class PostgresDatabase(p.ComponentResource):
         )
 
         # Introduce a data driven dependency on the cluster creation
-        postgres_service = cluster.metadata.apply(lambda _: 'postgres-rw')  # type: ignore[union-attr]
+        # Derive service name from cluster name (CloudNativePG appends '-rw' for read-write service)
+        # Using cluster_name directly since metadata is accessed during resource creation
+        postgres_service = cluster.metadata.apply(lambda _: f'{cluster_name}-rw')  # pyright: ignore[reportAttributeAccessIssue]
 
         # Set up port forwarding for local development/management
         postgres_port = utils.port_forward.ensure_port_forward(
