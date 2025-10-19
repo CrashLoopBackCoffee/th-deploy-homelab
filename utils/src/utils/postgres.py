@@ -41,6 +41,7 @@ class PostgresDatabase(p.ComponentResource):
             'postgres-password',
             length=24,
             special=True,
+            opts=p.ResourceOptions(parent=self),
         )
 
         # Create secret for PostgreSQL credentials
