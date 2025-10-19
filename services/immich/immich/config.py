@@ -2,15 +2,19 @@ import pydantic
 import utils.model
 
 
+class PersistenceShareConfig(utils.model.LocalBaseModel):
+    nfs_server: str = pydantic.Field(alias='nfs-server')
+    nfs_path: str = pydantic.Field(alias='nfs-path')
+    nfs_mount_options: str = pydantic.Field(
+        alias='nfs-mount-options', default='nfsvers=4.1,sec=sys'
+    )
+    size: str = '100Gi'
+
+
 class ImmichConfig(utils.model.LocalBaseModel):
     version: str
     chart_version: str
-    library_server: str
-    library_share: str
-    library_mount_options: str = pydantic.Field(
-        alias='library-mount-options', default='nfsvers=4.1,sec=sys'
-    )
-    library_pvc_name: str = pydantic.Field(default='immich-library')
+    persistence: dict[str, PersistenceShareConfig]
 
 
 class PostgresConfig(utils.model.LocalBaseModel):
