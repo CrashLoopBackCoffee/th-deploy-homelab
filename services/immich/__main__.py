@@ -34,7 +34,7 @@ postgres_db = utils.postgres.PostgresDatabase(
     k8s_provider=k8s_provider,
     spec_overrides={
         # Use vectorchord-enabled PostgreSQL image for immich
-        'imageName': f'ghcr.io/tensorchord/cloudnative-vectorchord:{component_config.postgres.vectorchord_version}',
+        'imageName': f'ghcr.io/tensorchord/cloudnative-vectorchord:{component_config.postgres.version}-{component_config.postgres.vectorchord_version}',
         'postgresql': {
             'shared_preload_libraries': ['vchord.so'],
         },
