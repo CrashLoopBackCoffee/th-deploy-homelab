@@ -12,9 +12,17 @@ config:
       version: 2.1.0
       # renovate: datasource=helm registryUrl=oci://ghcr.io/immich-app packageName=immich-charts
       chart-version: "0.10.0"
-      library-server: synology.tobiash.net
-      library-share: /volume2/photo
-      library-pvc-name: immich-library
+      persistence:
+        library:
+          nfs-server: synology.tobiash.net
+          nfs-path: /volume2/photo/immich
+          nfs-mount-options: "nfsvers=4.1,sec=sys"
+          size: "100Gi"
+        handy:
+          nfs-server: synology.tobiash.net
+          nfs-path: /volume2/photo/Handy
+          nfs-mount-options: "nfsvers=4.1,sec=sys"
+          size: "10Gi"
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
       version: "17.6"

@@ -28,55 +28,70 @@ def create_immich(
         provider=namespaced_provider,
     )
 
-    # Create PersistentVolume for NFS library storage
-    pv = k8s.core.v1.PersistentVolume(
-        'immich-library',
-        metadata={
-            'name': 'immich-library',
-        },
-        spec={
-            'capacity': {
-                'storage': '100Gi',
+    # Create PersistentVolumes and PersistentVolumeClaims for each persistence share
+    pvcs: dict[str, p.Output[str]] = {}
+    for share_name, share_config in component_config.immich.persistence.items():
+        # Create PersistentVolume for NFS storage
+        pv = k8s.core.v1.PersistentVolume(
+            f'immich-{share_name}',
+            metadata={
+                'name': f'immich-{share_name}',
             },
-            'access_modes': ['ReadWriteMany'],
-            'persistent_volume_reclaim_policy': 'Retain',
-            'mount_options': component_config.immich.library_mount_options.split(','),
-            'csi': {
-                'driver': 'nfs.csi.k8s.io',
-                'volume_handle': p.Output.concat(
-                    component_config.immich.library_server,
-                    '#',
-                    component_config.immich.library_share,
-                    '#',
-                ),
-                'volume_attributes': {
-                    'server': component_config.immich.library_server,
-                    'share': component_config.immich.library_share,
+            spec={
+                'capacity': {
+                    'storage': share_config.size,
+                },
+                'access_modes': ['ReadWriteMany'],
+                'persistent_volume_reclaim_policy': 'Retain',
+                'mount_options': share_config.nfs_mount_options.split(','),
+                'csi': {
+                    'driver': 'nfs.csi.k8s.io',
+                    'volume_handle': p.Output.concat(
+                        share_config.nfs_server,
+                        '#',
+                        share_config.nfs_path,
+                        '#',
+                    ),
+                    'volume_attributes': {
+                        'server': share_config.nfs_server,
+                        'share': share_config.nfs_path,
+                    },
                 },
             },
-        },
-        opts=p.ResourceOptions(provider=k8s_provider),
-    )
+            opts=p.ResourceOptions(provider=k8s_provider),
+        )
 
-    # Create PersistentVolumeClaim for library storage
-    library_pvc = k8s.core.v1.PersistentVolumeClaim(
-        'immich-library',
-        metadata={
-            'namespace': namespace,
-            'name': 'immich-library',
-        },
-        spec={
-            'access_modes': ['ReadWriteMany'],
-            'storage_class_name': '',  # Use no storage class for static binding
-            'volume_name': pv.metadata.name,
-            'resources': {
-                'requests': {
-                    'storage': '100Gi',
+        # Create PersistentVolumeClaim for storage
+        pvc = k8s.core.v1.PersistentVolumeClaim(
+            f'immich-{share_name}',
+            metadata={
+                'namespace': namespace,
+                'name': f'immich-{share_name}',
+            },
+            spec={
+                'access_modes': ['ReadWriteMany'],
+                'storage_class_name': '',  # Use no storage class for static binding
+                'volume_name': pv.metadata.name,
+                'resources': {
+                    'requests': {
+                        'storage': share_config.size,
+                    },
                 },
             },
-        },
-        opts=p.ResourceOptions(provider=k8s_provider),
-    )
+            opts=p.ResourceOptions(provider=k8s_provider),
+        )
+        pvcs[share_name] = pvc.metadata.name
+
+    # Build persistence configuration for external libraries
+    persistence_values: dict = {
+        share_name: {
+            'enabled': True,
+            'existingClaim': pvc_name,
+            'readOnly': True,
+        }
+        for share_name, pvc_name in pvcs.items()
+        if share_name != 'library'
+    }
 
     # Deploy Immich using official Helm chart
     chart = k8s.helm.v4.Chart(
@@ -97,6 +112,7 @@ def create_immich(
                 },
             },
             'server': {
+                'persistence': persistence_values,
                 'controllers': {
                     'main': {
                         'containers': {
@@ -158,7 +174,7 @@ def create_immich(
                 'persistence': {
                     'library': {
                         'enabled': True,
-                        'existingClaim': library_pvc.metadata.name,
+                        'existingClaim': pvcs['library'],
                     },
                 },
             },
