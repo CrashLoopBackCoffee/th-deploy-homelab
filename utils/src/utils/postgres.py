@@ -161,8 +161,7 @@ def create_postgres(
     """Create PostgreSQL instance using Bitnami Helm chart.
 
     .. deprecated::
-        Use :class:`PostgreSQL` component resource instead for proper resource management.
-
+        Use :class:`PostgresDatabase` component resource instead for proper resource management.
     Args:
         version: PostgreSQL version to deploy.
         namespace_name: Kubernetes namespace for deployment.
