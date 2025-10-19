@@ -162,6 +162,15 @@ def create_immich(
                     },
                 },
             },
+            'machine-learning': {
+                'persistence': {
+                    'cache': {
+                        'enabled': True,
+                        'size': '10Gi',
+                        'type': 'persistentVolumeClaim',
+                    },
+                },
+            },
         },
         opts=p.ResourceOptions(provider=namespaced_provider),
     )
