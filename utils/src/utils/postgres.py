@@ -7,6 +7,25 @@ import utils
 import utils.port_forward
 
 
+def _deep_merge(base: dict, overrides: dict) -> dict:
+    """Deep merge overrides dict into base dict.
+
+    Args:
+        base: Base dictionary.
+        overrides: Dictionary with values to override.
+
+    Returns:
+        Merged dictionary with overrides applied recursively.
+    """
+    result = base.copy()
+    for key, value in overrides.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = _deep_merge(result[key], value)
+        else:
+            result[key] = value
+    return result
+
+
 class PostgresDatabase(p.ComponentResource):
     def __init__(
         self,
@@ -18,6 +37,7 @@ class PostgresDatabase(p.ComponentResource):
         local_port: int = 15432,
         storage_size: str = '20Gi',
         storage_class: str = 'microk8s-hostpath',
+        spec_overrides: dict | None = None,
         opts: p.ResourceOptions | None = None,
     ):
         """Initialize PostgreSQL component.
@@ -30,6 +50,7 @@ class PostgresDatabase(p.ComponentResource):
             local_port: Local port for port forwarding (default: 15432).
             storage_size: Storage size for CloudNativePG backend (default: '20Gi').
             storage_class: Storage class for CloudNativePG backend (default: 'microk8s-hostpath').
+            spec_overrides: Optional dict to override values in the cluster spec (deep merged).
             opts: Pulumi resource options.
         """
         super().__init__(f'lab:postgres:{name}', name, None, opts)
@@ -39,26 +60,52 @@ class PostgresDatabase(p.ComponentResource):
         # Use component name as cluster name to support multiple instances
         cluster_name = name
 
-        # Generate secure password for PostgreSQL
-        root_password = pulumi_random.RandomPassword(
-            'postgres-password',
-            length=24,
-            special=True,
-            opts=p.ResourceOptions(parent=self),
-        )
+        # Build the default spec configuration
+        spec = {
+            'instances': 1,
+            'imageName': f'ghcr.io/cloudnative-pg/postgresql:{version}-minimal-trixie',
+            # PostgreSQL configuration
+            'postgresql': {
+                'parameters': {
+                    # Performance tuning for homelab environment
+                    'max_connections': '100',
+                    'shared_buffers': '256MB',
+                    'effective_cache_size': '1GB',
+                    'maintenance_work_mem': '64MB',
+                    'checkpoint_completion_target': '0.9',
+                    'wal_buffers': '16MB',
+                    'default_statistics_target': '100',
+                    'random_page_cost': '1.1',
+                    'effective_io_concurrency': '200',
+                    # Logging configuration
+                    'log_min_duration_statement': '1000',
+                    'log_line_prefix': '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h ',
+                    'log_checkpoints': 'on',
+                    'log_connections': 'on',
+                    'log_disconnections': 'on',
+                    'log_lock_waits': 'on',
+                }
+            },
+            # Bootstrap configuration
+            'bootstrap': {
+                'initdb': {
+                    'options': [
+                        '--encoding=UTF8',
+                        '--lc-collate=C',
+                        '--lc-ctype=C',
+                    ],
+                }
+            },
+            # Storage configuration
+            'storage': {
+                'size': storage_size,
+                'storageClass': storage_class,
+            },
+        }
 
-        # Create secret for PostgreSQL credentials
-        credentials_secret = k8s.core.v1.Secret(
-            f'{cluster_name}-credentials',
-            metadata={
-                'namespace': namespace_name,
-            },
-            string_data={
-                'username': 'postgres',
-                'password': root_password.result,
-            },
-            opts=k8s_opts,
-        )
+        # Apply spec overrides if provided
+        if spec_overrides:
+            spec = _deep_merge(spec, spec_overrides)
 
         # Create PostgreSQL cluster using CloudNativePG
         cluster = k8s.apiextensions.CustomResource(
@@ -73,81 +120,14 @@ class PostgresDatabase(p.ComponentResource):
                     'pulumi.com/waitFor': 'condition=Ready',
                 },
             },
-            spec={
-                'instances': 1,
-                'imageName': f'ghcr.io/cloudnative-pg/postgresql:{version}-minimal-trixie',
-                # PostgreSQL configuration
-                'postgresql': {
-                    'parameters': {
-                        # Performance tuning for homelab environment
-                        'max_connections': '100',
-                        'shared_buffers': '256MB',
-                        'effective_cache_size': '1GB',
-                        'maintenance_work_mem': '64MB',
-                        'checkpoint_completion_target': '0.9',
-                        'wal_buffers': '16MB',
-                        'default_statistics_target': '100',
-                        'random_page_cost': '1.1',
-                        'effective_io_concurrency': '200',
-                        # Logging configuration
-                        'log_min_duration_statement': '1000',
-                        'log_line_prefix': '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h ',
-                        'log_checkpoints': 'on',
-                        'log_connections': 'on',
-                        'log_disconnections': 'on',
-                        'log_lock_waits': 'on',
-                    }
-                },
-                # Bootstrap configuration
-                'bootstrap': {
-                    'initdb': {
-                        'secret': {
-                            'name': credentials_secret.metadata.name,
-                        },
-                        'options': [
-                            '--encoding=UTF8',
-                            '--lc-collate=C',
-                            '--lc-ctype=C',
-                        ],
-                    }
-                },
-                # Storage configuration
-                'storage': {
-                    'size': storage_size,
-                    'storageClass': storage_class,
-                },
-            },
+            spec=spec,
             opts=k8s_opts,
         )
 
-        # Introduce a data driven dependency on the cluster creation
-        # Derive service name from cluster name (CloudNativePG appends '-rw' for read-write service)
-        # Using cluster_name directly since metadata is accessed during resource creation
-        postgres_service = cluster.metadata.apply(lambda _: f'{cluster_name}-rw')  # pyright: ignore[reportAttributeAccessIssue]
-
-        # Set up port forwarding for local development/management
-        postgres_port = utils.port_forward.ensure_port_forward(
-            local_port=local_port,
-            namespace=namespace_name,
-            resource_type=utils.port_forward.ResourceType.SERVICE,
-            resource_name=postgres_service,
-            target_port='5432',
-            k8s_provider=k8s_provider,
-        )
-
-        # Create PostgreSQL provider for database/user management
-        self.postgres_provider = postgresql.Provider(
-            'postgres',
-            host='localhost',
-            port=postgres_port,
-            sslmode='disable',
-            username='postgres',
-            password=root_password.result,
-            opts=p.ResourceOptions(parent=self),
-        )
-
-        self.service_name = p.Output.from_input(postgres_service)
-        self.port = 5432
+        # Retrieve the postgres password from the Kubernetes secret created by CloudNativePG
+        # CloudNativePG creates a secret named '{cluster_name}-app' with the password
+        # Derive the secret name from cluster metadata to ensure data-driven dependency
+        self.secret_name = cluster.metadata.apply(lambda _: f'{cluster_name}-app')  # pyright: ignore[reportAttributeAccessIssue]
 
         self.register_outputs({})
 
