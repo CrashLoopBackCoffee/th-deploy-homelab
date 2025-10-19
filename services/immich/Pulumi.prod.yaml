@@ -1,0 +1,20 @@
+config:
+  immich:config:
+    cloudflare:
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      email: tobias_henkel@gmx.de
+      zone: tobiash.net
+    kubeconfig:
+      ref: op://Pulumi/Kubeconfig prod/password
+    immich:
+      # renovate: datasource=github-releases packageName=immich-app/immich versioning=semver
+      version: 2.0.1
+      # renovate: datasource=helm registryUrl=oci://ghcr.io/immich-app packageName=immich-charts
+      chart-version: "0.10.0"
+      library-server: synology.tobiash.net
+      library-share: /volume2/photo
+      library-pvc-name: immich-library
+    postgres:
+      # renovate: datasource=github-releases packageName=tensorchord/cloudnative-vectorchord versioning=semver
+      vectorchord-version: "16.9-0.4.3"
