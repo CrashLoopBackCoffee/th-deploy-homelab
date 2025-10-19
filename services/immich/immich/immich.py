@@ -1,48 +1,23 @@
 import pulumi as p
 import pulumi_kubernetes as k8s
-import pulumi_postgresql as postgresql
-import pulumi_random as random
 import utils.opnsense.unbound.host_override
+import utils.postgres
 
 from immich.config import ComponentConfig
 
 IMMICH_PORT = 2283
-REDIS_PORT = 6379
 
 
 def create_immich(
     component_config: ComponentConfig,
     namespace: p.Input[str],
     k8s_provider: k8s.Provider,
-    postgres_provider: postgresql.Provider,
-    postgres_service: p.Input[str],
-    postgres_port: p.Input[int],
+    postgres_db: utils.postgres.PostgresDatabase,
 ):
     """
-    Deploy Immich photo management service
+    Deploy Immich photo management service using official Helm chart
     """
     assert component_config.immich
-
-    # Configure database
-    postgres_opts = p.ResourceOptions(provider=postgres_provider)
-    postgres_password = random.RandomPassword(
-        'immich-password',
-        length=24,
-    )
-    postgres_user = postgresql.Role(
-        'immich',
-        login=True,
-        password=postgres_password.result,
-        opts=postgres_opts,
-    )
-    database = postgresql.Database(
-        'immich',
-        encoding='UTF8',
-        lc_collate='C',
-        lc_ctype='C',
-        owner=postgres_user.name,
-        opts=postgres_opts,
-    )
 
     namespaced_provider = k8s.Provider(
         'immich-provider',
@@ -53,95 +28,154 @@ def create_immich(
         provider=namespaced_provider,
     )
 
-    # Create Redis
-    redis_service = create_redis(component_config, k8s_opts)
-
-    app_labels = {'app': 'immich'}
-    sts = k8s.apps.v1.StatefulSet(
-        'immich',
-        metadata={'name': 'immich'},
+    # Create PersistentVolume for NFS library storage
+    pv = k8s.core.v1.PersistentVolume(
+        'immich-library',
+        metadata={
+            'name': 'immich-library',
+        },
         spec={
-            'replicas': 1,
-            'selector': {'match_labels': app_labels},
-            'service_name': 'immich-headless',
-            'template': {
-                'metadata': {'labels': app_labels},
-                'spec': {
-                    'containers': [
-                        {
-                            'name': 'immich',
-                            'image': f'ghcr.io/immich-app/immich-server:{component_config.immich.version}',
-                            'ports': [{'container_port': IMMICH_PORT}],
-                            'env': [
-                                {
-                                    'name': 'DB_HOSTNAME',
-                                    'value': postgres_service,
-                                },
-                                {
-                                    'name': 'DB_PORT',
-                                    'value': p.Output.from_input(postgres_port).apply(
-                                        lambda port: str(port)
-                                    ),
-                                },
-                                {
-                                    'name': 'DB_DATABASE_NAME',
-                                    'value': database.name,
-                                },
-                                {
-                                    'name': 'DB_USERNAME',
-                                    'value': postgres_user.name,
-                                },
-                                {
-                                    'name': 'DB_PASSWORD',
-                                    'value': postgres_password.result,
-                                },
-                                {
-                                    'name': 'REDIS_HOSTNAME',
-                                    'value': redis_service.metadata.name,
-                                },
-                                {
-                                    'name': 'REDIS_PORT',
-                                    'value': str(REDIS_PORT),
-                                },
-                            ],
-                            'volume_mounts': [
-                                {
-                                    'name': 'library',
-                                    'mount_path': '/usr/src/app/upload',
-                                },
-                            ],
-                        },
-                    ],
-                    'volumes': [
-                        {
-                            'name': 'library',
-                            'csi': {
-                                'driver': 'nfs.csi.k8s.io',
-                                'volume_attributes': {
-                                    'server': component_config.immich.library_server,
-                                    'share': component_config.immich.library_share,
-                                    'mount_options': component_config.immich.library_mount_options,
-                                },
-                            },
-                        },
-                    ],
+            'capacity': {
+                'storage': '100Gi',
+            },
+            'access_modes': ['ReadWriteMany'],
+            'persistent_volume_reclaim_policy': 'Retain',
+            'mount_options': component_config.immich.library_mount_options.split(','),
+            'csi': {
+                'driver': 'nfs.csi.k8s.io',
+                'volume_handle': p.Output.concat(
+                    component_config.immich.library_server,
+                    '#',
+                    component_config.immich.library_share,
+                    '#',
+                ),
+                'volume_attributes': {
+                    'server': component_config.immich.library_server,
+                    'share': component_config.immich.library_share,
                 },
             },
         },
-        opts=k8s_opts,
+        opts=p.ResourceOptions(provider=k8s_provider),
     )
 
-    service = k8s.core.v1.Service(
-        'immich',
-        metadata={'name': 'immich'},
-        spec={
-            'ports': [{'port': IMMICH_PORT}],
-            'selector': sts.spec.selector.match_labels,
+    # Create PersistentVolumeClaim for library storage
+    library_pvc = k8s.core.v1.PersistentVolumeClaim(
+        'immich-library',
+        metadata={
+            'namespace': namespace,
+            'name': 'immich-library',
         },
-        opts=k8s_opts,
+        spec={
+            'access_modes': ['ReadWriteMany'],
+            'storage_class_name': '',  # Use no storage class for static binding
+            'volume_name': pv.metadata.name,
+            'resources': {
+                'requests': {
+                    'storage': '100Gi',
+                },
+            },
+        },
+        opts=p.ResourceOptions(provider=k8s_provider),
     )
 
-    # Create local DNS record
+    # Deploy Immich using official Helm chart
+    chart = k8s.helm.v4.Chart(
+        'immich',
+        chart='oci://ghcr.io/immich-app/immich-charts/immich',
+        namespace=namespace,
+        version=component_config.immich.chart_version,
+        values={
+            'controllers': {
+                'main': {
+                    'containers': {
+                        'main': {
+                            'image': {
+                                'tag': f'v{component_config.immich.version}',
+                            },
+                        },
+                    },
+                },
+            },
+            'server': {
+                'controllers': {
+                    'main': {
+                        'containers': {
+                            'main': {
+                                'env': {
+                                    'DB_HOSTNAME': {
+                                        'valueFrom': {
+                                            'secretKeyRef': {
+                                                'name': postgres_db.secret_name,
+                                                'key': 'host',
+                                            }
+                                        }
+                                    },
+                                    'DB_PORT': {
+                                        'valueFrom': {
+                                            'secretKeyRef': {
+                                                'name': postgres_db.secret_name,
+                                                'key': 'port',
+                                            }
+                                        }
+                                    },
+                                    'DB_DATABASE_NAME': {
+                                        'valueFrom': {
+                                            'secretKeyRef': {
+                                                'name': postgres_db.secret_name,
+                                                'key': 'dbname',
+                                            }
+                                        }
+                                    },
+                                    'DB_USERNAME': {
+                                        'valueFrom': {
+                                            'secretKeyRef': {
+                                                'name': postgres_db.secret_name,
+                                                'key': 'username',
+                                            }
+                                        }
+                                    },
+                                    'DB_PASSWORD': {
+                                        'valueFrom': {
+                                            'secretKeyRef': {
+                                                'name': postgres_db.secret_name,
+                                                'key': 'password',
+                                            }
+                                        }
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'valkey': {
+                'enabled': True,
+                'auth': {
+                    'enabled': False,
+                },
+            },
+            'immich': {
+                'persistence': {
+                    'library': {
+                        'enabled': True,
+                        'existingClaim': library_pvc.metadata.name,
+                    },
+                },
+            },
+        },
+        opts=p.ResourceOptions(provider=namespaced_provider),
+    )
+
+    immich_service = k8s.core.v1.Service.get(
+        'immich-server',
+        p.Output.concat(namespace, '/immich-server'),
+        opts=p.ResourceOptions(
+            provider=k8s_provider,
+            depends_on=chart.resources,  # pyright: ignore[reportArgumentType]
+        ),
+    )
+
+    # Create local DNS record pointing to Traefik service
     traefik_service = k8s.core.v1.Service.get('traefik-service', 'traefik/traefik', opts=k8s_opts)
     record = utils.opnsense.unbound.host_override.HostOverride(
         'immich',
@@ -152,13 +186,14 @@ def create_immich(
     )
 
     # Create IngressRoute for internal access
-    fqdn = f'immich.{component_config.cloudflare.zone}'
+    fqdn = p.Output.concat('immich.', component_config.cloudflare.zone)
     k8s.apiextensions.CustomResource(
         'ingress',
         api_version='traefik.io/v1alpha1',
         kind='IngressRoute',
         metadata={
             'name': 'ingress',
+            'namespace': namespace,
         },
         spec={
             'entryPoints': ['websecure'],
@@ -168,8 +203,8 @@ def create_immich(
                     'match': p.Output.concat('Host(`', fqdn, '`)'),
                     'services': [
                         {
-                            'name': service.metadata.name,
-                            'namespace': service.metadata.namespace,
+                            'name': immich_service.metadata.name,
+                            'namespace': immich_service.metadata.namespace,
                             'port': IMMICH_PORT,
                         },
                     ],
@@ -182,40 +217,5 @@ def create_immich(
 
     p.export(
         'immich_url',
-        p.Output.format('https://{}.{}', record.host, record.domain),
-    )
-
-
-def create_redis(component_config: ComponentConfig, opts: p.ResourceOptions) -> k8s.core.v1.Service:
-    app_labels_redis = {'app': 'redis'}
-    redis_sts = k8s.apps.v1.StatefulSet(
-        'redis',
-        metadata={'name': 'redis'},
-        spec={
-            'replicas': 1,
-            'selector': {'match_labels': app_labels_redis},
-            'service_name': 'redis-headless',
-            'template': {
-                'metadata': {'labels': app_labels_redis},
-                'spec': {
-                    'containers': [
-                        {
-                            'name': 'redis',
-                            'image': f'docker.io/library/redis:{component_config.redis.version}',
-                            'ports': [{'container_port': REDIS_PORT}],
-                        },
-                    ],
-                },
-            },
-        },
-        opts=opts,
-    )
-    return k8s.core.v1.Service(
-        'redis',
-        metadata={'name': 'redis'},
-        spec={
-            'ports': [{'port': REDIS_PORT}],
-            'selector': redis_sts.spec.selector.match_labels,
-        },
-        opts=opts,
+        p.Output.concat('https://', record.host, '.', record.domain),
     )

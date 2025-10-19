@@ -4,19 +4,17 @@ import utils.model
 
 class ImmichConfig(utils.model.LocalBaseModel):
     version: str
-    library_server: str = pydantic.Field(alias='library-server')
-    library_share: str = pydantic.Field(alias='library-share')
+    chart_version: str
+    library_server: str
+    library_share: str
     library_mount_options: str = pydantic.Field(
         alias='library-mount-options', default='nfsvers=4.1,sec=sys'
     )
+    library_pvc_name: str = pydantic.Field(default='immich-library')
 
 
 class PostgresConfig(utils.model.LocalBaseModel):
-    version: str
-
-
-class RedisConfig(utils.model.LocalBaseModel):
-    version: str
+    vectorchord_version: str
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
@@ -24,7 +22,6 @@ class ComponentConfig(utils.model.LocalBaseModel):
     cloudflare: utils.model.CloudflareConfig
     immich: ImmichConfig
     postgres: PostgresConfig
-    redis: RedisConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

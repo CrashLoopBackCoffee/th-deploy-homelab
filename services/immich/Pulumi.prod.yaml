@@ -10,11 +10,11 @@ config:
     immich:
       # renovate: datasource=github-releases packageName=immich-app/immich versioning=semver
       version: 2.0.1
+      # renovate: datasource=helm registryUrl=oci://ghcr.io/immich-app packageName=immich-charts
+      chart-version: "0.10.0"
       library-server: synology.tobiash.net
-      library-share: /volume2/paperless
+      library-share: /volume2/photo
+      library-pvc-name: immich-library
     postgres:
-      # renovate: datasource=endoflife-date packageName=postgresql versioning=semver
-      version: "18.0"
-    redis:
-      # renovate: datasource=github-releases packageName=redis/redis versioning=semver
-      version: 8.2.1
+      # renovate: datasource=github-releases packageName=tensorchord/cloudnative-vectorchord versioning=semver
+      vectorchord-version: "16.9-0.4.3"

@@ -27,10 +27,26 @@ namespace = k8s.core.v1.Namespace(
 )
 
 # Create postgres database
-postgres_provider, postgres_service, postgres_port = utils.postgres.create_postgres(
-    component_config.postgres.version,
-    namespace.metadata.name,
-    k8s_provider,
+postgres_db = utils.postgres.PostgresDatabase(
+    'postgres',
+    version='dummy',  # version is unused when using overriding the image name
+    namespace_name=namespace.metadata.name,
+    k8s_provider=k8s_provider,
+    spec_overrides={
+        # Use vectorchord-enabled PostgreSQL image for immich
+        'imageName': f'ghcr.io/tensorchord/cloudnative-vectorchord:{component_config.postgres.vectorchord_version}',
+        'postgresql': {
+            'shared_preload_libraries': ['vchord.so'],
+        },
+        'bootstrap': {
+            'initdb': {
+                'postInitApplicationSQL': [
+                    'CREATE EXTENSION vchord CASCADE;',
+                    'CREATE EXTENSION earthdistance CASCADE;',
+                ],
+            },
+        },
+    },
 )
 
 assert component_config
@@ -40,7 +56,5 @@ create_immich(
     component_config,
     namespace.metadata.name,
     k8s_provider,
-    postgres_provider,
-    postgres_service,
-    postgres_port,
+    postgres_db,
 )
