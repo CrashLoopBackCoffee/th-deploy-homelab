@@ -16,5 +16,7 @@ config:
       library-share: /volume2/photo
       library-pvc-name: immich-library
     postgres:
-      # renovate: datasource=docker packageName=ghcr.io/tensorchord/cloudnative-vectorchord versioning=loose
-      vectorchord-version: "17.6"
+      # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
+      version: "17.5"
+      # renovate: datasource=github-releases packageName=tensorchord/VectorChord versioning=loose
+      vectorchord-version: "0.5.0"

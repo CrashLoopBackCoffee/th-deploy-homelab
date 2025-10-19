@@ -14,6 +14,7 @@ class ImmichConfig(utils.model.LocalBaseModel):
 
 
 class PostgresConfig(utils.model.LocalBaseModel):
+    version: str
     vectorchord_version: str
 
 
