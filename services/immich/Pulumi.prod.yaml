@@ -13,8 +13,8 @@ config:
       library-server: synology.tobiash.net
       library-share: /volume2/paperless
     postgres:
-      # renovate: datasource=docker packageName=registry-1.docker.io/bitnamicharts/postgresql versioning=semver
-      version: 16.7.26
+      # renovate: datasource=endoflife-date packageName=postgresql versioning=semver
+      version: "18.0"
     redis:
       # renovate: datasource=github-releases packageName=redis/redis versioning=semver
       version: 8.2.1
