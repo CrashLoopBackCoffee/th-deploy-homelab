@@ -1,0 +1,138 @@
+# WARNING: This file was auto-generated using snmp_exporter generator, manual changes will be lost.
+auths:
+  public_v2:
+    community: public
+    security_level: noAuthNoPriv
+    auth_protocol: MD5
+    priv_protocol: DES
+    version: 2
+modules:
+  draytek:
+    walk:
+    - 1.3.6.1.2.1.10.251.1.2.2.1.2
+    - 1.3.6.1.2.1.10.251.1.2.2.1.3
+    - 1.3.6.1.2.1.10.251.1.2.2.1.7
+    - 1.3.6.1.2.1.10.251.1.2.2.1.8
+    - 1.3.6.1.2.1.10.94.1.1.2.1.4
+    - 1.3.6.1.2.1.10.94.1.1.2.1.5
+    - 1.3.6.1.2.1.10.94.1.1.2.1.8
+    - 1.3.6.1.2.1.10.94.1.1.3.1.4
+    - 1.3.6.1.2.1.10.94.1.1.3.1.5
+    - 1.3.6.1.2.1.10.94.1.1.3.1.6
+    - 1.3.6.1.2.1.10.94.1.1.3.1.8
+    get:
+    - 1.3.6.1.2.1.1.5.0
+    metrics:
+    - name: sysName
+      oid: 1.3.6.1.2.1.1.5
+      type: DisplayString
+      help: An administratively-assigned name for this managed node - 1.3.6.1.2.1.1.5
+    - name: xdsl2ChStatusActDataRate
+      oid: 1.3.6.1.2.1.10.251.1.2.2.1.2
+      type: gauge
+      help: The actual net data rate at which the bearer channel is operating, if
+        in L0 power management state - 1.3.6.1.2.1.10.251.1.2.2.1.2
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      - labelname: xdsl2ChStatusUnit
+        type: gauge
+        enum_values:
+          1: xtuc
+          2: xtur
+    - name: xdsl2ChStatusPrevDataRate
+      oid: 1.3.6.1.2.1.10.251.1.2.2.1.3
+      type: gauge
+      help: The previous net data rate that the bearer channel was operating at just
+        before the latest rate change event - 1.3.6.1.2.1.10.251.1.2.2.1.3
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      - labelname: xdsl2ChStatusUnit
+        type: gauge
+        enum_values:
+          1: xtuc
+          2: xtur
+    - name: xdsl2ChStatusNFec
+      oid: 1.3.6.1.2.1.10.251.1.2.2.1.7
+      type: gauge
+      help: Actual size of Reed-Solomon codeword - 1.3.6.1.2.1.10.251.1.2.2.1.7
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      - labelname: xdsl2ChStatusUnit
+        type: gauge
+        enum_values:
+          1: xtuc
+          2: xtur
+    - name: xdsl2ChStatusRFec
+      oid: 1.3.6.1.2.1.10.251.1.2.2.1.8
+      type: gauge
+      help: Actual number of Reed-Solomon redundancy bytes - 1.3.6.1.2.1.10.251.1.2.2.1.8
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      - labelname: xdsl2ChStatusUnit
+        type: gauge
+        enum_values:
+          1: xtuc
+          2: xtur
+    - name: adslAtucCurrSnrMgn
+      oid: 1.3.6.1.2.1.10.94.1.1.2.1.4
+      type: gauge
+      help: Noise Margin as seen by this ATU with respect to its received signal in
+        tenth dB. - 1.3.6.1.2.1.10.94.1.1.2.1.4
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+    - name: adslAtucCurrAtn
+      oid: 1.3.6.1.2.1.10.94.1.1.2.1.5
+      type: gauge
+      help: Measured difference in the total power transmitted by the peer ATU and
+        the total power received by this ATU. - 1.3.6.1.2.1.10.94.1.1.2.1.5
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+    - name: adslAtucCurrAttainableRate
+      oid: 1.3.6.1.2.1.10.94.1.1.2.1.8
+      type: gauge
+      help: Indicates the maximum currently attainable data rate by the ATU - 1.3.6.1.2.1.10.94.1.1.2.1.8
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+    - name: adslAturCurrSnrMgn
+      oid: 1.3.6.1.2.1.10.94.1.1.3.1.4
+      type: gauge
+      help: Noise Margin as seen by this ATU with respect to its received signal in
+        tenth dB. - 1.3.6.1.2.1.10.94.1.1.3.1.4
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+    - name: adslAturCurrAtn
+      oid: 1.3.6.1.2.1.10.94.1.1.3.1.5
+      type: gauge
+      help: Measured difference in the total power transmitted by the peer ATU and
+        the total power received by this ATU. - 1.3.6.1.2.1.10.94.1.1.3.1.5
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+    - name: adslAturCurrStatus
+      oid: 1.3.6.1.2.1.10.94.1.1.3.1.6
+      type: Bits
+      help: Indicates current state of the ATUR line - 1.3.6.1.2.1.10.94.1.1.3.1.6
+      indexes:
+      - labelname: ifIndex
+        type: gauge
+      enum_values:
+        0: noDefect
+        1: lossOfFraming
+        2: lossOfSignal
+        3: lossOfPower
+        4: lossOfSignalQuality
+    - name: adslAturCurrAttainableRate
+      oid: 1.3.6.1.2.1.10.94.1.1.3.1.8
+      type: gauge
+      help: Indicates the maximum currently attainable data rate by the ATU - 1.3.6.1.2.1.10.94.1.1.3.1.8
+      indexes:
+      - labelname: ifIndex
+        type: gauge
