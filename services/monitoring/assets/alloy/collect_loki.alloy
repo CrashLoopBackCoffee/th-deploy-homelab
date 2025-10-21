@@ -36,6 +36,11 @@ loki.relabel "syslog" {
 		source_labels = ["__syslog_connection_ip_address"]
 		target_label  = "remote_ip"
 	}
+
+	rule {
+		target_label = "service_name"
+		replacement  = "syslog"
+	}
 }
 
 //===========================================================
