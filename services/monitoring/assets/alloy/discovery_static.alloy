@@ -23,5 +23,7 @@ discovery.relabel "static" {
 		// Node exporter
 		{__address__ = "opnsense.tobiash.net:9100", job = "integrations/unix", instance = "opnsense.tobiash.net"},
 		{__address__ = "pve.tobiash.net:9100", job = "integrations/unix", instance = "pve.tobiash.net"},
+		// Mimir
+		{__address__ = "mimir.tobiash.net:9009", job = "default/mimir", instance = "mimir.tobiash.net", cluster = "default", namespace = "mimir"},
 	]
 }
