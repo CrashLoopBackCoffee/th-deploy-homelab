@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import concurrent.futures
 import dataclasses
 import importlib
 import json
@@ -141,24 +140,16 @@ def main():
 
     configs = get_configs()
 
-    # Use parallel processing for schema generation
+    # Process schemas sequentially to avoid event loop issues in threads with Pydantic v2
     successful_configs = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(configs), 4)) as executor:
-        # Submit all tasks
-        future_to_config = {
-            executor.submit(generate_json_schema, config): config for config in configs
-        }
+    for config in configs:
+        config_name, success = generate_json_schema(config)
 
-        # Collect results as they complete
-        for future in concurrent.futures.as_completed(future_to_config):
-            config = future_to_config[future]
-            config_name, success = future.result()
-
-            if success:
-                print(f'✓ Generated JSON schema for {config_name}')
-                successful_configs.append(config)
-            else:
-                print(f'✗ Failed to generate schema for {config_name}')
+        if success:
+            print(f'✓ Generated JSON schema for {config_name}')
+            successful_configs.append(config)
+        else:
+            print(f'✗ Failed to generate schema for {config_name}')
 
     # Batch update VSCode settings for all successful configs
     if successful_configs:
