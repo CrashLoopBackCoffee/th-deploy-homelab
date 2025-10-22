@@ -100,6 +100,7 @@ class Alloy(p.ComponentResource):
                     'api_groups': [''],
                     'resources': [
                         'pods',
+                        'pods/log',
                         'nodes',
                         'nodes/proxy',
                         'nodes/metrics',
