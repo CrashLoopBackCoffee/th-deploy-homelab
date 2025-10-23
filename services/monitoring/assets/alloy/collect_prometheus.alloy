@@ -7,6 +7,7 @@ prometheus.scrape "default" {
 		discovery.relabel.blackbox.output,
 		discovery.relabel.static.output,
 		prometheus.exporter.self.default.targets,
+		prometheus.exporter.snmp.default.targets,
 	)
 
 	scrape_interval = "15s"

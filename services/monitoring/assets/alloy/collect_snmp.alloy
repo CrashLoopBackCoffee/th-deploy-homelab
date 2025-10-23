@@ -1,0 +1,23 @@
+//===========================================================
+// SNMP Exporter Configuration
+//===========================================================
+
+prometheus.exporter.snmp "default" {
+	config_file = "/etc/alloy/snmp/snmp.yml"
+
+	target "draytek_vigor167" {
+		address     = "192.168.10.2"
+		module      = "draytek"
+		walk_params = "public"
+		labels      = {
+			"device" = "draytek_vigor167",
+			"type"   = "modem",
+			"host"   = "draytek.tobiash.net",
+		}
+	}
+
+	walk_param "public" {
+		retries = "2"
+		timeout = "10s"
+	}
+}

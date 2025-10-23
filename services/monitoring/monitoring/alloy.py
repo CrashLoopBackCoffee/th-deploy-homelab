@@ -81,6 +81,19 @@ class Alloy(p.ComponentResource):
             opts=k8s_opts,
         )
 
+        # Create ConfigMap with SNMP configuration
+        snmp_config_path = get_assets_path().parent / 'assets' / 'snmp' / 'snmp.yml'
+        snmp_config_map = k8s.core.v1.ConfigMap(
+            'alloy-snmp-config',
+            metadata={
+                'namespace': namespace.metadata.name,
+            },
+            data={
+                'snmp.yml': snmp_config_path.read_text(),
+            },
+            opts=k8s_opts,
+        )
+
         # Create ServiceAccount for Alloy
         service_account = k8s.core.v1.ServiceAccount(
             'alloy-serviceaccount',
@@ -231,6 +244,10 @@ class Alloy(p.ComponentResource):
                                         'mount_path': '/etc/alloy',
                                     },
                                     {
+                                        'name': 'snmp-config',
+                                        'mount_path': '/etc/alloy/snmp',
+                                    },
+                                    {
                                         'name': 'data',
                                         'mount_path': '/var/lib/alloy/data',
                                     },
@@ -264,6 +281,12 @@ class Alloy(p.ComponentResource):
                                 'name': 'config',
                                 'config_map': {
                                     'name': config_map.metadata.name,
+                                },
+                            },
+                            {
+                                'name': 'snmp-config',
+                                'config_map': {
+                                    'name': snmp_config_map.metadata.name,
                                 },
                             },
                             {
