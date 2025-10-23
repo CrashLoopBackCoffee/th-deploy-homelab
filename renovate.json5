@@ -31,7 +31,7 @@
         '/.*.(yaml|yml)$/',
       ],
       matchStrings: [
-        '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z0-9-]+?))?\\s+[a-zA-Z_-]+:\\s+\\"?(?<currentValue>[a-zA-Z0-9._-]+)\\"?',
+        '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: extractVersion=(?<extractVersion>.+?))?(?: versioning=(?<versioning>[a-z0-9-]+?))?\\s+[a-zA-Z_-]+:\\s+\\"?(?<currentValue>[a-zA-Z0-9._-]+)\\"?',
       ],
       versioningTemplate: '{{#if versioning}}{{versioning}}{{else}}semver{{/if}}',
     },
@@ -51,13 +51,6 @@
         'grafana/grafana',
       ],
       extractVersion: '^v?(?<version>.*)$',
-    },
-    // Extract correct package version for cloudnative-pg charts
-    {
-      matchPackageNames: [
-        'cloudnative-pg/charts',
-      ],
-      extractVersion: '^cloudnative-pg-v(?<version>.*)$',
     },
     {
       // Create separate PRs per minor release line for canonical/microk8s
