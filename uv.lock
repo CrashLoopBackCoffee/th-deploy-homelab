@@ -14,6 +14,7 @@ members = [
     "ingress",
     "iot",
     "kubernetes",
+    "longhorn",
     "monitoring",
     "n8n",
     "obsidian",
@@ -637,6 +638,23 @@ requires-dist = [
     { name = "pulumiverse-acme", specifier = "==0.14.0" },
     { name = "pulumiverse-talos", specifier = "==0.6.1" },
     { name = "requests", specifier = ">=2.31.0" },
+    { name = "utils", editable = "utils" },
+]
+
+[[package]]
+name = "longhorn"
+version = "0.1.0"
+source = { editable = "services/longhorn" }
+dependencies = [
+    { name = "pulumi" },
+    { name = "pulumi-kubernetes" },
+    { name = "utils" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pulumi", specifier = ">=3.0.0,<4.0.0" },
+    { name = "pulumi-kubernetes", specifier = ">=4.0.0,<5.0.0" },
     { name = "utils", editable = "utils" },
 ]
 

@@ -1,0 +1,18 @@
+config:
+  longhorn:config:
+    kubeconfig:
+      ref: op://Pulumi/Kubeconfig prod/password
+
+    longhorn:
+      # renovate: datasource=github-releases packageName=longhorn/longhorn versioning=semver
+      chart-version: 1.10.0
+      hostname: longhorn.tobiash.net
+
+    # IDrive E2 S3 credentials for Longhorn backups
+    s3:
+      endpoint:
+        ref: "op://Pulumi/IDrive e2 Longhorn/Endpoint"
+      access-key-id:
+        ref: "op://Pulumi/IDrive e2 Longhorn/Access Key ID"
+      secret-access-key:
+        ref: "op://Pulumi/IDrive e2 Longhorn/Secret Access Key"

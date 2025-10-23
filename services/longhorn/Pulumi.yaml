@@ -1,0 +1,7 @@
+name: longhorn
+description: Longhorn distributed block storage for Kubernetes
+runtime:
+  name: python
+  options:
+    virtualenv: ../../.venv
+main: ./

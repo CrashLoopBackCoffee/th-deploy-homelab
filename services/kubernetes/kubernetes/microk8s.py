@@ -49,23 +49,35 @@ def _get_cloud_config(
             # Disk config
             'device_aliases': {
                 'data': '/dev/vdb',
+                'longhorn': '/dev/vdc',
             },
             'disk_setup': {
                 'data': {
                     'table_type': 'gpt',
                     'layout': True,
                     'overwrite': False,
-                }
+                },
+                'longhorn': {
+                    'table_type': 'gpt',
+                    'layout': True,
+                    'overwrite': False,
+                },
             },
             'fs_setup': [
                 {
                     'label': 'data',
                     'filesystem': 'ext4',
                     'device': 'data',
-                }
+                },
+                {
+                    'label': 'longhorn',
+                    'filesystem': 'ext4',
+                    'device': 'longhorn',
+                },
             ],
             'mounts': [
                 ['LABEL=data', '/var/snap/microk8s/common/default-storage'],
+                ['LABEL=longhorn', '/var/lib/longhorn', 'ext4', 'defaults', '0', '2'],
             ],
             # Install packages and configure MicroK8s
             'runcmd': [

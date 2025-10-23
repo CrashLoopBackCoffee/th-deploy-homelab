@@ -40,6 +40,8 @@ config:
             - size: 20
             # Data disk
             - size: 20
+            # Longhorn storage disk
+            - size: 200
     traefik:
       # renovate: datasource=github-releases packageName=traefik/traefik versioning=semver
       version: v34.3.0
