@@ -2,6 +2,7 @@ extends: default
 ignore: |
   .git
   .venv
+  services/monitoring/assets/mimir/rules
 
 rules:
   document-start:
