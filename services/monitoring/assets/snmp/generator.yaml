@@ -1,0 +1,34 @@
+auths:
+  public_v2:
+    community: public
+    version: 2
+modules:
+  draytek:
+    walk:
+      # VDSL2 actual/net sync rate (bps): xdsl2ChStatusActDataRate.{1|2}
+      - 1.3.6.1.2.1.10.251.1.2.2.1.2
+
+      # ADSL-LINE compatibility values the modem exposes (scalars)
+      # adslAtucCurrSnrMgn (down, tenth dB)
+      - 1.3.6.1.2.1.10.94.1.1.2.1.4
+      # adslAturCurrSnrMgn (up, tenth dB)
+      - 1.3.6.1.2.1.10.94.1.1.3.1.4
+      # adslAtucCurrAtn (down, tenth dB)
+      - 1.3.6.1.2.1.10.94.1.1.2.1.5
+      # adslAturCurrAtn (up, tenth dB)
+      - 1.3.6.1.2.1.10.94.1.1.3.1.5
+      # adslAtucCurrAttainableRate (down, bps)
+      - 1.3.6.1.2.1.10.94.1.1.2.1.8
+      # adslAturCurrAttainableRate (up, bps)
+      - 1.3.6.1.2.1.10.94.1.1.3.1.8
+      # VDSL2-LINE-MIB::xdsl2ChStatusPrevDataRate
+      - 1.3.6.1.2.1.10.251.1.2.2.1.3
+      # VDSL2-LINE-MIB::xdsl2ChStatusNFec
+      - 1.3.6.1.2.1.10.251.1.2.2.1.7
+      # VDSL2-LINE-MIB::xdsl2ChStatusRFec
+      - 1.3.6.1.2.1.10.251.1.2.2.1.8
+
+      # ADSL-LINE-MIB::adslAturCurrStatus
+      - 1.3.6.1.2.1.10.94.1.1.3.1.6
+      # SNMPv2-MIB::sysName
+      - 1.3.6.1.2.1.1.5
