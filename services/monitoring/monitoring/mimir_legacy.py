@@ -195,7 +195,11 @@ def create_mimir(
             rule_name = rule_file.stem
             # Wait for Mimir to be ready, then upload rules
             upload_command = (
-                f'sleep 10 && '  # Wait for Mimir to start
+                # Wait for Mimir to be ready with retries
+                f'for i in {{1..30}}; do '
+                f'curl -sf http://{target_host}:9009/ready && break || sleep 2; '
+                f'done && '
+                # Upload the rules
                 f'curl -X POST '
                 f'http://{target_host}:9009/prometheus/config/v1/rules/{namespace} '
                 f'-H "Content-Type: application/yaml" '
