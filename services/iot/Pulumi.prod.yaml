@@ -1,8 +1,8 @@
+environment:
+  - kubernetes/kubeconfig-prod
+
 config:
   iot:config:
-    kubeconfig:
-      ref: op://Pulumi/Kubeconfig prod/password
-
     proxmox:
       username: root@pam
       password:

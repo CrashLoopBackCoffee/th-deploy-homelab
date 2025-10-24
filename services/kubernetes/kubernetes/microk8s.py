@@ -4,6 +4,7 @@ import pulumi_command as command
 import pulumi_kubernetes as k8s
 import pulumi_onepassword as onepassword
 import pulumi_proxmoxve as proxmoxve
+import pulumi_pulumiservice as pulumiservice
 import utils.utils
 import yaml
 
@@ -273,6 +274,25 @@ def create_microk8s(
     # export to kube config with
     # p stack output --show-secrets k8s-master-0-dev-kube-config > ~/.kube/config
     p.export('kubeconfig', kube_config_command.stdout)
+
+    # Export kubeconfig in an ESC environment using the Pulumi Service Provider
+    esc_config = p.Output.from_input(
+        {
+            'values': {
+                'kubeconfig': {
+                    'fn::secret': kube_config_command.stdout,
+                },
+                'pulumiConfig': {'kubeconfig': '${kubeconfig}'},
+            },
+        },
+    )
+    pulumiservice.Environment(
+        'kubeconfig',
+        organization=p.get_organization(),
+        project=p.get_project(),
+        name=f'kubeconfig-{p.get_stack()}',
+        yaml=esc_config.apply(lambda c: yaml.safe_dump(c)),  # type: ignore
+    )
 
     onepassword.Item(
         's3-pulumi',

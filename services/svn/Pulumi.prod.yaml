@@ -1,3 +1,6 @@
+environment:
+  - kubernetes/kubeconfig-prod
+
 config:
   svn:config:
     cloudflare:
@@ -5,8 +8,6 @@ config:
         ref: op://Pulumi/Cloudflare Global API Key/password
       email: tobias_henkel@gmx.de
       zone: tobiash.net
-    kubeconfig:
-      ref: op://Pulumi/Kubeconfig prod/password
     svn:
       # renovate: datasource=docker packageName=obslib/subversion versioning=semver
       version: httpd_svn-1.14-1

@@ -1,3 +1,6 @@
+environment:
+  - kubernetes/kubeconfig-prod
+
 config:
   ollama:config:
     cloudflare:

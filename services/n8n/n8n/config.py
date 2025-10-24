@@ -26,4 +26,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str] | None = None
     config: StackConfig

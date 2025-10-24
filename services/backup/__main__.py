@@ -3,11 +3,12 @@ import pulumi_kubernetes as k8s
 
 from backup.backup import Backup
 from backup.config import ComponentConfig
+from utils.k8s import get_k8s_provider
 
 config = p.Config()
 component_config = ComponentConfig.model_validate(config.get_object('config'))
 
-k8s_provider = k8s.Provider('k8s', kubeconfig=component_config.kubeconfig.value)
+k8s_provider = get_k8s_provider()
 
 namespace = k8s.core.v1.Namespace(
     'backup',

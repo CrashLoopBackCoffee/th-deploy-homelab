@@ -6,15 +6,12 @@ import utils.postgres
 
 from immich.config import ComponentConfig
 from immich.immich import create_immich
+from utils.k8s import get_k8s_provider
 
 config = p.Config()
 component_config = ComponentConfig.model_validate(config.get_object('config'))
 
-stack = p.get_stack()
-org = p.get_organization()
-k8s_stack_ref = p.StackReference(f'{org}/kubernetes/{stack}')
-
-k8s_provider = k8s.Provider('k8s', kubeconfig=k8s_stack_ref.get_output('kubeconfig'))
+k8s_provider = get_k8s_provider()
 
 namespace = k8s.core.v1.Namespace(
     'immich-namespace',

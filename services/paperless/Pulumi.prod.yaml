@@ -1,3 +1,6 @@
+environment:
+  - kubernetes/kubeconfig-prod
+
 config:
   paperless:config:
     cloudflare:
@@ -5,8 +8,6 @@ config:
         ref: op://Pulumi/Cloudflare Global API Key/password
       email: tobias_henkel@gmx.de
       zone: tobiash.net
-    kubeconfig:
-      ref: op://Pulumi/Kubeconfig prod/password
     entraid:
       client-id: a02dcdca-dd0d-4b11-8a92-e7c8307ad547
       client-secret:
