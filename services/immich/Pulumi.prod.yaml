@@ -1,5 +1,6 @@
 environment:
   - kubernetes/kubeconfig-prod
+  - kubernetes/postgres-backup-prod
 
 config:
   immich:config:
@@ -29,3 +30,5 @@ config:
       version: "17.6"
       # renovate: datasource=github-releases packageName=tensorchord/VectorChord versioning=loose
       vectorchord-version: "0.5.3"
+      backup:
+        cron-schedule: "0 0 0 * * *"

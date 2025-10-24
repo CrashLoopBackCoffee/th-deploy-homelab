@@ -30,6 +30,8 @@ postgres_db = utils.postgres.PostgresDatabase(
     namespace_name=namespace.metadata.name,
     k8s_provider=k8s_provider,
     enable_superuser=True,
+    backup_enabled=True,
+    backup_config=component_config.postgres.backup,
     spec_overrides={
         # Use vectorchord-enabled PostgreSQL image for immich
         'imageName': f'ghcr.io/tensorchord/cloudnative-vectorchord:{component_config.postgres.version}-{component_config.postgres.vectorchord_version}',

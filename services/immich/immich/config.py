@@ -17,9 +17,14 @@ class ImmichConfig(utils.model.LocalBaseModel):
     persistence: dict[str, PersistenceShareConfig]
 
 
+class BackupObjectStoreConfig(utils.model.LocalBaseModel):
+    cron_schedule: str = '0 0 0 * * *'
+
+
 class PostgresConfig(utils.model.LocalBaseModel):
     version: str
     vectorchord_version: str
+    backup: BackupObjectStoreConfig | None = None
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
