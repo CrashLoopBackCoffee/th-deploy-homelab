@@ -8,6 +8,7 @@ class TandoorConfig(utils.model.LocalBaseModel):
 
 class PostgresConfig(utils.model.LocalBaseModel):
     version: str
+    backup: utils.model.PostgresBackupConfig | None = None
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
