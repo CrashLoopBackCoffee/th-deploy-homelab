@@ -1,8 +1,8 @@
+environment:
+  - kubernetes/kubeconfig-prod
+
 config:
   backup:config:
-    kubeconfig:
-      ref: op://Pulumi/Kubeconfig prod/password
-
     restic:
       # renovate: datasource=github-releases packageName=restic/restic versioning=semver
       version: "0.18.1"

@@ -74,7 +74,6 @@ class BackupConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    kubeconfig: utils.model.OnePasswordRef
     cloudflare: utils.model.CloudflareConfig
     paperless: PaperlessConfig
     backup: BackupConfig
@@ -95,4 +94,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str] | None
     config: StackConfig

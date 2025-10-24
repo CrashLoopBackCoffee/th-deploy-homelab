@@ -1,6 +1,7 @@
 import pulumi as p
-import pulumi_kubernetes as k8s
 import pulumi_proxmoxve as proxmoxve
+
+from utils.k8s import get_k8s_provider
 
 from iot.config import ComponentConfig
 from iot.mosquitto import Mosquitto
@@ -12,7 +13,7 @@ def main():
     config = p.Config()
     component_config = ComponentConfig.model_validate(config.get_object('config'))
 
-    k8s_provider = k8s.Provider('k8s', kubeconfig=component_config.kubeconfig.value)
+    k8s_provider = get_k8s_provider()
     proxmox_provider = proxmoxve.Provider(
         'proxmox',
         endpoint=component_config.proxmox.api_endpoint,

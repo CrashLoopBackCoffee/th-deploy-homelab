@@ -1,3 +1,6 @@
+environment:
+  - kubernetes/kubeconfig-prod
+
 config:
   n8n:config:
     cloudflare:

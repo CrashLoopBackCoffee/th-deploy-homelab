@@ -25,7 +25,6 @@ class ResticConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    kubeconfig: utils.model.OnePasswordRef
     restic: ResticConfig
     schedule: str = pydantic.Field(default='0 1 * * *')
     retention_daily: int = pydantic.Field(default=14)
@@ -45,4 +44,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str] | None
     config: StackConfig

@@ -55,7 +55,6 @@ class ZwaveControllerConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    kubeconfig: utils.model.OnePasswordRef
     proxmox: ProxmoxConfig
 
     cloudflare: utils.model.CloudflareConfig | None = None
@@ -72,4 +71,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str] | None
     config: StackConfig
