@@ -28,48 +28,6 @@ def _deep_merge(base: dict, overrides: dict) -> dict:
     return result
 
 
-def _create_scheduled_backup(
-    cluster_name: str,
-    namespace_name: p.Input[str],
-    cron_schedule: str,
-    k8s_provider: k8s.Provider,
-):
-    """Create a ScheduledBackup resource for automated daily backups.
-
-    Args:
-        cluster_name: Name of the PostgreSQL cluster.
-        namespace_name: Kubernetes namespace for deployment.
-        cron_schedule: Cron schedule for backups (e.g., '0 0 0 * * *' for daily at midnight UTC).
-        k8s_provider: Kubernetes provider instance.
-
-    Returns:
-        ScheduledBackup CustomResource.
-    """
-    k8s_opts = p.ResourceOptions(provider=k8s_provider)
-
-    k8s.apiextensions.CustomResource(
-        f'{cluster_name}-scheduled-backup',
-        api_version='postgresql.cnpg.io/v1',
-        kind='ScheduledBackup',
-        metadata={
-            'name': f'{cluster_name}-daily',
-            'namespace': namespace_name,
-        },
-        spec={
-            'schedule': cron_schedule,
-            'backupOwnerReference': 'cluster',
-            'cluster': {
-                'name': cluster_name,
-            },
-            'method': 'plugin',
-            'pluginConfiguration': {
-                'name': 'barman-cloud.cloudnative-pg.io',
-            },
-        },
-        opts=k8s_opts,
-    )
-
-
 def _create_backup_objectstore(
     namespace_name: p.Input[str],
     cluster_name: p.Input[str],
@@ -248,7 +206,27 @@ class PostgresDatabase(p.ComponentResource):
         # Create ScheduledBackup if backup is enabled
         if backup_enabled and backup_config is not None:
             cron = backup_cron or backup_config.cron_schedule
-            _create_scheduled_backup(cluster_name, namespace_name, cron, k8s_provider)
+            k8s.apiextensions.CustomResource(
+                f'{cluster_name}-scheduled-backup',
+                api_version='postgresql.cnpg.io/v1',
+                kind='ScheduledBackup',
+                metadata={
+                    'name': cluster_name,
+                    'namespace': namespace_name,
+                },
+                spec={
+                    'schedule': cron,
+                    'backupOwnerReference': 'cluster',
+                    'cluster': {
+                        'name': cluster_name,
+                    },
+                    'method': 'plugin',
+                    'pluginConfiguration': {
+                        'name': 'barman-cloud.cloudnative-pg.io',
+                    },
+                },
+                opts=k8s_opts,
+            )
 
         # Retrieve the postgres password from the Kubernetes secret created by CloudNativePG
         # CloudNativePG creates a secret named '{cluster_name}-app' with the password
