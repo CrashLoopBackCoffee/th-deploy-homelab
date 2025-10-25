@@ -59,6 +59,13 @@
       ],
       separateMultipleMinor: true,
     },
+    {
+      // Create separate PRs per file for postgres
+      matchPackageNames: [
+        'postgresql',
+      ],
+      separateMultipleFiles: true,
+    },
   ],
   prHourlyLimit: 10,
   rangeStrategy: 'replace',
