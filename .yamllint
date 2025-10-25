@@ -2,6 +2,7 @@ extends: default
 ignore: |
   .git
   .venv
+  services/monitoring/assets/mimir/rules
   services/monitoring/assets/snmp/snmp.yml
 
 rules:
