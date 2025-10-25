@@ -18,7 +18,7 @@ discovery.relabel "pods_common" {
 		action        = "drop"
 	}
 
-	// drop empty container targets
+	// Drop empty container targets
 	rule {
 		source_labels = ["__meta_kubernetes_pod_container_name"]
 		regex         = ""
