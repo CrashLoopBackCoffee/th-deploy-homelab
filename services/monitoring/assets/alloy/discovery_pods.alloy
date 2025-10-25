@@ -84,3 +84,48 @@ discovery.relabel "pods_logs" {
 		target_label  = "service_name"
 	}
 }
+
+//-----------------------------------------------------------
+// Kubernetes Pod Relabeling - Metrics
+//-----------------------------------------------------------
+discovery.relabel "pods_metrics" {
+	targets = discovery.relabel.pods_common.output
+
+	// Keep only pods that explicitly opt-in
+	rule {
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_scrape"]
+		regex         = "true"
+		action        = "keep"
+	}
+
+	// Address = <pod_ip>:<port from annotation>, e.g. "9100"
+	rule {
+		action        = "replace"
+		separator     = ":"
+		source_labels = ["__meta_kubernetes_pod_ip", "__meta_kubernetes_pod_annotation_prometheus_io_port"]
+		target_label  = "__address__"
+	}
+
+	// Customizations from annotations
+	rule {
+		action        = "replace"
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_path"]
+		target_label  = "__metrics_path__"
+		regex         = "(.+)"
+		replacement   = "$1"
+	}
+
+	rule {
+		action        = "replace"
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_scheme"]
+		target_label  = "__scheme__"
+		regex         = "https|http"
+		replacement   = "$1"
+	}
+
+	// Give this scrape a job label
+	rule {
+		target_label = "job"
+		replacement  = "kubernetes-pods"
+	}
+}
