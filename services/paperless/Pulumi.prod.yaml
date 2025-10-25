@@ -59,7 +59,7 @@ config:
         ref: "op://Pulumi/IDrive e2 Paperless/Secret Access Key"
     postgres:
       # renovate: datasource=docker packageName=ghcr.io/cloudnative-pg/postgresql versioning=loose
-      version: "17.6"
+      version: "18.0"
     redis:
       # renovate: datasource=github-releases packageName=redis/redis versioning=semver
       version: 8.2.2
