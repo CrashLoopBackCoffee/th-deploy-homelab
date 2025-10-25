@@ -66,3 +66,7 @@ class TargetConfig(LocalBaseModel):
     host: str
     user: str
     root_dir: str
+
+
+class PostgresBackupConfig(LocalBaseModel):
+    cron_schedule: str = '0 0 0 * * *'

@@ -1,5 +1,3 @@
-import typing as t
-
 import pulumi as p
 import pulumi_kubernetes as k8s
 import pulumi_postgresql as postgresql
@@ -7,6 +5,8 @@ import pulumi_random
 
 import utils
 import utils.port_forward
+
+from utils.model import PostgresBackupConfig
 
 
 def _deep_merge(base: dict, overrides: dict) -> dict:
@@ -139,7 +139,7 @@ class PostgresDatabase(p.ComponentResource):
         enable_superuser: bool = False,
         backup_enabled: bool = False,
         backup_cron: str | None = None,
-        backup_config: t.Any | None = None,
+        backup_config: PostgresBackupConfig | None = None,
         spec_overrides: dict | None = None,
         opts: p.ResourceOptions | None = None,
     ):
