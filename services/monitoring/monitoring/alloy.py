@@ -132,6 +132,11 @@ class Alloy(p.ComponentResource):
                     'resources': ['namespaces'],
                     'verbs': ['get', 'list', 'watch'],
                 },
+                {
+                    'api_groups': ['monitoring.coreos.com'],
+                    'resources': ['podmonitors', 'servicemonitors'],
+                    'verbs': ['get', 'list', 'watch'],
+                },
             ],
             opts=p.ResourceOptions(provider=k8s_provider, parent=self),
         )

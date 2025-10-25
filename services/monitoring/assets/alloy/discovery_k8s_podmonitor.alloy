@@ -1,0 +1,6 @@
+//-----------------------------------------------------------
+// Kubernetes PodMonitor Discovery
+//-----------------------------------------------------------
+prometheus.operator.podmonitors "podmonitors" {
+	forward_to = [otelcol.receiver.prometheus.default.receiver]
+}

@@ -33,6 +33,10 @@ class SpeedtestExporterConfig(utils.model.LocalBaseModel):
     version: str
 
 
+class PrometheusOperatorCrdsConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig | None = None
     alloy: AlloyConfig | None = None
@@ -42,6 +46,7 @@ class ComponentConfig(utils.model.LocalBaseModel):
     grafana: GrafanaConfig | None = None
     grafana_cloud: GrafanaCloudConfig | None = None
     mimir: MimirConfig | None = None
+    prometheus_operator_crds: PrometheusOperatorCrdsConfig
     speedtest_exporter: SpeedtestExporterConfig | None = None
 
 
@@ -53,5 +58,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
-    environment: list[str] | None
+    environment: list[str] | None = None
     config: StackConfig
