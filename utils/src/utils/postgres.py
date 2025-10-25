@@ -228,6 +228,30 @@ class PostgresDatabase(p.ComponentResource):
                 opts=k8s_opts,
             )
 
+        # Create PodMonitor for Prometheus operator to monitor PostgreSQL instances
+        k8s.apiextensions.CustomResource(
+            f'{cluster_name}-monitor',
+            api_version='monitoring.coreos.com/v1',
+            kind='PodMonitor',
+            metadata={
+                'name': cluster_name,
+                'namespace': namespace_name,
+            },
+            spec={
+                'selector': {
+                    'matchLabels': {
+                        'cnpg.io/cluster': cluster_name,
+                    },
+                },
+                'podMetricsEndpoints': [
+                    {
+                        'port': 'metrics',
+                    },
+                ],
+            },
+            opts=k8s_opts,
+        )
+
         # Retrieve the postgres password from the Kubernetes secret created by CloudNativePG
         # CloudNativePG creates a secret named '{cluster_name}-app' with the password
         # Derive the secret name from cluster metadata to ensure data-driven dependency
