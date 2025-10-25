@@ -2,7 +2,7 @@
 // Kubernetes Service Discovery
 //-----------------------------------------------------------
 discovery.kubernetes "services" {
-	role = "services"
+	role = "service"
 }
 
 //-----------------------------------------------------------
@@ -16,6 +16,13 @@ discovery.relabel "svc_metrics" {
 		source_labels = ["__meta_kubernetes_service_annotation_prometheus_io_scrape"]
 		regex         = "true"
 		action        = "keep"
+	}
+
+	// Keep only ports prefixed or postfixed with "metrics"
+	rule {
+		action        = "keep"
+		source_labels = ["__meta_kubernetes_service_port_name"]
+		regex         = "(.*-)?metrics(-.*)?$"
 	}
 
 	// Address is already the target endpoint address:port for endpoints role,
