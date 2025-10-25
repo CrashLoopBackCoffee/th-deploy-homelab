@@ -112,6 +112,24 @@ def create_immich(
                 },
             },
             'server': {
+                'service': {
+                    'main': {
+                        'annotations': {
+                            'prometheus.io/scrape': 'true',
+                            'prometheus.io/port': '8081',
+                        },
+                        'ports': {
+                            'metrics-server': {
+                                'enabled': True,
+                                'port': '8081',
+                            },
+                            'metrics-microservices': {
+                                'enabled': True,
+                                'port': '8082',
+                            },
+                        },
+                    },
+                },
                 'persistence': persistence_values,
                 'controllers': {
                     'main': {
@@ -158,6 +176,8 @@ def create_immich(
                                             }
                                         }
                                     },
+                                    # Enable full telemetry
+                                    'IMMICH_TELEMETRY_INCLUDE': 'all',
                                 },
                             },
                         },
