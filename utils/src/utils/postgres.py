@@ -6,6 +6,8 @@ import pulumi_random
 import utils
 import utils.port_forward
 
+from utils.model import PostgresBackupConfig
+
 
 def _deep_merge(base: dict, overrides: dict) -> dict:
     """Deep merge overrides dict into base dict.
@@ -26,6 +28,61 @@ def _deep_merge(base: dict, overrides: dict) -> dict:
     return result
 
 
+def _create_backup_objectstore(
+    namespace_name: p.Input[str],
+    cluster_name: p.Input[str],
+    k8s_opts: p.ResourceOptions,
+) -> k8s.apiextensions.CustomResource:
+    """Create ObjectStore for Barman Cloud Plugin to use IDrive e2 S3 storage."""
+
+    backup_config = p.Config().require_object('postgres-backup')
+
+    # Create secret for S3 credentials
+    backup_secret = k8s.core.v1.Secret(
+        'postgres-backup-credentials',
+        metadata={
+            'namespace': namespace_name,
+        },
+        string_data={
+            'access-key-id': backup_config['access-key-id'],
+            'secret-access-key': backup_config['secret-access-key'],
+        },
+        opts=k8s_opts,
+    )
+
+    # Create ObjectStore resource for Barman Cloud Plugin
+    return k8s.apiextensions.CustomResource(
+        'idrive-e2-store',
+        api_version='barmancloud.cnpg.io/v1',
+        kind='ObjectStore',
+        metadata={
+            'namespace': namespace_name,
+        },
+        spec={
+            'configuration': {
+                'destinationPath': p.Output.concat(
+                    backup_config['destination-path'], '/', namespace_name, '/', cluster_name
+                ),
+                'endpointURL': backup_config['endpoint-url'],
+                's3Credentials': {
+                    'accessKeyId': {
+                        'name': backup_secret.metadata.name,
+                        'key': 'access-key-id',
+                    },
+                    'secretAccessKey': {
+                        'name': backup_secret.metadata.name,
+                        'key': 'secret-access-key',
+                    },
+                },
+                'wal': {
+                    'compression': 'gzip',
+                },
+            },
+        },
+        opts=k8s_opts,
+    )
+
+
 class PostgresDatabase(p.ComponentResource):
     def __init__(
         self,
@@ -38,6 +95,9 @@ class PostgresDatabase(p.ComponentResource):
         storage_size: str = '20Gi',
         storage_class: str = 'microk8s-hostpath',
         enable_superuser: bool = False,
+        backup_enabled: bool = False,
+        backup_cron: str | None = None,
+        backup_config: PostgresBackupConfig | None = None,
         spec_overrides: dict | None = None,
         opts: p.ResourceOptions | None = None,
     ):
@@ -51,6 +111,10 @@ class PostgresDatabase(p.ComponentResource):
             local_port: Local port for port forwarding (default: 15432).
             storage_size: Storage size for CloudNativePG backend (default: '20Gi').
             storage_class: Storage class for CloudNativePG backend (default: 'microk8s-hostpath').
+            enable_superuser: Whether to enable superuser access (default: False).
+            backup_enabled: Whether to enable automated backups (default: False).
+            backup_cron: Cron schedule for backups (default: None, uses config default).
+            backup_config: BackupConfig object with endpoint and bucket info.
             spec_overrides: Optional dict to override values in the cluster spec (deep merged).
             opts: Pulumi resource options.
         """
@@ -105,6 +169,19 @@ class PostgresDatabase(p.ComponentResource):
             },
         }
 
+        # Add backup configuration if enabled
+        if backup_enabled and backup_config is not None:
+            object_store = _create_backup_objectstore(namespace_name, cluster_name, k8s_opts)
+            spec['plugins'] = [
+                {
+                    'name': 'barman-cloud.cloudnative-pg.io',
+                    'isWALArchiver': True,
+                    'parameters': {
+                        'barmanObjectName': object_store.metadata.apply(lambda m: m['name']),  # pyright: ignore[reportAttributeAccessIssue]
+                    },
+                }
+            ]
+
         # Apply spec overrides if provided
         if spec_overrides:
             spec = _deep_merge(spec, spec_overrides)
@@ -125,6 +202,31 @@ class PostgresDatabase(p.ComponentResource):
             spec=spec,
             opts=k8s_opts,
         )
+
+        # Create ScheduledBackup if backup is enabled
+        if backup_enabled and backup_config is not None:
+            cron = backup_cron or backup_config.cron_schedule
+            k8s.apiextensions.CustomResource(
+                f'{cluster_name}-scheduled-backup',
+                api_version='postgresql.cnpg.io/v1',
+                kind='ScheduledBackup',
+                metadata={
+                    'name': cluster_name,
+                    'namespace': namespace_name,
+                },
+                spec={
+                    'schedule': cron,
+                    'backupOwnerReference': 'cluster',
+                    'cluster': {
+                        'name': cluster_name,
+                    },
+                    'method': 'plugin',
+                    'pluginConfiguration': {
+                        'name': 'barman-cloud.cloudnative-pg.io',
+                    },
+                },
+                opts=k8s_opts,
+            )
 
         # Retrieve the postgres password from the Kubernetes secret created by CloudNativePG
         # CloudNativePG creates a secret named '{cluster_name}-app' with the password

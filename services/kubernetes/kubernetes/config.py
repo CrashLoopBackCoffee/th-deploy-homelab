@@ -62,8 +62,17 @@ class CertManagerConfig(utils.model.LocalBaseModel):
         )
 
 
+class BackupObjectStoreConfig(utils.model.LocalBaseModel):
+    endpoint: utils.model.OnePasswordRef
+    access_key_id: utils.model.OnePasswordRef
+    secret_access_key: utils.model.OnePasswordRef
+    cron_schedule: str = '0 0 0 * * *'
+
+
 class CloudNativePgConfig(utils.model.LocalBaseModel):
     version: str
+    barman_plugin_version: str | None = None
+    backup: BackupObjectStoreConfig | None = None
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
