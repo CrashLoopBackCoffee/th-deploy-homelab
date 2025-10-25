@@ -39,7 +39,7 @@ def _create_scheduled_backup(
     Args:
         cluster_name: Name of the PostgreSQL cluster.
         namespace_name: Kubernetes namespace for deployment.
-        cron_schedule: Cron schedule for backups (default: '0 0 0 * * *' for daily at midnight UTC).
+        cron_schedule: Cron schedule for backups (e.g., '0 0 0 * * *' for daily at midnight UTC).
         k8s_provider: Kubernetes provider instance.
 
     Returns:
