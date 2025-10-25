@@ -4,4 +4,4 @@
   roles:
     - role: prometheus.prometheus.node_exporter
       # renovate: datasource=github-releases packageName=prometheus/node_exporter versioning=loose
-      node_exporter_version: 1.10.0
+      node_exporter_version: 1.10.1
