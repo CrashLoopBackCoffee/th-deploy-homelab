@@ -21,6 +21,9 @@ config:
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir versioning=semver
       version: 2.14.1
+    prometheus-operator-crds:
+      # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^prometheus-operator-crds-(?<version>.*)$ versioning=semver
+      version: 24.0.0
     speedtest-exporter:
       # renovate: datasource=github-releases packageName=billimek/prometheus-speedtest-exporter versioning=semver
       version: 1.3.1
