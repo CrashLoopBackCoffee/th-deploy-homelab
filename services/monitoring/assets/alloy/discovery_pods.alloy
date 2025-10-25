@@ -1,0 +1,131 @@
+//-----------------------------------------------------------
+// Kubernetes Pod Discovery
+//-----------------------------------------------------------
+discovery.kubernetes "pods" {
+	role = "pod"
+}
+
+//-----------------------------------------------------------
+// Kubernetes Pod Relabeling - Common
+//-----------------------------------------------------------
+discovery.relabel "pods_common" {
+	targets = discovery.kubernetes.pods.targets
+
+	// Filter by phase
+	rule {
+		source_labels = ["__meta_kubernetes_pod_phase"]
+		regex         = "Pending|Succeeded|Failed|Unknown"
+		action        = "drop"
+	}
+
+	// Drop empty container targets
+	rule {
+		source_labels = ["__meta_kubernetes_pod_container_name"]
+		regex         = ""
+		action        = "drop"
+	}
+
+	// Kubernetes metadata
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		target_label  = "namespace"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_name"]
+		target_label  = "pod"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_container_name"]
+		target_label  = "container"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_node_name"]
+		target_label  = "node"
+	}
+
+	// App identity (prefer well-known labels; last write wins)
+	rule {
+		source_labels = ["__meta_kubernetes_pod_label_app"]
+		target_label  = "app"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+		target_label  = "app"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_label_k8s_app"]
+		target_label  = "app"
+	}
+}
+
+//-----------------------------------------------------------
+// Kubernetes Pod Relabeling - Logs
+//-----------------------------------------------------------
+discovery.relabel "pods_logs" {
+	targets = discovery.relabel.pods_common.output
+
+	// Path to container logs
+	rule {
+		source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+		target_label  = "__path__"
+		separator     = "/"
+		regex         = "(.*)/(.*)"
+		replacement   = "/var/log/pods/*$1*/$2/*.log"
+	}
+
+	// Set service_name for loki
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		target_label  = "service_name"
+	}
+}
+
+//-----------------------------------------------------------
+// Kubernetes Pod Relabeling - Metrics
+//-----------------------------------------------------------
+discovery.relabel "pods_metrics" {
+	targets = discovery.relabel.pods_common.output
+
+	// Keep only pods that explicitly opt-in
+	rule {
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_scrape"]
+		regex         = "true"
+		action        = "keep"
+	}
+
+	// Address = <pod_ip>:<port from annotation>, e.g. "9100"
+	rule {
+		action        = "replace"
+		separator     = ":"
+		source_labels = ["__meta_kubernetes_pod_ip", "__meta_kubernetes_pod_annotation_prometheus_io_port"]
+		target_label  = "__address__"
+	}
+
+	// Customizations from annotations
+	rule {
+		action        = "replace"
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_path"]
+		target_label  = "__metrics_path__"
+		regex         = "(.+)"
+		replacement   = "$1"
+	}
+
+	rule {
+		action        = "replace"
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_scheme"]
+		target_label  = "__scheme__"
+		regex         = "https|http"
+		replacement   = "$1"
+	}
+
+	// Give this scrape a job label
+	rule {
+		target_label = "job"
+		replacement  = "kubernetes-pods"
+	}
+}

@@ -3,81 +3,10 @@
 //===========================================================
 
 //-----------------------------------------------------------
-// Kubernetes Pod Discovery
-//-----------------------------------------------------------
-discovery.kubernetes "pods" {
-	role = "pod"
-}
-
-discovery.relabel "pods" {
-	targets = discovery.kubernetes.pods.targets
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_phase"]
-		regex         = "Pending|Succeeded|Failed|Unknown"
-		action        = "drop"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_container_name"]
-		regex         = ""
-		action        = "drop"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_node_name"]
-		target_label  = "__host__"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_name"]
-		target_label  = "pod"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_namespace"]
-		target_label  = "namespace"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_container_name"]
-		target_label  = "container"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
-		target_label  = "__path__"
-		separator     = "/"
-		regex         = "(.*)/(.*)"
-		replacement   = "/var/log/pods/*$1*/$2/*.log"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_label_app"]
-		target_label  = "app"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
-		target_label  = "app"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_label_k8s_app"]
-		target_label  = "app"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_namespace"]
-		target_label  = "service_name"
-	}
-}
-
-//-----------------------------------------------------------
 // Pod Log Collection via Kubernetes API
 //-----------------------------------------------------------
 loki.source.kubernetes "pods" {
-	targets    = discovery.relabel.pods.output
+	targets    = discovery.relabel.pods_logs.output
 	forward_to = [otelcol.receiver.loki.k8s_pods.receiver]
 }
 
