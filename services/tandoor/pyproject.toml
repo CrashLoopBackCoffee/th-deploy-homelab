@@ -1,0 +1,13 @@
+[project]
+name = "tandoor"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["pulumi-random>=4.18.0", "utils"]
+
+[build-system]
+requires = ["uv_build>=0.8.4,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "tandoor"
+module-root = ""

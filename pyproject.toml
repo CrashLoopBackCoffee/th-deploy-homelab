@@ -29,6 +29,7 @@ dependencies = [
     "proxmox",
     "s3",
     "svn",
+    "tandoor",
     "unifi",
 ]
 
@@ -56,6 +57,7 @@ paperless = { workspace = true }
 proxmox = { workspace = true }
 s3 = { workspace = true }
 svn = { workspace = true }
+tandoor = { workspace = true }
 unifi = { workspace = true }
 utils = { workspace = true }
 
@@ -177,3 +179,7 @@ model = "unifi.config:PulumiConfigRoot"
 [tool.config-models.svn]
 root = "services/svn"
 model = "svn.config:PulumiConfigRoot"
+
+[tool.config-models.tandoor]
+root = "services/tandoor"
+model = "tandoor.config:PulumiConfigRoot"

@@ -1,0 +1,20 @@
+environment:
+  - kubernetes/kubeconfig-prod
+  - kubernetes/postgres-backup-prod
+
+config:
+  tandoor:config:
+    cloudflare:
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      email: tobias_henkel@gmx.de
+      zone: tobiash.net
+    tandoor:
+      # renovate: datasource=github-releases packageName=TandoorRecipes/recipes versioning=semver
+      version: 2.3.2
+      hostname: tandoor.tobiash.net
+    postgres:
+      # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
+      version: "17.6"
+      backup:
+        cron-schedule: "0 0 0 * * *"
