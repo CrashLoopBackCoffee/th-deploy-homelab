@@ -274,6 +274,18 @@ class Alloy(p.ComponentResource):
                                         'memory': '512Mi',
                                     },
                                 },
+                                'readiness_probe': {
+                                    'http_get': {
+                                        'path': '/-/ready',
+                                        'port': ALLOY_HTTP_PORT,
+                                        'scheme': 'HTTPS',
+                                    },
+                                    'initial_delay_seconds': 10,
+                                    'period_seconds': 10,
+                                    'timeout_seconds': 5,
+                                    'success_threshold': 1,
+                                    'failure_threshold': 3,
+                                },
                             },
                         ],
                         'volumes': [
