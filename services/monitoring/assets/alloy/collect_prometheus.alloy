@@ -5,7 +5,8 @@
 prometheus.scrape "default" {
 	targets = array.concat(
 		discovery.relabel.blackbox.output,
-		discovery.relabel.pods_metrics.output,
+		discovery.relabel.pods_metrics_with_port.output,
+		discovery.relabel.pods_metrics_without_port.output,
 		discovery.relabel.svc_metrics.output,
 		discovery.relabel.static.output,
 		prometheus.exporter.self.default.targets,

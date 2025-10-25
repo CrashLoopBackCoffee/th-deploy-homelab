@@ -86,9 +86,9 @@ discovery.relabel "pods_logs" {
 }
 
 //-----------------------------------------------------------
-// Kubernetes Pod Relabeling - Metrics
+// Kubernetes Pod Relabeling - Metrics Common
 //-----------------------------------------------------------
-discovery.relabel "pods_metrics" {
+discovery.relabel "pods_metrics_common" {
 	targets = discovery.relabel.pods_common.output
 
 	// Keep only pods that explicitly opt-in
@@ -96,46 +96,6 @@ discovery.relabel "pods_metrics" {
 		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_scrape"]
 		regex         = "true"
 		action        = "keep"
-	}
-
-	// When no port annotation is set, drop containers without any ports
-	// This filters out init containers, sidecars, and containers without monitoring ports
-	rule {
-		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_port", "__meta_kubernetes_pod_container_port_name"]
-		regex         = ";$"
-		action        = "drop"
-	}
-
-	// When no port annotation is set, keep only containers with properly named metrics ports
-	// When port annotation IS set, keep all containers (the annotation overrides this check)
-	rule {
-		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_port", "__meta_kubernetes_pod_container_port_name"]
-		regex         = ";.+"
-		action        = "keep"
-	}
-
-	rule {
-		source_labels = ["__meta_kubernetes_pod_container_port_name"]
-		regex         = "monitoring|metrics|prometheus"
-		action        = "keep"
-	}
-
-	// Address = <pod_ip>:<port from annotation OR container port>
-	// If the annotation specifies a port, use it; otherwise use the container's port
-	rule {
-		action        = "replace"
-		separator     = ":"
-		source_labels = ["__meta_kubernetes_pod_ip", "__meta_kubernetes_pod_annotation_prometheus_io_port"]
-		target_label  = "__address__"
-		regex         = "(.+):(.+)"
-	}
-
-	rule {
-		action        = "replace"
-		separator     = ":"
-		source_labels = ["__meta_kubernetes_pod_ip", "__meta_kubernetes_pod_container_port_number"]
-		target_label  = "__address__"
-		regex         = "(.+):"
 	}
 
 	// Customizations from annotations
@@ -159,5 +119,47 @@ discovery.relabel "pods_metrics" {
 	rule {
 		target_label = "job"
 		replacement  = "kubernetes-pods"
+	}
+}
+
+//-----------------------------------------------------------
+// Kubernetes Pod Relabeling - Metrics with port override
+//-----------------------------------------------------------
+discovery.relabel "pods_metrics_with_port" {
+	targets = discovery.relabel.pods_metrics_common.output
+
+	// When no port annotation is set drop
+	rule {
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_port"]
+		regex         = ""
+		action        = "drop"
+	}
+
+	// Keep if port annotation is equal to container port
+	rule {
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_port"]
+		target_label  = "__meta_kubernetes_pod_container_port_number"
+		action        = "keepequal"
+	}
+}
+
+//-----------------------------------------------------------
+// Kubernetes Pod Relabeling - Metrics without port override
+//-----------------------------------------------------------
+discovery.relabel "pods_metrics_without_port" {
+	targets = discovery.relabel.pods_metrics_common.output
+
+	// Drop if port annotation is set
+	rule {
+		source_labels = ["__meta_kubernetes_pod_annotation_prometheus_io_port"]
+		regex         = ".+"
+		action        = "drop"
+	}
+
+	// Drop if container port is not designated for metrics
+	rule {
+		action        = "keep"
+		source_labels = ["__meta_kubernetes_pod_container_port_name"]
+		regex         = "(.*-)?metrics(-.*)?|monitoring|prometheus"
 	}
 }
