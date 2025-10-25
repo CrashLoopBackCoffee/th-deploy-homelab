@@ -11,13 +11,6 @@ discovery.kubernetes "pods" {
 discovery.relabel "pods_common" {
 	targets = discovery.kubernetes.pods.targets
 
-	// Filter by phase
-	rule {
-		source_labels = ["__meta_kubernetes_pod_phase"]
-		regex         = "Pending|Succeeded|Failed|Unknown"
-		action        = "drop"
-	}
-
 	// Drop empty container targets
 	rule {
 		source_labels = ["__meta_kubernetes_pod_container_name"]
@@ -90,6 +83,13 @@ discovery.relabel "pods_logs" {
 //-----------------------------------------------------------
 discovery.relabel "pods_metrics_common" {
 	targets = discovery.relabel.pods_common.output
+
+	// Filter by phase
+	rule {
+		source_labels = ["__meta_kubernetes_pod_phase"]
+		regex         = "Pending|Succeeded|Failed|Unknown"
+		action        = "drop"
+	}
 
 	// Keep only pods that explicitly opt-in
 	rule {
