@@ -3,9 +3,10 @@ import textwrap
 
 import pulumi as p
 import pulumi_kubernetes as k8s
-import pulumi_postgresql as postgresql
 import pulumi_random as random
 import utils.opnsense.unbound.host_override
+
+from utils.postgres import PostgresDatabase
 
 from paperless.backup import create_backup_cronjob
 from paperless.config import ComponentConfig
@@ -22,31 +23,16 @@ class Paperless(p.ComponentResource):
         component_config: ComponentConfig,
         namespace: p.Input[str],
         k8s_provider: k8s.Provider,
-        postgres_provider: postgresql.Provider,
-        postgres_service: p.Input[str],
-        postgres_port: p.Input[int],
     ):
         super().__init__('paperless', 'paperless')
-        # Configure database
-        postgres_opts = p.ResourceOptions(provider=postgres_provider)
-        postgres_password = random.RandomPassword(
-            'synapse-password',
-            length=24,
+
+        cnpg_database = PostgresDatabase(
+            'postgres-paperless',
+            component_config.postgres.version,
+            namespace,
+            k8s_provider,
         )
-        postgres_user = postgresql.Role(
-            'synapse',
-            login=True,
-            password=postgres_password.result,
-            opts=postgres_opts,
-        )
-        database = postgresql.Database(
-            'synapse',
-            encoding='UTF8',
-            lc_collate='C',
-            lc_ctype='C',
-            owner=postgres_user.name,
-            opts=postgres_opts,
-        )
+
         admin_username = 'admin'
         admin_password = random.RandomPassword('admin-password', length=32, special=False).result
         p.export('admin_username', admin_username)
@@ -93,10 +79,6 @@ class Paperless(p.ComponentResource):
             'PAPERLESS_ACCOUNT_EMAIL_VERIFICATION': 'none',
             'PAPERLESS_OIDC_DEFAULT_GROUP': 'readers',
             'PAPERLESS_DBENGINE': 'postgresql',
-            'PAPERLESS_DBHOST': postgres_service,
-            'PAPERLESS_DBPORT': p.Output.from_input(postgres_port).apply(lambda port: str(port)),
-            'PAPERLESS_DBNAME': database.name,
-            'PAPERLESS_DBUSER': postgres_user.name,
             'PAPERLESS_CONSUMER_ENABLE_BARCODES': 'true',
             'PAPERLESS_CONSUMER_ENABLE_ASN_BARCODE': 'true',
             'PAPERLESS_CONSUMER_BARCODE_SCANNER': 'ZXING',
@@ -198,7 +180,6 @@ class Paperless(p.ComponentResource):
                         },
                     }
                 ),
-                'PAPERLESS_DBPASS': postgres_password.result,
                 'PAPERLESS_GMAIL_OAUTH_CLIENT_SECRET': str(component_config.mail.client_secret),
             },
             opts=k8s_opts,
@@ -278,6 +259,51 @@ class Paperless(p.ComponentResource):
                                 'image': f'ghcr.io/paperless-ngx/paperless-ngx:{component_config.paperless.version}',
                                 'env': [
                                     *[{'name': k, 'value': v} for k, v in env_vars.items()],
+                                    {
+                                        'name': 'PAPERLESS_DBPASS',
+                                        'value_from': {
+                                            'secret_key_ref': {
+                                                'name': cnpg_database.secret_name,
+                                                'key': 'password',
+                                            },
+                                        },
+                                    },
+                                    {
+                                        'name': 'PAPERLESS_DBHOST',
+                                        'value_from': {
+                                            'secret_key_ref': {
+                                                'name': cnpg_database.secret_name,
+                                                'key': 'host',
+                                            },
+                                        },
+                                    },
+                                    {
+                                        'name': 'PAPERLESS_DBPORT',
+                                        'value_from': {
+                                            'secret_key_ref': {
+                                                'name': cnpg_database.secret_name,
+                                                'key': 'port',
+                                            },
+                                        },
+                                    },
+                                    {
+                                        'name': 'PAPERLESS_DBNAME',
+                                        'value_from': {
+                                            'secret_key_ref': {
+                                                'name': cnpg_database.secret_name,
+                                                'key': 'dbname',
+                                            },
+                                        },
+                                    },
+                                    {
+                                        'name': 'PAPERLESS_DBUSER',
+                                        'value_from': {
+                                            'secret_key_ref': {
+                                                'name': cnpg_database.secret_name,
+                                                'key': 'username',
+                                            },
+                                        },
+                                    },
                                 ],
                                 'env_from': [
                                     {

@@ -58,8 +58,8 @@ config:
       idrive-secret-access-key:
         ref: "op://Pulumi/IDrive e2 Paperless/Secret Access Key"
     postgres:
-      # renovate: datasource=docker packageName=registry-1.docker.io/bitnamicharts/postgresql versioning=semver
-      version: 16.7.26
+      # renovate: datasource=docker packageName=ghcr.io/cloudnative-pg/postgresql versioning=loose
+      version: "17.6"
     redis:
       # renovate: datasource=github-releases packageName=redis/redis versioning=semver
       version: 8.2.2
