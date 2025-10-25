@@ -1,0 +1,55 @@
+//-----------------------------------------------------------
+// Kubernetes Service Discovery
+//-----------------------------------------------------------
+discovery.kubernetes "services" {
+	role = "services"
+}
+
+//-----------------------------------------------------------
+// Kubernetes Service Relabeling - Metrics Endpoints
+//-----------------------------------------------------------
+discovery.relabel "svc_metrics" {
+	targets = discovery.kubernetes.services.targets
+
+	// Keep only services opting in
+	rule {
+		source_labels = ["__meta_kubernetes_service_annotation_prometheus_io_scrape"]
+		regex         = "true"
+		action        = "keep"
+	}
+
+	// Address is already the target endpoint address:port for endpoints role,
+	// but you can still override path/scheme from annotations:
+	rule {
+		action        = "replace"
+		source_labels = ["__meta_kubernetes_service_annotation_prometheus_io_path"]
+		target_label  = "__metrics_path__"
+		regex         = "(.+)"
+		replacement   = "$1"
+	}
+
+	rule {
+		action        = "replace"
+		source_labels = ["__meta_kubernetes_service_annotation_prometheus_io_scheme"]
+		target_label  = "__scheme__"
+		regex         = "https|http"
+		replacement   = "$1"
+	}
+
+	// Kubernetes Metadata
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		target_label  = "namespace"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_service_name"]
+		target_label  = "service_name"
+	}
+
+	// Give this scrape a job label
+	rule {
+		target_label = "job"
+		replacement  = "kubernetes-services"
+	}
+}
