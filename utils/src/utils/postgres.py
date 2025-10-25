@@ -98,6 +98,12 @@ class PostgresDatabase(p.ComponentResource):
         backup_enabled: bool = False,
         backup_cron: str | None = None,
         backup_config: PostgresBackupConfig | None = None,
+        import_databases: bool = False,
+        import_source_name: str | None = None,
+        import_source_host: p.Input[str] | None = None,
+        import_source_user: str | None = None,
+        import_source_dbname: p.Input[str] | None = None,
+        import_source_password_secret: tuple[p.Input[str], str] | None = None,
         spec_overrides: dict | None = None,
         opts: p.ResourceOptions | None = None,
     ):
@@ -115,6 +121,12 @@ class PostgresDatabase(p.ComponentResource):
             backup_enabled: Whether to enable automated backups (default: False).
             backup_cron: Cron schedule for backups (default: None, uses config default).
             backup_config: BackupConfig object with endpoint and bucket info.
+            import_databases: List of databases to import for microservice bootstrap (optional).
+            import_source_name: Name for the external cluster reference (default: 'source').
+            import_source_host: Hostname of source PostgreSQL instance (can be Output).
+            import_source_user: Username for connecting to source database.
+            import_source_dbname: Database name on source to connect to (usually 'postgres').
+            import_source_password_secret: Tuple of (secret_name, key) for source password.
             spec_overrides: Optional dict to override values in the cluster spec (deep merged).
             opts: Pulumi resource options.
         """
@@ -126,9 +138,34 @@ class PostgresDatabase(p.ComponentResource):
         cluster_name = name
 
         # Build the default spec configuration
-        spec = {
+        # Build bootstrap initdb config
+        bootstrap_initdb: dict = {
+            'options': [
+                '--encoding=UTF8',
+                '--lc-collate=C',
+                '--lc-ctype=C',
+            ],
+        }
+
+        # Add import configuration if specified (microservice type)
+        if import_databases:
+            import_source_name_final = import_source_name or 'source'
+            import_config: dict = {
+                'type': 'microservice',
+                'databases': [import_source_dbname],
+                'source': {
+                    'externalCluster': import_source_name_final,
+                },
+            }
+            bootstrap_initdb['import'] = import_config
+
+        system_type = 'minimal-trixie'
+        if version.startswith('16') or version.startswith('15'):
+            system_type = 'bookworm'
+
+        spec: dict = {
             'instances': 1,
-            'imageName': f'ghcr.io/cloudnative-pg/postgresql:{version}-minimal-trixie',
+            'imageName': f'ghcr.io/cloudnative-pg/postgresql:{version}-{system_type}',
             'enableSuperuserAccess': enable_superuser,
             # PostgreSQL configuration
             'postgresql': {
@@ -154,13 +191,7 @@ class PostgresDatabase(p.ComponentResource):
             },
             # Bootstrap configuration
             'bootstrap': {
-                'initdb': {
-                    'options': [
-                        '--encoding=UTF8',
-                        '--lc-collate=C',
-                        '--lc-ctype=C',
-                    ],
-                }
+                'initdb': bootstrap_initdb,
             },
             # Storage configuration
             'storage': {
@@ -168,6 +199,25 @@ class PostgresDatabase(p.ComponentResource):
                 'storageClass': storage_class,
             },
         }
+
+        # Add external clusters configuration if import is enabled
+        if import_databases and import_source_host:
+            import_source_name_final = import_source_name or 'source'
+            external_clusters_config = {
+                'name': import_source_name_final,
+                'connectionParameters': {
+                    'host': import_source_host,
+                    'user': import_source_user or 'postgres',
+                    'dbname': import_source_dbname or 'postgres',
+                },
+            }
+            if import_source_password_secret:
+                secret_name, secret_key = import_source_password_secret
+                external_clusters_config['password'] = {
+                    'name': secret_name,
+                    'key': secret_key,
+                }
+            spec['externalClusters'] = [external_clusters_config]
 
         # Add backup configuration if enabled
         if backup_enabled and backup_config is not None:
