@@ -1,0 +1,86 @@
+//-----------------------------------------------------------
+// Kubernetes Pod Discovery
+//-----------------------------------------------------------
+discovery.kubernetes "pods" {
+	role = "pod"
+}
+
+//-----------------------------------------------------------
+// Kubernetes Pod Relabeling - Common
+//-----------------------------------------------------------
+discovery.relabel "pods_common" {
+	targets = discovery.kubernetes.pods.targets
+
+	// Filter by phase
+	rule {
+		source_labels = ["__meta_kubernetes_pod_phase"]
+		regex         = "Pending|Succeeded|Failed|Unknown"
+		action        = "drop"
+	}
+
+	// drop empty container targets
+	rule {
+		source_labels = ["__meta_kubernetes_pod_container_name"]
+		regex         = ""
+		action        = "drop"
+	}
+
+	// Kubernetes metadata
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		target_label  = "namespace"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_name"]
+		target_label  = "pod"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_container_name"]
+		target_label  = "container"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_node_name"]
+		target_label  = "node"
+	}
+
+	// App identity (prefer well-known labels; last write wins)
+	rule {
+		source_labels = ["__meta_kubernetes_pod_label_app"]
+		target_label  = "app"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+		target_label  = "app"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_pod_label_k8s_app"]
+		target_label  = "app"
+	}
+}
+
+//-----------------------------------------------------------
+// Kubernetes Pod Relabeling - Logs
+//-----------------------------------------------------------
+discovery.relabel "pods_logs" {
+	targets = discovery.relabel.pods_common.output
+
+	// Path to container logs
+	rule {
+		source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+		target_label  = "__path__"
+		separator     = "/"
+		regex         = "(.*)/(.*)"
+		replacement   = "/var/log/pods/*$1*/$2/*.log"
+	}
+
+	// Set service_name for loki
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		target_label  = "service_name"
+	}
+}
