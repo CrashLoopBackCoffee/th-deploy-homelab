@@ -83,4 +83,25 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
             ).apply(lambda c: yaml.safe_dump(c)),  # pyright: ignore[reportArgumentType]
         )
 
+    # Create PodMonitor for Prometheus operator to monitor the CloudNativePG operator
+    k8s.apiextensions.CustomResource(
+        'cnpg-controller-manager-monitor',
+        api_version='monitoring.coreos.com/v1',
+        kind='PodMonitor',
+        metadata={'name': 'cnpg-controller-manager', 'namespace': namespace.metadata.name},
+        spec={
+            'selector': {
+                'matchLabels': {
+                    'app.kubernetes.io/name': 'cloudnative-pg',
+                },
+            },
+            'podMetricsEndpoints': [
+                {
+                    'port': 'metrics',
+                },
+            ],
+        },
+        opts=k8s_opts,
+    )
+
     return operator
