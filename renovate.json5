@@ -65,8 +65,6 @@
         'postgresql',
       ],
       additionalBranchPrefix: "{{parentDir}}-",
-      commitMessageTopic: "dependency {{depName}}",
-      commitMessageExtra: "to {{newVersion}}",
       commitMessageSuffix: "({{parentDir}})",
     },
   ],
