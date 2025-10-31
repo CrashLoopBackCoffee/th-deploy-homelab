@@ -11,7 +11,7 @@ config:
       zone: tobiash.net
     immich:
       # renovate: datasource=github-releases packageName=immich-app/immich versioning=semver
-      version: 2.2.0
+      version: 2.2.1
       # renovate: datasource=helm registryUrl=oci://ghcr.io/immich-app packageName=immich-charts
       chart-version: "0.10.0"
       persistence:
