@@ -25,6 +25,11 @@ config:
           nfs-path: /volume2/photo/Handy
           nfs-mount-options: "nfsvers=4.1,sec=sys"
           size: "10Gi"
+        bilder:
+          nfs-server: synology.tobiash.net
+          nfs-path: /volume2/photo/Bilder
+          nfs-mount-options: "nfsvers=4.1,sec=sys"
+          size: "10Gi"
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
       version: "17.6"
