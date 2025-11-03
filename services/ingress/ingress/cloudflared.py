@@ -142,7 +142,7 @@ def create_cloudflared(
             name=ingress.hostname.split('.')[0],
             type='CNAME',
             content=p.Output.format('{}.cfargotunnel.com', tunnel.id),
-            ttl=60,
+            ttl=1,
             zone_id=zone.zone_id,
             opts=cloudflare_opts,
         )
