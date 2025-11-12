@@ -15,6 +15,6 @@ config:
       hostname: tandoor.tobiash.net
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
-      version: "18.0"
+      version: "18.1"
       backup:
         cron-schedule: "0 0 0 * * *"
