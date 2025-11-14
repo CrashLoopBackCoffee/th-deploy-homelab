@@ -32,7 +32,7 @@ config:
           size: "10Gi"
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
-      version: "18.0"
+      version: "17.6"
       # renovate: datasource=github-releases packageName=tensorchord/VectorChord versioning=loose
       vectorchord-version: "0.5.3"
       backup:

@@ -67,6 +67,20 @@
       additionalBranchPrefix: "{{parentDir}}-",
       commitMessageSuffix: "({{parentDir}})",
     },
+    {
+      // PostgreSQL except immich should track only <major> versions (disable minor/patch)
+      matchPackageNames: [
+        'postgresql',
+      ],
+      matchFileNames: [
+        '!services/immich/Pulumi.prod.yaml',
+      ],
+      matchUpdateTypes: [
+        'minor',
+        'patch'
+      ],
+      enabled: false,
+    },
   ],
   prHourlyLimit: 10,
   rangeStrategy: 'replace',
