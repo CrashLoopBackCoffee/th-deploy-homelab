@@ -2,6 +2,7 @@ extends: default
 ignore: |
   .git
   .venv
+  services/kubernetes/assets/image-catalogs/*.yaml
   services/monitoring/assets/snmp/snmp.yml
 
 rules:
