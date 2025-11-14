@@ -4,6 +4,7 @@ import pulumi_pulumiservice as pulumiservice
 import yaml
 
 from kubernetes.config import ComponentConfig
+from kubernetes.utils import get_assets_path
 
 
 def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.Provider):
@@ -101,6 +102,16 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
                 },
             ],
         },
+        opts=k8s_opts,
+    )
+
+    # Install image catalogs
+    k8s.yaml.ConfigGroup(
+        'image-catalogs',
+        yaml=[
+            catalog_file.read_text()
+            for catalog_file in (get_assets_path() / 'image-catalogs').glob('*.yaml')
+        ],
         opts=k8s_opts,
     )
 

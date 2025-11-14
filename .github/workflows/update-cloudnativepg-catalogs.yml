@@ -1,0 +1,62 @@
+name: Update CloudNativePG Image Catalogs
+
+on:
+  schedule:
+    # Run nightly at 2:00 AM UTC
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-catalogs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Run update script
+        run: |
+          (cd services/kubernetes/assets/image-catalogs && bash update-catalogs.sh)
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            chore: Update CloudNativePG image catalogs
+
+            Automated update from cloudnative-pg/artifacts repository.
+          branch: automated/update-cloudnativepg-catalogs
+          delete-branch: true
+          title: "chore: Update CloudNativePG image catalogs"
+          body: |
+            ## Automated Update: CloudNativePG Image Catalogs
+
+            This PR updates the CloudNativePG image catalog files from the upstream repository.
+
+            ### Changes
+            - Updated image catalog files from [cloudnative-pg/artifacts](https://github.com/cloudnative-pg/artifacts/tree/main/image-catalogs)
+
+            ### Files Updated
+            - `catalog-minimal-bookworm.yaml`
+            - `catalog-minimal-bullseye.yaml`
+            - `catalog-minimal-trixie.yaml`
+            - `catalog-standard-bookworm.yaml`
+            - `catalog-standard-bullseye.yaml`
+            - `catalog-standard-trixie.yaml`
+            - `catalog-system-bookworm.yaml`
+            - `catalog-system-bullseye.yaml`
+            - `catalog-system-trixie.yaml`
+
+            ### Notes
+            - These catalogs define available PostgreSQL versions for CloudNativePG
+            - Review changes to ensure compatibility with current CloudNativePG version
+
+            ---
+            *This PR was automatically created by the Update CloudNativePG Catalogs workflow.*
+          labels: |
+            dependencies
+            automated

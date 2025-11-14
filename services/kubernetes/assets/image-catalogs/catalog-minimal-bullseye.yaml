@@ -1,0 +1,24 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ClusterImageCatalog
+metadata:
+  name: postgresql-minimal-bullseye
+  labels:
+    images.cnpg.io/family: postgresql
+    images.cnpg.io/type: minimal
+    images.cnpg.io/os: bullseye
+    images.cnpg.io/date: '20251104'
+    images.cnpg.io/publisher: cnpg.io
+spec:
+  images:
+  - major: 13
+    image: ghcr.io/cloudnative-pg/postgresql:13.22-202511030807-minimal-bullseye@sha256:dbc70c5b030c1276d0d3d44f0f2308cf710475c94b5c71ce1a93ca9a6ed6ea62
+  - major: 14
+    image: ghcr.io/cloudnative-pg/postgresql:14.19-202511030807-minimal-bullseye@sha256:aadb0c5e102cb632fe0e97bb0cf558200cd9db5b10161b4179c3b14de0be559a
+  - major: 15
+    image: ghcr.io/cloudnative-pg/postgresql:15.14-202511030807-minimal-bullseye@sha256:412691665df19013e52ea85a1549070d6e5c8208904e702131351bd04abdde13
+  - major: 16
+    image: ghcr.io/cloudnative-pg/postgresql:16.10-202511030807-minimal-bullseye@sha256:94272c8d231b24ffb35872d67ce8811b921c83f0acd5b3a939098bbe99db848d
+  - major: 17
+    image: ghcr.io/cloudnative-pg/postgresql:17.6-202511030807-minimal-bullseye@sha256:b082c4ec5c7a5e7763f7b2ab420bdd45895c5700b8670d609ef0a0b87202c7b9
+  - major: 18
+    image: ghcr.io/cloudnative-pg/postgresql:18.0-202511030807-minimal-bullseye@sha256:be692363b65bd790394f048ccf6523bf99175abcd0b83be5be515e833e1d4d8b
