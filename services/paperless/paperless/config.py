@@ -26,7 +26,7 @@ class GotenbergConfig(utils.model.LocalBaseModel):
 
 
 class PostgresConfig(utils.model.LocalBaseModel):
-    version: str
+    version: int
 
 
 class MailConfig(utils.model.LocalBaseModel):
