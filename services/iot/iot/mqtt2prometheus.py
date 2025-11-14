@@ -1,4 +1,5 @@
 import copy
+import typing as t
 
 import pulumi as p
 import pulumi_kubernetes as k8s
@@ -31,7 +32,7 @@ class Mqtt2Prometheus(p.ComponentResource):
         )
         k8s_opts = p.ResourceOptions(provider=k8s_provider, parent=self)
 
-        base_config = {
+        base_config: dict[str, t.Any] = {
             'mqtt': {
                 'server': f'mqtts://{component_config.mosquitto.hostname}:8883',
                 'qos': 0,

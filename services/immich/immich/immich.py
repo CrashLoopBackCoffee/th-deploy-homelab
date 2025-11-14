@@ -216,7 +216,7 @@ def create_immich(
         p.Output.concat(namespace, '/immich-server'),
         opts=p.ResourceOptions(
             provider=k8s_provider,
-            depends_on=chart.resources,  # pyright: ignore[reportArgumentType]
+            depends_on=chart.resources,  # type: ignore[reportArgumentType]
         ),
     )
 

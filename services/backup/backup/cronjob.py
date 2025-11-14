@@ -189,4 +189,4 @@ def create_backup_cronjob(
             },
         },
         opts=k8s_opts,
-    )
+    )  # pyrefly: ignore (pyrefly false positive)

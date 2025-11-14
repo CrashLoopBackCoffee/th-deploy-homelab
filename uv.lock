@@ -475,8 +475,11 @@ dev = [
     { name = "filelock" },
     { name = "platformdirs" },
     { name = "pre-commit" },
+    { name = "pyrefly" },
     { name = "pyright" },
     { name = "ruff" },
+    { name = "types-pyyaml" },
+    { name = "types-requests" },
     { name = "yamllint" },
 ]
 
@@ -515,8 +518,11 @@ dev = [
     { name = "filelock", specifier = ">=3.16.1" },
     { name = "platformdirs", specifier = ">=4.3.6" },
     { name = "pre-commit", specifier = ">=4.0.1" },
+    { name = "pyrefly", specifier = ">=0.41.3" },
     { name = "pyright", specifier = ">=1.1.390" },
     { name = "ruff", specifier = ">=0.8.2" },
+    { name = "types-pyyaml", specifier = ">=6.0.12.20250915" },
+    { name = "types-requests", specifier = ">=2.32.4.20250913" },
     { name = "yamllint", specifier = ">=1.35.1" },
 ]
 
@@ -1159,6 +1165,22 @@ wheels = [
 ]
 
 [[package]]
+name = "pyrefly"
+version = "0.41.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/9e/60/f975432c7a8a44664b5a24f437b30f3078fb115841df968216e389180797/pyrefly-0.41.3.tar.gz", hash = "sha256:a2e47040a1f1e5d236775fed41f63270eb7ffd7ca2fed38d227ea133ccbbac68", size = 3835187, upload-time = "2025-11-14T03:14:04.358Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f2/56/980e911b5ea990cf740dc668173345b9769cc0650090a5937d488f616370/pyrefly-0.41.3-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:75a8efa9737bc862edcaea9f41b56e97686d173b87a85e58ca73f93dcdd1a5f6", size = 9471541, upload-time = "2025-11-14T03:13:43.933Z" },
+    { url = "https://files.pythonhosted.org/packages/46/f3/077a6a2cc29b2a3e04807673fc758a478c3efc98bf46391b3cb1bd510208/pyrefly-0.41.3-py3-none-macosx_11_0_arm64.whl", hash = "sha256:e920195930fb498266395c433ab5123db31a7488772664c66aa52d1d5893b6f7", size = 8989777, upload-time = "2025-11-14T03:13:46.94Z" },
+    { url = "https://files.pythonhosted.org/packages/7c/52/b958d00441863b97fab2aade0c98475a120f183e4c9e334dd9ed2133ba4e/pyrefly-0.41.3-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:9f60887a7a2a819355665a949d8a51414e9a75c41706b90a1e63f4913202af18", size = 9215461, upload-time = "2025-11-14T03:13:49.134Z" },
+    { url = "https://files.pythonhosted.org/packages/28/09/73024bec228881b97f23aa252825249f289ba36ab54ee18db19e6d8aabda/pyrefly-0.41.3-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f234b22396edcad35204e81b1925fc803e106ce4029fcaebd0a7d6889ca838c4", size = 10130697, upload-time = "2025-11-14T03:13:51.29Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/8c/80d6b32758f2f15cf59b148b469a889c557e13cde8042e38bb8fe4c211da/pyrefly-0.41.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6beb41f6025036c098fd0a98bb9d3df602b973532fe4d1a413b5dbf0a6ff0e83", size = 9749261, upload-time = "2025-11-14T03:13:53.717Z" },
+    { url = "https://files.pythonhosted.org/packages/e6/fa/0a339023649a4ac10142ebd83ff45dd63d568c4d6f635a17624faab4d005/pyrefly-0.41.3-py3-none-win32.whl", hash = "sha256:ca5903b7a9305b1e4b443ad8f55046cda49355de07bc6e7332456632d66c993a", size = 9275076, upload-time = "2025-11-14T03:13:56.004Z" },
+    { url = "https://files.pythonhosted.org/packages/f0/d9/cc0bedc22abb642cc490a25a1c594ccb1044f94dd72a665202b5f89bb6a0/pyrefly-0.41.3-py3-none-win_amd64.whl", hash = "sha256:4a78d3f1819fb7a483c7f0d0ba37ed744ecc284bc84521ff051f433f5fef352f", size = 9749455, upload-time = "2025-11-14T03:13:58.12Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/6e/4e5d9112a7972497ff2fee4c23d4be363ce855d152435a1400049343da3b/pyrefly-0.41.3-py3-none-win_arm64.whl", hash = "sha256:37d0c8e0aca9c693574304daa076267a732560521ee470743bdd2fe14f272175", size = 9306928, upload-time = "2025-11-14T03:14:00.655Z" },
+]
+
+[[package]]
 name = "pyright"
 version = "1.1.407"
 source = { registry = "https://pypi.org/simple" }
@@ -1432,6 +1454,27 @@ dependencies = [
 requires-dist = [
     { name = "pulumi-random", specifier = ">=4.18.0" },
     { name = "utils", editable = "utils" },
+]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.20250915"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7e/69/3c51b36d04da19b92f9e815be12753125bd8bc247ba0470a982e6979e71c/types_pyyaml-6.0.12.20250915.tar.gz", hash = "sha256:0f8b54a528c303f0e6f7165687dd33fafa81c807fcac23f632b63aa624ced1d3", size = 17522, upload-time = "2025-09-15T03:01:00.728Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bd/e0/1eed384f02555dde685fff1a1ac805c1c7dcb6dd019c916fe659b1c1f9ec/types_pyyaml-6.0.12.20250915-py3-none-any.whl", hash = "sha256:e7d4d9e064e89a3b3cae120b4990cd370874d2bf12fa5f46c97018dd5d3c9ab6", size = 20338, upload-time = "2025-09-15T03:00:59.218Z" },
+]
+
+[[package]]
+name = "types-requests"
+version = "2.32.4.20250913"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/36/27/489922f4505975b11de2b5ad07b4fe1dca0bca9be81a703f26c5f3acfce5/types_requests-2.32.4.20250913.tar.gz", hash = "sha256:abd6d4f9ce3a9383f269775a9835a4c24e5cd6b9f647d64f88aa4613c33def5d", size = 23113, upload-time = "2025-09-13T02:40:02.309Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2a/20/9a227ea57c1285986c4cf78400d0a91615d25b24e257fd9e2969606bdfae/types_requests-2.32.4.20250913-py3-none-any.whl", hash = "sha256:78c9c1fffebbe0fa487a418e0fa5252017e9c60d1a2da394077f1780f655d7e1", size = 20658, upload-time = "2025-09-13T02:40:01.115Z" },
 ]
 
 [[package]]

@@ -40,8 +40,11 @@ dev = [
     "filelock>=3.16.1",
     "platformdirs>=4.3.6",
     "pre-commit>=4.0.1",
+    "pyrefly>=0.41.3",
     "pyright>=1.1.390",
     "ruff>=0.8.2",
+    "types-pyyaml>=6.0.12.20250915",
+    "types-requests>=2.32.4.20250913",
     "yamllint>=1.35.1",
 ]
 
@@ -133,6 +136,11 @@ venvPath = "."
 [tool.config-models.backup]
 root = "services/backup"
 model = "backup.config:PulumiConfigRoot"
+
+[tool.pyrefly]
+project-includes = ["scripts", "services", "utils", "**/*.py"]
+disable-project-excludes-heuristics = true
+infer-with-first-use = false
 
 [tool.config-models.immich]
 root = "services/immich"
