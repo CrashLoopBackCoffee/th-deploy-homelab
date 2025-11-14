@@ -126,10 +126,19 @@ def create_mimir(
     )
     with open(mimir_path / 'config.yaml', 'r', encoding='UTF-8') as f:
         mimir_config = yaml.safe_load(f.read())
+
+    # Collect all rules files for triggering updates
+    rules_files = []
+    rules_path = mimir_path / 'rules'
+    if rules_path.exists():
+        for rule_file in rules_path.rglob('*.yaml'):
+            with open(rule_file, 'r', encoding='UTF-8') as f:
+                rules_files.append(yaml.safe_load(f.read()))
+
     pulumi_command.local.Command(
         'mimir-config',
         create=sync_command,
-        triggers=[mimir_config, mimir_config_dir_resource.id],
+        triggers=[mimir_config, *rules_files, mimir_config_dir_resource.id],
     )
 
     image = docker.RemoteImage(
@@ -139,7 +148,7 @@ def create_mimir(
         opts=opts,
     )
 
-    docker.Container(
+    mimir_container = docker.Container(
         'mimir',
         image=image.image_id,
         name='mimir',
@@ -177,3 +186,29 @@ def create_mimir(
         start=True,
         opts=p.ResourceOptions.merge(opts, p.ResourceOptions(depends_on=[mimir_data_dir_resource])),
     )
+
+    # Upload mimir mixins to the ruler
+    rules_path = mimir_path / 'rules' / 'anonymous' / 'mimir'
+    if rules_path.exists():
+        for rule_file in rules_path.glob('*.yaml'):
+            namespace = 'mimir'
+            rule_name = rule_file.stem
+            # Wait for Mimir to be ready, then upload rules
+            upload_command = (
+                # Wait for Mimir to be ready with retries
+                f'for i in {{1..30}}; do '
+                f'curl -sf http://{target_host}:9009/ready && break || sleep 2; '
+                f'done && '
+                # Upload the rules
+                f'curl -X POST '
+                f'http://{target_host}:9009/prometheus/config/v1/rules/{namespace} '
+                f'-H "Content-Type: application/yaml" '
+                f'--data-binary "@{target_root_dir}/mimir-config/rules/anonymous/mimir/{rule_file.name}"'
+            )
+            pulumi_command.remote.Command(
+                f'mimir-upload-rules-{rule_name}',
+                connection=pulumi_command.remote.ConnectionArgs(host=target_host, user=target_user),
+                create=upload_command,
+                triggers=[rule_file.read_text()],
+                opts=p.ResourceOptions(depends_on=[mimir_container]),
+            )
