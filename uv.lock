@@ -443,6 +443,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "backup" },
+    { name = "immich" },
     { name = "ingress" },
     { name = "iot" },
     { name = "kubernetes" },
@@ -482,6 +483,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "backup", editable = "services/backup" },
+    { name = "immich", editable = "services/immich" },
     { name = "ingress", editable = "services/ingress" },
     { name = "iot", editable = "services/iot" },
     { name = "kubernetes", editable = "services/kubernetes" },
