@@ -109,7 +109,7 @@ def create_backup_cronjob(
         )
 
     # Environment variables (non-sensitive only)
-    env_vars = [
+    env_vars: list[k8s.core.v1.EnvVarArgsDict] = [
         {
             'name': 'RESTIC_COMPRESSION',
             'value': 'max',
@@ -189,4 +189,4 @@ def create_backup_cronjob(
             },
         },
         opts=k8s_opts,
-    )  # pyrefly: ignore (pyrefly false positive)
+    )
