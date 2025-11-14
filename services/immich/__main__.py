@@ -26,15 +26,14 @@ namespace = k8s.core.v1.Namespace(
 # Create postgres database
 postgres_db = utils.postgres.PostgresDatabase(
     'postgres',
-    version='dummy',  # version is unused when using overriding the image name
     namespace_name=namespace.metadata.name,
     k8s_provider=k8s_provider,
     enable_superuser=True,
     backup_enabled=True,
     backup_config=component_config.postgres.backup,
+    # Use vectorchord-enabled PostgreSQL image for immich
+    postgres_image=f'ghcr.io/tensorchord/cloudnative-vectorchord:{component_config.postgres.version}-{component_config.postgres.vectorchord_version}',
     spec_overrides={
-        # Use vectorchord-enabled PostgreSQL image for immich
-        'imageName': f'ghcr.io/tensorchord/cloudnative-vectorchord:{component_config.postgres.version}-{component_config.postgres.vectorchord_version}',
         'postgresql': {
             'shared_preload_libraries': ['vchord.so'],
         },

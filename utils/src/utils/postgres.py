@@ -1,3 +1,5 @@
+import typing as t
+
 import pulumi as p
 import pulumi_kubernetes as k8s
 
@@ -82,7 +84,6 @@ class PostgresDatabase(p.ComponentResource):
     def __init__(
         self,
         name: str,
-        version: str,
         namespace_name: p.Input[str],
         k8s_provider: k8s.Provider,
         *,
@@ -93,6 +94,9 @@ class PostgresDatabase(p.ComponentResource):
         backup_enabled: bool = False,
         backup_cron: str | None = None,
         backup_config: PostgresBackupConfig | None = None,
+        postgres_version: int | None = None,
+        postgres_image_type: str = 'standard-trixie',
+        postgres_image: str | None = None,
         import_databases: bool = False,
         import_source_name: str | None = None,
         import_source_host: p.Input[str] | None = None,
@@ -106,7 +110,7 @@ class PostgresDatabase(p.ComponentResource):
 
         Args:
             name: Logical name of the component.
-            version: PostgreSQL version to deploy.
+            version: PostgreSQL major version to deploy, referenced by ClusterImageCatalogs.
             namespace_name: Kubernetes namespace for deployment.
             k8s_provider: Kubernetes provider instance.
             local_port: Local port for port forwarding (default: 15432).
@@ -154,13 +158,26 @@ class PostgresDatabase(p.ComponentResource):
             }
             bootstrap_initdb['import'] = import_config
 
-        system_type = 'minimal-trixie'
-        if version.startswith('16') or version.startswith('15'):
-            system_type = 'bookworm'
+        version_spec: dict[str, t.Any]
+        if postgres_version:
+            # We reference a ClusterImageCatalog that matches this version
+            version_spec = {
+                'imageCatalogRef': {
+                    'apiGroup': 'postgresql.cnpg.io',
+                    'kind': 'ClusterImageCatalog',
+                    'name': f'postgresql-{postgres_image_type}',
+                    'major': postgres_version,
+                }
+            }
+        else:
+            # Use explicit image name
+            assert postgres_image is not None, (
+                'postgres_image must be provided if version is not set'
+            )
+            version_spec = {'imageName': postgres_image}
 
         spec: dict = {
             'instances': 1,
-            'imageName': f'ghcr.io/cloudnative-pg/postgresql:{version}-{system_type}',
             'enableSuperuserAccess': enable_superuser,
             # PostgreSQL configuration
             'postgresql': {
@@ -193,6 +210,7 @@ class PostgresDatabase(p.ComponentResource):
                 'size': storage_size,
                 'storageClass': storage_class,
             },
+            **version_spec,
         }
 
         # Add external clusters configuration if import is enabled

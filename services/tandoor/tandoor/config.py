@@ -7,7 +7,7 @@ class TandoorConfig(utils.model.LocalBaseModel):
 
 
 class PostgresConfig(utils.model.LocalBaseModel):
-    version: str
+    version: int
     backup: utils.model.PostgresBackupConfig | None = None
 
 
@@ -25,4 +25,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str]
     config: StackConfig

@@ -28,9 +28,9 @@ class Paperless(p.ComponentResource):
 
         cnpg_database = PostgresDatabase(
             'postgres-paperless',
-            component_config.postgres.version,
             namespace,
             k8s_provider,
+            postgres_version=component_config.postgres.version,
         )
 
         admin_username = 'admin'

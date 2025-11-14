@@ -27,7 +27,7 @@ def create_tandoor(component_config: ComponentConfig, k8s_provider: k8s.Provider
     # Create postgres database using CloudNativePG
     postgres_db = utils.postgres.PostgresDatabase(
         'postgres',
-        version=component_config.postgres.version,
+        postgres_version=component_config.postgres.version,
         namespace_name=namespace.metadata.name,
         k8s_provider=k8s_provider,
         backup_enabled=component_config.postgres.backup is not None,
