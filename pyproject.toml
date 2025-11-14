@@ -18,6 +18,7 @@ dependencies = [
     "pulumi==3.206.0",
     # Workspaces
     "backup",
+    "immich",
     "ingress",
     "iot",
     "kubernetes",
@@ -46,6 +47,7 @@ dev = [
 
 [tool.uv.sources]
 backup = { workspace = true }
+immich = { workspace = true }
 ingress = { workspace = true }
 iot = { workspace = true }
 kubernetes = { workspace = true }
@@ -131,6 +133,10 @@ venvPath = "."
 [tool.config-models.backup]
 root = "services/backup"
 model = "backup.config:PulumiConfigRoot"
+
+[tool.config-models.immich]
+root = "services/immich"
+model = "immich.config:PulumiConfigRoot"
 
 [tool.config-models.ingress]
 root = "services/ingress"
