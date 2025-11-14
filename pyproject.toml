@@ -141,6 +141,7 @@ model = "backup.config:PulumiConfigRoot"
 project-includes = ["scripts", "services", "utils", "**/*.py"]
 disable-project-excludes-heuristics = true
 infer-with-first-use = false
+python-interpreter-path = ".venv/bin/python3"
 
 [tool.config-models.immich]
 root = "services/immich"
