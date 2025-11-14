@@ -385,14 +385,13 @@ class Alloy(p.ComponentResource):
         def create_dns_record(args):
             lb_ip = args[0]
             if lb_ip and lb_ip != '' and component_config.alloy and component_config.alloy.hostname:
-                return utils.opnsense.unbound.host_override.HostOverride(
+                utils.opnsense.unbound.host_override.HostOverride(
                     'alloy-host-override',
                     host=component_config.alloy.hostname.split('.')[0],
                     domain='.'.join(component_config.alloy.hostname.split('.')[1:]),
                     record_type='A',
                     ipaddress=lb_ip,
                 )
-            return None
 
         service.status.load_balancer.ingress[0].ip.apply(
             lambda ip: create_dns_record([ip]) if ip else None

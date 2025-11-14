@@ -203,7 +203,9 @@ class PostgresDatabase(p.ComponentResource):
                 'connectionParameters': {
                     'host': import_source_host,
                     'user': import_source_user or 'postgres',
-                    'dbname': import_source_dbname or 'postgres',
+                    'dbname': import_source_dbname
+                    if import_source_dbname is not None
+                    else 'postgres',
                 },
             }
             if import_source_password_secret:
@@ -222,7 +224,7 @@ class PostgresDatabase(p.ComponentResource):
                     'name': 'barman-cloud.cloudnative-pg.io',
                     'isWALArchiver': True,
                     'parameters': {
-                        'barmanObjectName': object_store.metadata.apply(lambda m: m['name']),  # pyright: ignore[reportAttributeAccessIssue]
+                        'barmanObjectName': object_store.metadata.apply(lambda m: m['name']),  # type: ignore[reportAttributeAccessIssue]
                     },
                 }
             ]
@@ -300,10 +302,10 @@ class PostgresDatabase(p.ComponentResource):
         # Retrieve the postgres password from the Kubernetes secret created by CloudNativePG
         # CloudNativePG creates a secret named '{cluster_name}-app' with the password
         # Derive the secret name from cluster metadata to ensure data-driven dependency
-        self.secret_name = cluster.metadata.apply(lambda _: f'{cluster_name}-app')  # pyright: ignore[reportAttributeAccessIssue]
+        self.secret_name = cluster.metadata.apply(lambda _: f'{cluster_name}-app')  # type: ignore[reportAttributeAccessIssue]
 
         if enable_superuser:
-            self.superuser_secret_name = cluster.metadata.apply(  # pyright: ignore[reportAttributeAccessIssue]
+            self.superuser_secret_name = cluster.metadata.apply(  # type: ignore[reportAttributeAccessIssue]
                 lambda _: f'{cluster_name}-superuser'
             )
         else:
