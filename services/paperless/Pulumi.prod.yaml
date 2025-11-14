@@ -59,7 +59,7 @@ config:
         ref: "op://Pulumi/IDrive e2 Paperless/Secret Access Key"
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql extractVersion=^(?<version>\d+) versioning=loose
-      version: 17
+      version: 18
     redis:
       # renovate: datasource=github-releases packageName=redis/redis versioning=semver
       version: 8.2.3
