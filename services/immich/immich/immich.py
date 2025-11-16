@@ -199,6 +199,17 @@ def create_immich(
                 },
             },
             'machine-learning': {
+                'controllers': {
+                    'main': {
+                        'containers': {
+                            'main': {
+                                'env': {
+                                    'MACHINE_LEARNING_PRELOAD__CLIP': component_config.immich.preload_model,
+                                },
+                            },
+                        },
+                    },
+                },
                 'persistence': {
                     'cache': {
                         'enabled': True,

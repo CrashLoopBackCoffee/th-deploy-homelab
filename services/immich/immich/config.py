@@ -15,6 +15,7 @@ class ImmichConfig(utils.model.LocalBaseModel):
     version: str
     chart_version: str
     persistence: dict[str, PersistenceShareConfig]
+    preload_model: str = ''
 
 
 class PostgresConfig(utils.model.LocalBaseModel):
