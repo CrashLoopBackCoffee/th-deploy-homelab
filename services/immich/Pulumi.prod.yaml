@@ -30,6 +30,7 @@ config:
           nfs-path: /volume2/photo/Bilder
           nfs-mount-options: "nfsvers=4.1,sec=sys"
           size: "10Gi"
+      preload-model: ViT-SO400M-16-SigLIP2-384__webli
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
       version: "18.0"
