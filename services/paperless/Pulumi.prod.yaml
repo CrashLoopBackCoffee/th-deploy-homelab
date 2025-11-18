@@ -62,7 +62,7 @@ config:
       version: 18
     redis:
       # renovate: datasource=github-releases packageName=redis/redis versioning=semver
-      version: 8.2.3
+      version: 8.4.0
     tika:
       # renovate: datasource=docker packageName=registry-1.docker.io/apache/tika versioning=loose
       version: 3.2.3.0
