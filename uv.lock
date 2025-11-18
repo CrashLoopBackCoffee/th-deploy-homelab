@@ -496,14 +496,14 @@ requires-dist = [
     { name = "ollama", editable = "services/ollama" },
     { name = "paperless", editable = "services/paperless" },
     { name = "proxmox", editable = "services/proxmox" },
-    { name = "pulumi", specifier = "==3.206.0" },
+    { name = "pulumi", specifier = "==3.207.0" },
     { name = "pulumi-cloudflare", specifier = "==6.11.0" },
     { name = "pulumi-command", specifier = "==1.1.3" },
-    { name = "pulumi-docker", specifier = "==4.9.0" },
+    { name = "pulumi-docker", specifier = "==4.10.0" },
     { name = "pulumi-kubernetes", specifier = "==4.24.0" },
     { name = "pulumi-minio", specifier = "==0.16.6" },
     { name = "pulumi-onepassword", specifier = "==1.1.3" },
-    { name = "pulumi-proxmoxve", specifier = "==7.7.0" },
+    { name = "pulumi-proxmoxve", specifier = "==7.8.1" },
     { name = "pulumi-pulumiservice", specifier = ">=0.32.0" },
     { name = "pulumi-random", specifier = "==4.18.4" },
     { name = "s3", editable = "services/s3" },
@@ -892,7 +892,7 @@ requires-dist = [
 
 [[package]]
 name = "pulumi"
-version = "3.206.0"
+version = "3.207.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "debugpy" },
@@ -904,7 +904,7 @@ dependencies = [
     { name = "semver" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6d/ee/780f13e7e066afc5f96f3b7b574cb0f0ea0fa9c48f7a6ec3a858b4367d4e/pulumi-3.206.0-py3-none-any.whl", hash = "sha256:f8e06fb984ace3c4faacd5363027228f1fc3c7b7f8156d16a37d4fc614b64fb7", size = 388930, upload-time = "2025-11-05T18:45:38.104Z" },
+    { url = "https://files.pythonhosted.org/packages/cf/b0/c3e5a44e192d32bcf30c39aa54321aae85e8e0ea5ca310945e34b23761e5/pulumi-3.207.0-py3-none-any.whl", hash = "sha256:8a5a211d155f7c60fb8333005b53490c7e1eb882bbd5f7afbccc267fe8c2478c", size = 389892, upload-time = "2025-11-12T16:14:05.829Z" },
 ]
 
 [[package]]
@@ -937,16 +937,16 @@ wheels = [
 
 [[package]]
 name = "pulumi-docker"
-version = "4.9.0"
+version = "4.10.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/99/37/b89a1992308609620e8225449940e70bd9a227435ccf42c39938668058c5/pulumi_docker-4.9.0.tar.gz", hash = "sha256:335cb42097e05ed15f940fc5d44e31bcb856e067354639b670775ce88029276b", size = 108365, upload-time = "2025-09-26T04:04:35.867Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/bd/79e56ec5ab69cb2d3d03718c54e2b71adc384c3aa0cc6c09cc7e6e3f9bdd/pulumi_docker-4.10.0.tar.gz", hash = "sha256:2f1e97842189e7e26dfc7eff0bd22e86690c57a67c1635afae9feaee56072538", size = 115579, upload-time = "2025-11-13T20:40:37.279Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/45/23/90a7c2735445c04fb8443a576baf9e914cc3b50f5f3603389e48f33868fa/pulumi_docker-4.9.0-py3-none-any.whl", hash = "sha256:d1bdd85f8292d2901b40ae1ae2742b325b1eda807bc9b658bfb6353cb043501a", size = 129825, upload-time = "2025-09-26T04:04:33.921Z" },
+    { url = "https://files.pythonhosted.org/packages/fc/09/09f511246822d27440e5fd2e146a8fba9089c536936d9230becdf11f3968/pulumi_docker-4.10.0-py3-none-any.whl", hash = "sha256:6c9ebde223aa1b49a8c4447c742bc7e7f0abafeadc9e9f80b4f461a57c5e2b17", size = 137182, upload-time = "2025-11-13T20:40:35.436Z" },
 ]
 
 [[package]]
@@ -1005,16 +1005,16 @@ wheels = [
 
 [[package]]
 name = "pulumi-proxmoxve"
-version = "7.7.0"
+version = "7.8.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4b/c6/8b08918bd391b5825efeb999b24a4921cb040a54bf3fc90094c22f40e607/pulumi_proxmoxve-7.7.0.tar.gz", hash = "sha256:f48e91f9aee93031f81d7aef45abfb42b62d3b05a721051330f40ec305f486c8", size = 204408, upload-time = "2025-10-12T08:34:07.816Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/74/65/209f7feedd4701c415633721d0e1bd3dade5182c870f2060758ddfd7d68a/pulumi_proxmoxve-7.8.1.tar.gz", hash = "sha256:fe4b61b9c963ffc5eaed43e8c027bb74e50bc72887f3d699e0ec74cb1485d1be", size = 206081, upload-time = "2025-11-15T11:27:26.659Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/28/0d/02639a2731686d8a0d5194248e9ee42c9544aaeb10349c719b5e35032172/pulumi_proxmoxve-7.7.0-py3-none-any.whl", hash = "sha256:e7bd7d8a8dd08323dcecae03b3f21cd580d0d5c2f476f46e1a9119baa0f86570", size = 316219, upload-time = "2025-10-12T08:34:06.161Z" },
+    { url = "https://files.pythonhosted.org/packages/55/81/64cb30574a76455cf28df3fb0467a584b4483e98ec7089e927cfe70ea160/pulumi_proxmoxve-7.8.1-py3-none-any.whl", hash = "sha256:85d02d285da9e28b7b7afc1656289555cd63cbda2a15f58fcf7ca26ae975d897", size = 318338, upload-time = "2025-11-15T11:27:24.739Z" },
 ]
 
 [[package]]
@@ -1047,16 +1047,16 @@ wheels = [
 
 [[package]]
 name = "pulumi-tls"
-version = "5.2.2"
+version = "5.2.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/95/39/0fc8ba4370df35cf1c668f478c6fd6ec776d11bcd72bdc984c79697d56ca/pulumi_tls-5.2.2.tar.gz", hash = "sha256:de1f9074750f17b6fa71b66ed6b54c76cdc610b2b68eb7ecdc3b0fe9a207161d", size = 26569, upload-time = "2025-09-02T23:21:06.649Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5e/4a/eda9909797bb898fbe97101ed1daeed31629f53bce24cf956e609ff55c9a/pulumi_tls-5.2.3.tar.gz", hash = "sha256:0a8c398d4daac34477d21d42f97a98c816f2d187775d0541b8b718464d9821cd", size = 26523, upload-time = "2025-11-13T22:46:09.338Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1e/14/d826cfecaf67f7833cb8e4269479952a752df1e15bbb037d04554961719a/pulumi_tls-5.2.2-py3-none-any.whl", hash = "sha256:79204fed53c954260e480e6718744e696a06f23f0727b537ba0e620d7a7c7bef", size = 34984, upload-time = "2025-09-02T23:21:04.842Z" },
+    { url = "https://files.pythonhosted.org/packages/8b/10/1a492d796ebec9182a3f8b8ec684f4eb53e663cca6e08eab7c97f7804968/pulumi_tls-5.2.3-py3-none-any.whl", hash = "sha256:74602f072312081966b92f51cce35f2b725f0fcd536e27382ea54b96406c47f5", size = 34983, upload-time = "2025-11-13T22:46:07.764Z" },
 ]
 
 [[package]]
@@ -1373,6 +1373,8 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/6b/fa/3234f913fe9a6525a7b97c6dad1f51e72b917e6872e051a5e2ffd8b16fbb/ruamel.yaml.clib-0.2.14-cp314-cp314-macosx_15_0_arm64.whl", hash = "sha256:70eda7703b8126f5e52fcf276e6c0f40b0d314674f896fc58c47b0aef2b9ae83", size = 137970, upload-time = "2025-09-22T19:51:09.472Z" },
     { url = "https://files.pythonhosted.org/packages/ef/ec/4edbf17ac2c87fa0845dd366ef8d5852b96eb58fcd65fc1ecf5fe27b4641/ruamel.yaml.clib-0.2.14-cp314-cp314-musllinux_1_2_i686.whl", hash = "sha256:a0cb71ccc6ef9ce36eecb6272c81afdc2f565950cdcec33ae8e6cd8f7fc86f27", size = 739639, upload-time = "2025-09-22T19:51:10.566Z" },
     { url = "https://files.pythonhosted.org/packages/15/18/b0e1fafe59051de9e79cdd431863b03593ecfa8341c110affad7c8121efc/ruamel.yaml.clib-0.2.14-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:e7cb9ad1d525d40f7d87b6df7c0ff916a66bc52cb61b66ac1b2a16d0c1b07640", size = 764456, upload-time = "2025-09-22T19:51:11.736Z" },
+    { url = "https://files.pythonhosted.org/packages/e7/cd/150fdb96b8fab27fe08d8a59fe67554568727981806e6bc2677a16081ec7/ruamel_yaml_clib-0.2.14-cp314-cp314-win32.whl", hash = "sha256:9b4104bf43ca0cd4e6f738cb86326a3b2f6eef00f417bd1e7efb7bdffe74c539", size = 102394, upload-time = "2025-11-14T21:57:36.703Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/e6/a3fa40084558c7e1dc9546385f22a93949c890a8b2e445b2ba43935f51da/ruamel_yaml_clib-0.2.14-cp314-cp314-win_amd64.whl", hash = "sha256:13997d7d354a9890ea1ec5937a219817464e5cc344805b37671562a401ca3008", size = 122673, upload-time = "2025-11-14T21:57:38.177Z" },
 ]
 
 [[package]]
@@ -1509,7 +1511,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "pulumi-tls", specifier = "==5.2.2" },
+    { name = "pulumi-tls", specifier = "==5.2.3" },
     { name = "utils", editable = "utils" },
 ]
 
