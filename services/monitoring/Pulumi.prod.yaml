@@ -17,7 +17,7 @@ config:
       hostname: grafana.tobiash.net
     prometheus-operator-crds:
       # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^prometheus-operator-crds-(?<version>.*)$ versioning=semver
-      version: 24.0.2
+      version: 25.0.0
     speedtest-exporter:
       # renovate: datasource=github-releases packageName=billimek/prometheus-speedtest-exporter versioning=semver
       version: 1.3.1
