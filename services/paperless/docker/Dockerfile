@@ -5,7 +5,7 @@
 ARG RESTIC_VERSION=0.18.1
 
 # renovate: datasource=github-releases packageName=rclone/rclone versioning=semver
-ARG BUILD_RCLONE_VERSION=1.71.2
+ARG BUILD_RCLONE_VERSION=1.72.0
 
 FROM restic/restic:${RESTIC_VERSION}
 
