@@ -9,7 +9,7 @@ config:
       version: v1.11.3
     cadvisor:
       # renovate: datasource=github-releases packageName=google/cadvisor versioning=semver
-      version: 0.53.0
+      version: 0.54.1
     cloudflare:
       email: tobias_henkel@gmx.de
       api-key:
