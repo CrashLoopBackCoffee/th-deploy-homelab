@@ -6,19 +6,19 @@ metadata:
     images.cnpg.io/family: postgresql
     images.cnpg.io/type: standard
     images.cnpg.io/os: bullseye
-    images.cnpg.io/date: '20251117'
+    images.cnpg.io/date: '20251208'
     images.cnpg.io/publisher: cnpg.io
 spec:
   images:
   - major: 13
     image: ghcr.io/cloudnative-pg/postgresql:13.22-202511100817-standard-bullseye@sha256:bdf11cbefce25a4cdad91dbd30caf00d7efc2fd54319e7ab6195814b41ba8f66
   - major: 14
-    image: ghcr.io/cloudnative-pg/postgresql:14.20-202511170807-standard-bullseye@sha256:0c250bcd07387846c6ca9807b5831b066313ff6ad51267b174a6d0ec6a5b262e
+    image: ghcr.io/cloudnative-pg/postgresql:14.20-202512080807-standard-bullseye@sha256:09a998824784e2175e48073631809310fcb010580197f2a6613bdfcb6abf4fbf
   - major: 15
-    image: ghcr.io/cloudnative-pg/postgresql:15.15-202511170807-standard-bullseye@sha256:bb50f4a16062b8e07177c8c9244420a95b5d01ad7fcaca19e64cb42e89714413
+    image: ghcr.io/cloudnative-pg/postgresql:15.15-202512080807-standard-bullseye@sha256:b8860b1eba69d5570f1dd8bf37a753b5a58a4351445ec859e8e23b179def2f16
   - major: 16
-    image: ghcr.io/cloudnative-pg/postgresql:16.11-202511170807-standard-bullseye@sha256:b67d2cee5ce26dc09a8f691c61491784bf8a2b3cc567b1c52744af2bd0cf51a0
+    image: ghcr.io/cloudnative-pg/postgresql:16.11-202512080807-standard-bullseye@sha256:cf02398c07255325acea948a4228bd2963b3f1add493f95a0629b07b87c40afc
   - major: 17
-    image: ghcr.io/cloudnative-pg/postgresql:17.7-202511170807-standard-bullseye@sha256:bf6f887fb6404501892ddcfc475d9179ae087d723ee1df0113416e130de246bf
+    image: ghcr.io/cloudnative-pg/postgresql:17.7-202512080807-standard-bullseye@sha256:8e1d53cc2dc1f9d5d09aedf0aa11d5323af006fd234a7e4b17a12a21f01797b5
   - major: 18
-    image: ghcr.io/cloudnative-pg/postgresql:18.1-202511170807-standard-bullseye@sha256:14005e16012f121252538f7fcbdc896169bdad73945f65225c08e4a121111515
+    image: ghcr.io/cloudnative-pg/postgresql:18.1-202512080807-standard-bullseye@sha256:3944a15a198e4fdd98f1023c8ff1a9f768ccd93ef461736920e3919998949762
