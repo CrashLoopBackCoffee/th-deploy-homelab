@@ -1,3 +1,5 @@
+import typing as t
+
 import pulumi as p
 import pulumi_cloudflare as cloudflare
 import pulumi_command as command
@@ -207,10 +209,19 @@ def create_microk8s(
         opts=p.ResourceOptions.merge(proxmox_opts, p.ResourceOptions(ignore_changes=['cdrom'])),
     )
 
+    def _get_address(ipv4_addresses: t.Sequence[t.Sequence[str]]) -> str:
+        for addr in ipv4_addresses:
+            if not addr:
+                continue
+
+            if addr[0].startswith('192'):
+                return addr[0]
+        raise ValueError('No global-automatic address found')
+
     # Use discovered ip address to get an implicit dependency on the VM
     # Revert to the original addressing to avoid replacement of children during preview/apply.
     connection_args = command.remote.ConnectionArgs(
-        host=master_vm.ipv4_addresses[1][0],
+        host=master_vm.ipv4_addresses.apply(_get_address),
         user='ubuntu',
     )
     kube_config_command = command.remote.Command(
