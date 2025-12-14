@@ -46,7 +46,7 @@ config:
           memory-min: 4096
           memory-max: 32768
           disks:
-            - size: 50
+            - size: 70
             # Data disk
             - size: 100
     traefik:
