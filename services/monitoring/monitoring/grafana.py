@@ -122,7 +122,7 @@ def create_grafana(component_config: ComponentConfig, k8s_provider: k8s.Provider
     )
 
     app_labels = {'app': 'grafana'}
-    deployment = k8s.apps.v1.Deployment(
+    deployment = k8s.apps.v1.Deployment(  # type: ignore
         'grafana',
         metadata={
             'namespace': namespace.metadata.name,
