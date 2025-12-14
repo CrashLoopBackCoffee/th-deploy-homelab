@@ -35,6 +35,6 @@ config:
       # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
       version: "18.1"
       # renovate: datasource=github-releases packageName=tensorchord/VectorChord versioning=loose
-      vectorchord-version: "1.0.0"
+      vectorchord-version: "0.5.3"
       backup:
         cron-schedule: "0 0 0 * * *"
