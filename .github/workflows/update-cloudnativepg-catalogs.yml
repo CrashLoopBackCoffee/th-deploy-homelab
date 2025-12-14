@@ -22,7 +22,7 @@ jobs:
           (cd services/kubernetes/assets/image-catalogs && bash update-catalogs.sh)
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: |
