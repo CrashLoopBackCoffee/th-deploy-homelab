@@ -51,7 +51,7 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
     # Create backup ObjectStore if backup is configured
     if component_config.cloudnative_pg.backup:
         # Export backup credentials to Pulumi ESC
-        pulumiservice.Environment(
+        pulumiservice.Environment(  # type: ignore
             'postgres-backup',
             organization=p.get_organization(),
             project=p.get_project(),
@@ -81,7 +81,7 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
                         },
                     },
                 },
-            ).apply(lambda c: yaml.safe_dump(c)),  # type: ignore[reportArgumentType]
+            ).apply(lambda c: yaml.safe_dump(c)),
         )
 
     # Create PodMonitor for Prometheus operator to monitor the CloudNativePG operator

@@ -286,12 +286,12 @@ def create_microk8s(
             },
         },
     )
-    pulumiservice.Environment(
+    pulumiservice.Environment(  # type: ignore
         'kubeconfig',
         organization=p.get_organization(),
         project=p.get_project(),
         name=f'kubeconfig-{p.get_stack()}',
-        yaml=esc_config.apply(lambda c: yaml.safe_dump(c)),  # type: ignore
+        yaml=esc_config.apply(lambda c: yaml.safe_dump(c)),
     )
 
     onepassword.Item(
