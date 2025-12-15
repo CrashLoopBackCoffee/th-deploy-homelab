@@ -5,7 +5,7 @@ config:
   monitoring:config:
     alloy:
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
-      version: v1.12.0
+      version: v1.12.1
       hostname: alloy.tobiash.net
     grafana-cloud:
       username: "1115202"
