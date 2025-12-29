@@ -7,12 +7,7 @@ name = "kubernetes"
 version = "0.1.0"
 requires-python = ">=3.11"
 
-dependencies = [
-    "pulumiverse-talos==0.6.1",
-    "pulumiverse_acme==0.14.0",
-    "requests>=2.31.0",
-    "utils",
-]
+dependencies = ["pulumiverse_acme==0.14.0", "requests>=2.31.0", "utils"]
 
 [tool.uv.build-backend]
 module-name = "kubernetes"
