@@ -633,7 +633,6 @@ version = "0.1.0"
 source = { editable = "services/kubernetes" }
 dependencies = [
     { name = "pulumiverse-acme" },
-    { name = "pulumiverse-talos" },
     { name = "requests" },
     { name = "utils" },
 ]
@@ -641,7 +640,6 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "pulumiverse-acme", specifier = "==0.14.0" },
-    { name = "pulumiverse-talos", specifier = "==0.7.0" },
     { name = "requests", specifier = ">=2.31.0" },
     { name = "utils", editable = "utils" },
 ]
@@ -1060,20 +1058,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/a6/4f/dee818517eff5f6d4bbd6cb2e8770ac1a8bb9fa20ef98981bfebe912366f/pulumiverse_acme-0.14.0.tar.gz", hash = "sha256:1a338973b591fc5727ac7c55bdd83f08a609a80bbd9cdbb3fe9bb32d0256e3d0", size = 26925, upload-time = "2025-09-24T08:39:15.108Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6b/70/4c11ac5497f7d98dcddf86efa7c550679a6f65e32d80e9e33806574eb4c7/pulumiverse_acme-0.14.0-py3-none-any.whl", hash = "sha256:9837f96af9f3a223662f744679297361aa8b4d0b7c2124b338bb678b4fa8bbcd", size = 32130, upload-time = "2025-09-24T08:39:14.001Z" },
-]
-
-[[package]]
-name = "pulumiverse-talos"
-version = "0.7.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "parver" },
-    { name = "pulumi" },
-    { name = "semver" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/26/ed/1f61b73d9681177f90c6cba36ac7f4fb91836d98f27889b0f98cb999415d/pulumiverse_talos-0.7.0.tar.gz", hash = "sha256:f22424123ec03bad7d7a3f2434a66814201f1ca5971643d6662d26f58aa6ee60", size = 34300, upload-time = "2025-12-25T11:06:10.557Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/e4/4327246b340ea59db40f427947e1cf5210cb997fb1ac7d71b23e1ef6e05e/pulumiverse_talos-0.7.0-py3-none-any.whl", hash = "sha256:4ca3533344a4d35640dcbd9392ed45513aa138adba68c0ebfefae47491345458", size = 55298, upload-time = "2025-12-25T11:06:09.531Z" },
 ]
 
 [[package]]

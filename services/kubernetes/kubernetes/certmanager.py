@@ -1,3 +1,5 @@
+import json
+
 import pulumi as p
 import pulumi_cloudflare as cloudflare
 import pulumi_kubernetes as k8s
@@ -51,7 +53,7 @@ def create_certmanager(
                     # DNS Write
                     {'id': '4755a26eedb94da69e1066d98aa820be'},
                 ],
-                'resources': {'com.cloudflare.api.account.zone.*': '*'},
+                'resources': json.dumps({'com.cloudflare.api.account.zone.*': '*'}),
             },
         ],
         opts=p.ResourceOptions(provider=cloudflare_provider),
