@@ -21,6 +21,7 @@ prometheus.exporter.blackbox "default" {
 				http: {
 					fail_if_ssl: false,
 					fail_if_not_ssl: true,
+					preferred_ip_protocol: ip4,
 					tls_config: {
 						insecure_skip_verify: false
 					}
@@ -33,6 +34,7 @@ prometheus.exporter.blackbox "default" {
 					valid_status_codes: [303, 304],
 					fail_if_ssl: false,
 					fail_if_not_ssl: true,
+					preferred_ip_protocol: ip4,
 					tls_config: {
 						insecure_skip_verify: false
 					}
@@ -45,6 +47,7 @@ prometheus.exporter.blackbox "default" {
 					valid_status_codes: [403],
 					fail_if_ssl: false,
 					fail_if_not_ssl: true,
+					preferred_ip_protocol: ip4,
 					tls_config: {
 						insecure_skip_verify: false
 					}
