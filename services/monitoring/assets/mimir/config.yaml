@@ -41,16 +41,7 @@ store_gateway:
   sharding_ring:
     replication_factor: 1
 
-query_frontend:
-  max_concurrent_requests: 100
-  max_cache_freshness_per_query: 10m
-  compression: snappy
-  downstream_url: http://localhost:9009
-
-queryable:
-  max_concurrent_requests_per_tenant: 100
-
 limits:
   compactor_blocks_retention_period: 2y
   compactor_block_upload_enabled: true
-  max_cache_freshness_per_query: 10m
+  max_cache_freshness: 10m
