@@ -102,6 +102,12 @@ prometheus.exporter.blackbox "default" {
 	}
 
 	target {
+		name    = "home-assistant.tobiash.net"
+		address = "https://home-assistant.tobiash.net:8123"
+		module  = "https_2xx"
+	}
+
+	target {
 		name    = "immich"
 		address = "https://immich.tobiash.net"
 		module  = "https_2xx"
@@ -128,6 +134,12 @@ prometheus.exporter.blackbox "default" {
 	target {
 		name    = "ollama.tobiash.net"
 		address = "https://ollama.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "opnsense.tobiash.net"
+		address = "https://opnsense.tobiash.net"
 		module  = "https_2xx"
 	}
 
