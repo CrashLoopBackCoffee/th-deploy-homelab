@@ -13,7 +13,7 @@ config:
       # renovate: datasource=github-releases packageName=cloudnative-pg/charts extractVersion=^cloudnative-pg-v(?<version>.*)$ versioning=semver
       version: 0.27.0
       # renovate: datasource=github-releases packageName=cloudnative-pg/charts extractVersion=^plugin-barman-cloud-v(?<version>.*)$ versioning=semver
-      barman-plugin-version: 0.3.1
+      barman-plugin-version: 0.4.0
       backup:
         endpoint:
           ref: op://Pulumi/IDrive e2 Postgres/Endpoint
