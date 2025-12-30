@@ -7,7 +7,7 @@
 //-----------------------------------------------------------
 loki.source.kubernetes "pods" {
 	targets    = discovery.relabel.pods_logs.output
-	forward_to = [otelcol.receiver.loki.k8s_pods.receiver]
+	forward_to = [loki.process.drop_old_logs.receiver]
 }
 
 //-----------------------------------------------------------
@@ -43,7 +43,7 @@ loki.process "k8s_events" {
 }
 
 loki.relabel "k8s_events" {
-	forward_to = [otelcol.receiver.loki.k8s_events.receiver]
+	forward_to = [loki.process.drop_old_logs.receiver]
 
 	rule {
 		target_label = "service_name"
@@ -70,7 +70,7 @@ loki.source.file "system_logs" {
 }
 
 loki.relabel "system_logs" {
-	forward_to = [otelcol.receiver.loki.system_logs.receiver]
+	forward_to = [loki.process.drop_old_logs.receiver]
 
 	rule {
 		target_label = "service_name"
@@ -78,22 +78,66 @@ loki.relabel "system_logs" {
 	}
 }
 
+//===========================================================
+// Syslog receiver
+//===========================================================
+loki.source.syslog "default_udp" {
+	listener {
+		address               = "0.0.0.0:514"
+		protocol              = "udp"
+		label_structured_data = true
+		labels                = {component = "loki.source.syslog"}
+		syslog_format         = "rfc3164"
+	}
+	forward_to    = [loki.process.drop_old_logs.receiver]
+	relabel_rules = loki.relabel.syslog.rules
+}
+
+// build the relabel rules used by the source.syslog component
+loki.relabel "syslog" {
+	forward_to = [otelcol.receiver.loki.default.receiver]
+
+	rule {
+		source_labels = ["__syslog_message_severity"]
+		target_label  = "level"
+	}
+
+	rule {
+		source_labels = ["__syslog_message_hostname"]
+		target_label  = "hostname"
+	}
+
+	rule {
+		source_labels = ["__syslog_message_app_name"]
+		target_label  = "application"
+	}
+
+	rule {
+		source_labels = ["__syslog_connection_ip_address"]
+		target_label  = "remote_ip"
+	}
+
+	rule {
+		target_label = "service_name"
+		replacement  = "syslog"
+	}
+}
+
+//-----------------------------------------------------------
+// Drop old logs
+//-----------------------------------------------------------
+loki.process "drop_old_logs" {
+	forward_to = [otelcol.receiver.loki.default.receiver]
+
+	stage.drop {
+		older_than = "144h"
+	}
+}
+
 //-----------------------------------------------------------
 // Convert Loki logs to OpenTelemetry format
 //-----------------------------------------------------------
-otelcol.receiver.loki "k8s_pods" {
-	output {
-		logs = [otelcol.processor.resourcedetection.default.input]
-	}
-}
-
-otelcol.receiver.loki "k8s_events" {
-	output {
-		logs = [otelcol.processor.resourcedetection.default.input]
-	}
-}
-
-otelcol.receiver.loki "system_logs" {
+otelcol.receiver.loki "default" {
 	output {
 		logs = [otelcol.processor.resourcedetection.default.input]
 	}
