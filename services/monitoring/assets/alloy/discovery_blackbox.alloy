@@ -3,7 +3,65 @@
 //===========================================================
 
 prometheus.exporter.blackbox "default" {
-	config = "{ modules: {icmp_ipv4: {prober: icmp, icmp: {preferred_ip_protocol: ip4 } }, http_2xx: { prober: http, timeout: 5s } } }"
+	config = `{
+		modules: {
+			icmp_ipv4: {
+				prober: icmp,
+				icmp: {
+					preferred_ip_protocol: ip4
+				}
+			},
+			http_2xx: {
+				prober: http,
+				timeout: 5s
+			},
+			https_2xx: {
+				prober: http,
+				timeout: 5s,
+				http: {
+					fail_if_ssl: false,
+					fail_if_not_ssl: true,
+					tls_config: {
+						insecure_skip_verify: false
+					}
+				}
+			},
+			https_3xx: {
+				prober: http,
+				timeout: 5s,
+				http: {
+					valid_status_codes: [303, 304],
+					fail_if_ssl: false,
+					fail_if_not_ssl: true,
+					tls_config: {
+						insecure_skip_verify: false
+					}
+				}
+			},
+			https_4xx: {
+				prober: http,
+				timeout: 5s,
+				http: {
+					valid_status_codes: [403],
+					fail_if_ssl: false,
+					fail_if_not_ssl: true,
+					tls_config: {
+						insecure_skip_verify: false
+					}
+				}
+			},
+			tls_connect: {
+				prober: tcp,
+				timeout: 5s,
+				tcp: {
+					tls: true,
+					tls_config: {
+						insecure_skip_verify: false
+					}
+				}
+			}
+		}
+	}`
 
 	target {
 		name    = "router"
@@ -21,6 +79,112 @@ prometheus.exporter.blackbox "default" {
 		name    = "google.de"
 		address = "google.de"
 		module  = "icmp_ipv4"
+	}
+
+	// HTTPS Targets
+
+	target {
+		name    = "alloy.tobiash.net"
+		address = "https://alloy.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "alloy-legacy.tobiash.net"
+		address = "https://alloy-legacy.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "grafana.tobiash.net"
+		address = "https://grafana.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "immich"
+		address = "https://immich.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "mimir.tobiash.net"
+		address = "https://mimir.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "minio-console.tobiash.net"
+		address = "https://minio-console.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "n8n.tobiash.net"
+		address = "https://n8n.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "ollama.tobiash.net"
+		address = "https://ollama.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "paperless.tobiash.net"
+		address = "https://paperless.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "pbs.tobiash.net"
+		address = "https://pbs.tobiash.net:8007"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "pve.tobiash.net"
+		address = "https://pve.tobiash.net:8006"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "s3.tobiash.net"
+		address = "https://s3.tobiash.net"
+		module  = "https_4xx"
+	}
+
+	target {
+		name    = "svn.tobiash.net"
+		address = "https://svn.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "synology.tobiash.net"
+		address = "https://synology.tobiash.net:5001"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "tandoor.tobiash.net"
+		address = "https://tandoor.tobiash.net"
+		module  = "https_2xx"
+	}
+
+	target {
+		name    = "unifi.tobiash.net"
+		address = "https://unifi.tobiash.net:8443"
+		module  = "https_2xx"
+	}
+
+	// Plain TLS Targets
+
+	target {
+		name    = "mosquitto"
+		address = "mqtt.tobiash.net:8883"
+		module  = "tls_connect"
 	}
 }
 
