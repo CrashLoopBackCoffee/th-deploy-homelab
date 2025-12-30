@@ -45,3 +45,5 @@ limits:
   compactor_blocks_retention_period: 2y
   compactor_block_upload_enabled: true
   max_cache_freshness: 10m
+  ingestion_rate: 100000
+  ingestion_burst_size: 2000000
