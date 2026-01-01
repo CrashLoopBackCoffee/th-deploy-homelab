@@ -9,6 +9,7 @@ from monitoring.alloy_legacy import AlloyLegacy
 from monitoring.cadvisor_legacy import CAdvisorLegacy
 from monitoring.config import ComponentConfig
 from monitoring.grafana import Grafana
+from monitoring.mimir import Mimir
 from monitoring.mimir_buckets import MimirBuckets
 from monitoring.mimir_legacy import MimirLegacy
 from monitoring.prometheus_operator_crds import create_prometheus_operator_crds
@@ -39,6 +40,13 @@ def main():
 
     # Kubernetes based services
     k8s_provider = utils.k8s.get_k8s_provider()
+    Mimir(
+        'default',
+        component_config,
+        cloudflare_provider,
+        mimir_buckets,
+        k8s_provider,
+    )
     Alloy('default', component_config, k8s_provider)
     Grafana('default', component_config, k8s_provider)
     SpeedtestExporter('default', component_config, k8s_provider)
