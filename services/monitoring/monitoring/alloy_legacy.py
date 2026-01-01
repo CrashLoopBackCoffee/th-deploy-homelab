@@ -21,9 +21,6 @@ def create_alloy_legacy(
     """
     Deploys Alloy to the target host.
     """
-    assert component_config.target
-    assert component_config.cloudflare
-    assert component_config.alloy_legacy
     target_root_dir = component_config.target.root_dir
     target_host = component_config.target.host
     target_user = component_config.target.user

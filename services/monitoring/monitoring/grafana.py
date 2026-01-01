@@ -27,8 +27,6 @@ def create_grafana(component_config: ComponentConfig, k8s_provider: k8s.Provider
     """
     Deploy Grafana
     """
-    assert component_config.grafana
-    assert component_config.grafana.hostname
 
     k8s_opts = p.ResourceOptions(provider=k8s_provider)
     namespace = k8s.core.v1.Namespace(

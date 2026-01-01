@@ -10,8 +10,6 @@ def create_speedtest_exporter(component_config: ComponentConfig, k8s_provider: k
     """
     Deploys the speedtest-exporter
     """
-    assert component_config.speedtest_exporter
-
     k8s_opts = p.ResourceOptions(provider=k8s_provider)
     namespace = k8s.core.v1.Namespace(
         'speedtest-exporter',

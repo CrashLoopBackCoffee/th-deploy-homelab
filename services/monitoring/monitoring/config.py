@@ -22,7 +22,7 @@ class CAdvisorConfig(utils.model.LocalBaseModel):
 class GrafanaConfig(utils.model.LocalBaseModel):
     version: str
 
-    hostname: str | None = None
+    hostname: str
 
 
 class MimirConfig(utils.model.LocalBaseModel):
@@ -39,15 +39,15 @@ class PrometheusOperatorCrdsConfig(utils.model.LocalBaseModel):
 
 class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig
-    alloy: AlloyConfig | None = None
-    alloy_legacy: AlloyLegacyConfig | None = None
-    cadvisor_legacy: CAdvisorConfig | None = None
+    alloy: AlloyConfig
+    alloy_legacy: AlloyLegacyConfig
+    cadvisor_legacy: CAdvisorConfig
     cloudflare: utils.model.CloudflareConfig
-    grafana: GrafanaConfig | None = None
-    grafana_cloud: GrafanaCloudConfig | None = None
-    mimir: MimirConfig | None = None
+    grafana: GrafanaConfig
+    grafana_cloud: GrafanaCloudConfig
+    mimir: MimirConfig
     prometheus_operator_crds: PrometheusOperatorCrdsConfig
-    speedtest_exporter: SpeedtestExporterConfig | None = None
+    speedtest_exporter: SpeedtestExporterConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):
