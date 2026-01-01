@@ -73,7 +73,7 @@ class Grafana(p.ComponentResource):
                                 'type': 'prometheus',
                                 'access': 'proxy',
                                 'orgId': 1,
-                                'url': 'http://192.168.2.11:9009/prometheus',
+                                'url': 'http://mimir.mimir.svc.cluster.local:9009/prometheus',
                                 'basicAuth': False,
                                 'isDefault': True,
                                 'jsonData': {

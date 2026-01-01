@@ -50,7 +50,7 @@ class MimirLegacy(p.ComponentResource):
         s3_config = p.Config().require_object('s3')
 
         # Create mimir-config folder
-        mimir_path = get_assets_path() / 'mimir'
+        mimir_path = get_assets_path() / 'mimir-legacy'
         mimir_config_dir_resource = pulumi_command.remote.Command(
             'create-mimir-config',
             connection=pulumi_command.remote.ConnectionArgs(host=target_host, user=target_user),
@@ -80,7 +80,7 @@ class MimirLegacy(p.ComponentResource):
 
         image = docker.RemoteImage(
             'mimir',
-            name=f'grafana/mimir:{component_config.mimir.version}',
+            name=f'grafana/mimir:{component_config.mimir_legacy.version}',
             keep_locally=True,
             opts=docker_opts,
         )
