@@ -38,11 +38,11 @@ class PrometheusOperatorCrdsConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    target: utils.model.TargetConfig | None = None
+    target: utils.model.TargetConfig
     alloy: AlloyConfig | None = None
     alloy_legacy: AlloyLegacyConfig | None = None
     cadvisor_legacy: CAdvisorConfig | None = None
-    cloudflare: utils.model.CloudflareConfig | None = None
+    cloudflare: utils.model.CloudflareConfig
     grafana: GrafanaConfig | None = None
     grafana_cloud: GrafanaCloudConfig | None = None
     mimir: MimirConfig | None = None
