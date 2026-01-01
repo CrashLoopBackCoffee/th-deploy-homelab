@@ -11,7 +11,6 @@ from monitoring.config import ComponentConfig
 from monitoring.grafana import Grafana
 from monitoring.mimir import Mimir
 from monitoring.mimir_buckets import MimirBuckets
-from monitoring.mimir_legacy import MimirLegacy
 from monitoring.prometheus_operator_crds import create_prometheus_operator_crds
 from monitoring.speedtest import SpeedtestExporter
 
@@ -34,9 +33,6 @@ def main():
     # Create node-exporter container
     CAdvisorLegacy('default', component_config, network, docker_provider)
     AlloyLegacy('default', component_config, cloudflare_provider, docker_provider)
-    MimirLegacy(
-        'default', component_config, network, cloudflare_provider, mimir_buckets, docker_provider
-    )
 
     # Kubernetes based services
     k8s_provider = utils.k8s.get_k8s_provider()

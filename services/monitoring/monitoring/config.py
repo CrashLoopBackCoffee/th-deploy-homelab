@@ -46,7 +46,6 @@ class ComponentConfig(utils.model.LocalBaseModel):
     grafana: GrafanaConfig
     grafana_cloud: GrafanaCloudConfig
     mimir: MimirConfig
-    mimir_legacy: MimirConfig
     prometheus_operator_crds: PrometheusOperatorCrdsConfig
     speedtest_exporter: SpeedtestExporterConfig
 
