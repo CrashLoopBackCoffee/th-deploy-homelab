@@ -5,10 +5,10 @@ import pulumi_docker as docker
 import utils.cloudflare
 import utils.docker
 
-from monitoring.alloy_legacy import create_alloy
-from monitoring.cadvisor_legacy import create_cadvisor
+from monitoring.alloy_legacy import create_alloy_legacy
+from monitoring.cadvisor_legacy import create_cadvisor_legacy
 from monitoring.config import ComponentConfig
-from monitoring.mimir_legacy import create_mimir
+from monitoring.mimir_legacy import create_mimir_legacy
 
 
 def main_legacy():
@@ -30,6 +30,8 @@ def main_legacy():
     network = docker.Network('monitoring', opts=docker_opts)
 
     # Create node-exporter container
-    create_cadvisor(component_config, network, docker_opts)
-    create_alloy(component_config, network, cloudflare_provider, docker_opts)
-    create_mimir(component_config, network, cloudflare_provider, minio_stack_ref, docker_opts)
+    create_cadvisor_legacy(component_config, network, docker_opts)
+    create_alloy_legacy(component_config, network, cloudflare_provider, docker_opts)
+    create_mimir_legacy(
+        component_config, network, cloudflare_provider, minio_stack_ref, docker_opts
+    )

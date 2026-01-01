@@ -8,7 +8,7 @@ import pulumi_docker as docker
 from monitoring.config import ComponentConfig
 
 
-def create_cadvisor(
+def create_cadvisor_legacy(
     component_config: ComponentConfig, network: docker.Network, opts: p.ResourceOptions
 ):
     """
