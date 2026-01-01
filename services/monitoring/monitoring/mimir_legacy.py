@@ -18,7 +18,6 @@ def create_mimir_legacy(
     component_config: ComponentConfig,
     network: docker.Network,
     cloudflare_provider: cloudflare.Provider,
-    minio_stackref: p.StackReference,
     opts: p.ResourceOptions,
 ):
     """
@@ -36,13 +35,15 @@ def create_mimir_legacy(
         'mimir', component_config.cloudflare.zone, cloudflare_provider
     )
 
+    s3_config = p.Config().require_object('s3')
+
     # Create minio provider
     minio_opts = p.ResourceOptions(
         provider=minio.Provider(
             'minio',
-            minio_server=p.Output.format('{}:443', minio_stackref.get_output('minio-s3-hostname')),
-            minio_user=minio_stackref.get_output('minio-user'),
-            minio_password=minio_stackref.get_output('minio-password'),
+            minio_server=f'{s3_config["endpoint"]}:443',
+            minio_user=s3_config['admin-user'],
+            minio_password=p.Output.secret(s3_config['admin-password']),
             minio_ssl=True,
         )
     )
@@ -150,7 +151,7 @@ def create_mimir_legacy(
         envs=[
             p.Output.format('AWS_ACCESS_KEY_ID={}', bucket_user.name),
             p.Output.format('AWS_SECRET_ACCESS_KEY={}', bucket_user.secret),
-            p.Output.format('MINIO_HOSTNAME={}', minio_stackref.get_output('minio-s3-hostname')),
+            p.Output.format('MINIO_HOSTNAME={}', s3_config['endpoint']),
             p.Output.format('MINIO_BUCKET_ALERTMANAGER={}', bucket_alertmanager.bucket),
             p.Output.format('MINIO_BUCKET_BLOCKS={}', bucket_blocks.bucket),
             p.Output.format('MINIO_BUCKET_RULER={}', bucket_ruler.bucket),
