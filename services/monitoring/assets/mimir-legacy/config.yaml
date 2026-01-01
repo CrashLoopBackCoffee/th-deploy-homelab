@@ -1,9 +1,6 @@
 multitenancy_enabled: false
 target: all
 
-activity_tracker:
-  filepath: /data/activity.log
-
 common:
   storage:
     backend: s3
@@ -15,8 +12,6 @@ common:
 blocks_storage:
   s3:
     bucket_name: "${MINIO_BUCKET_BLOCKS}"
-  bucket_store:
-    sync_dir: /data/tsdb-sync
   tsdb:
     dir: /data/ingester
 
@@ -30,10 +25,6 @@ ruler_storage:
 
 compactor:
   data_dir: /data/compactor
-
-# stay on classic ingest architecture
-ingest_storage:
-  enabled: false
 
 ingester:
   ring:
