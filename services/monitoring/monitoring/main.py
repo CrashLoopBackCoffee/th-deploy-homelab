@@ -38,9 +38,6 @@ def main():
     # Kubernetes based services
     k8s_provider = utils.k8s.get_k8s_provider()
     create_prometheus_operator_crds(component_config, k8s_provider)
-    alloy = Alloy('default', component_config, k8s_provider)
+    Alloy('default', component_config, k8s_provider)
     Grafana('default', component_config, k8s_provider)
     create_speedtest_exporter(component_config, k8s_provider)
-
-    p.export('alloy_url', alloy.url)
-    p.export('alloy_lb_ip', alloy.lb_ip)

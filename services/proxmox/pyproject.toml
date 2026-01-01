@@ -7,7 +7,7 @@ name = "proxmox"
 version = "0.1.0"
 requires-python = ">=3.11"
 
-dependencies = ["ansible>=11.1.0", "ansible-lint>=6.8.7", "utils"]
+dependencies = ["ansible>=11.1.0", "utils"]
 
 [tool.uv.build-backend]
 module-name = "proxmox"

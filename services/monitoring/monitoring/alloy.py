@@ -396,3 +396,6 @@ class Alloy(p.ComponentResource):
         # Export outputs
         self.url = p.Output.from_input(f'https://{component_config.alloy.hostname}')
         self.lb_ip = service.status.load_balancer.ingress[0].ip
+
+        p.export('alloy_url', self.url)
+        p.export('alloy_lb_ip', self.lb_ip)

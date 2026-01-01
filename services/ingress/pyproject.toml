@@ -5,7 +5,7 @@ build-backend = "uv_build"
 [project]
 name = "ingress"
 version = "0.1.0"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = ["utils"]
 
 [tool.uv.build-backend]
