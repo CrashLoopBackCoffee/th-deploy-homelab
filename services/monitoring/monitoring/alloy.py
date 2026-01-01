@@ -17,10 +17,6 @@ class Alloy(p.ComponentResource):
     def __init__(self, name: str, component_config: ComponentConfig, k8s_provider: k8s.Provider):
         super().__init__(f'lab:alloy:{name}', name)
 
-        assert component_config.alloy
-        assert component_config.alloy.hostname
-        assert component_config.grafana_cloud
-
         namespace = k8s.core.v1.Namespace(
             'alloy',
             metadata={'name': 'alloy'},
@@ -400,3 +396,6 @@ class Alloy(p.ComponentResource):
         # Export outputs
         self.url = p.Output.from_input(f'https://{component_config.alloy.hostname}')
         self.lb_ip = service.status.load_balancer.ingress[0].ip
+
+        p.export('alloy_url', self.url)
+        p.export('alloy_lb_ip', self.lb_ip)
