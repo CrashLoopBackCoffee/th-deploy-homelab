@@ -36,7 +36,6 @@ class MimirLegacy(p.ComponentResource):
         docker_opts = p.ResourceOptions(
             provider=docker_provider,
             parent=self,
-            aliases=[p.Alias(parent=None)],
         )
 
         # Create mimir DNS record
