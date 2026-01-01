@@ -30,8 +30,6 @@ class Grafana(p.ComponentResource):
         k8s_opts = p.ResourceOptions(
             provider=k8s_provider,
             parent=self,
-            # Temporary alias to move into component resource
-            aliases=[p.Alias(parent=None)],
         )
         namespace = k8s.core.v1.Namespace(
             'grafana',
