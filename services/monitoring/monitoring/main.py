@@ -6,7 +6,7 @@ import utils.k8s
 
 from monitoring.alloy import Alloy
 from monitoring.alloy_legacy import AlloyLegacy
-from monitoring.cadvisor_legacy import create_cadvisor_legacy
+from monitoring.cadvisor_legacy import CAdvisorLegacy
 from monitoring.config import ComponentConfig
 from monitoring.grafana import Grafana
 from monitoring.mimir_buckets import MimirBuckets
@@ -31,7 +31,7 @@ def main():
     network = docker.Network('monitoring', opts=docker_opts)
 
     # Create node-exporter container
-    create_cadvisor_legacy(component_config, network, docker_opts)
+    CAdvisorLegacy('default', component_config, network, docker_provider)
     AlloyLegacy('default', component_config, cloudflare_provider, docker_provider)
     MimirLegacy(
         'default', component_config, network, cloudflare_provider, mimir_buckets, docker_provider
@@ -39,7 +39,7 @@ def main():
 
     # Kubernetes based services
     k8s_provider = utils.k8s.get_k8s_provider()
-    create_prometheus_operator_crds(component_config, k8s_provider)
     Alloy('default', component_config, k8s_provider)
     Grafana('default', component_config, k8s_provider)
+    create_prometheus_operator_crds(component_config, k8s_provider)
     create_speedtest_exporter(component_config, k8s_provider)
