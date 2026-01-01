@@ -19,10 +19,9 @@ class MimirBuckets(p.ComponentResource):
                 minio_user=s3_config['admin-user'],
                 minio_password=p.Output.secret(s3_config['admin-password']),
                 minio_ssl=True,
+                opts=p.ResourceOptions(parent=self),
             ),
             parent=self,
-            # Temporary alias to avoid re-creation
-            aliases=[p.Alias(parent=None)],
         )
 
         bucket_blocks = minio.S3Bucket(
