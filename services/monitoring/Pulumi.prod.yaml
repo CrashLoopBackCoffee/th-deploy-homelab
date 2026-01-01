@@ -1,5 +1,6 @@
 environment:
   - kubernetes/kubeconfig-prod
+  - s3/s3-prod
 
 config:
   monitoring:config:
