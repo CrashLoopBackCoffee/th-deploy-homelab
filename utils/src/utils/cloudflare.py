@@ -22,8 +22,15 @@ def get_zone(
 
 
 def create_cloudflare_cname(
-    name: str, zone_name: str, cloudflare_provider: cloudflare.Provider
+    name: str,
+    zone_name: str,
+    cloudflare_provider: cloudflare.Provider,
+    opts: p.ResourceOptions | None = None,
 ) -> cloudflare.DnsRecord:
+    cloudflare_opts = p.ResourceOptions(provider=cloudflare_provider)
+    if opts:
+        cloudflare_opts = opts.merge(cloudflare_opts)
+
     zone = cloudflare.get_zone_output(
         filter={'match': 'all', 'name': zone_name},
         opts=p.InvokeOptions(provider=cloudflare_provider),
@@ -37,5 +44,5 @@ def create_cloudflare_cname(
         content=f'home.{zone_name}',
         ttl=60,
         zone_id=zone.zone_id,
-        opts=p.ResourceOptions(provider=cloudflare_provider),
+        opts=cloudflare_opts,
     )

@@ -36,11 +36,15 @@ class MimirLegacy(p.ComponentResource):
         docker_opts = p.ResourceOptions(
             provider=docker_provider,
             parent=self,
+            aliases=[p.Alias(parent=None)],
         )
 
         # Create mimir DNS record
         utils.cloudflare.create_cloudflare_cname(
-            'mimir', component_config.cloudflare.zone, cloudflare_provider
+            'mimir',
+            component_config.cloudflare.zone,
+            cloudflare_provider,
+            docker_opts,
         )
 
         s3_config = p.Config().require_object('s3')
@@ -51,11 +55,13 @@ class MimirLegacy(p.ComponentResource):
             'create-mimir-config',
             connection=pulumi_command.remote.ConnectionArgs(host=target_host, user=target_user),
             create=f'mkdir -p {target_root_dir}/mimir-config',
+            opts=docker_opts,
         )
         mimir_data_dir_resource = pulumi_command.remote.Command(
             'create-mimir-data',
             connection=pulumi_command.remote.ConnectionArgs(host=target_host, user=target_user),
             create=f'mkdir -p {target_root_dir}/mimir-data',
+            opts=docker_opts,
         )
 
         sync_command = (
