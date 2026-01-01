@@ -1,12 +1,8 @@
 """A Python Pulumi program"""
 
-import pulumi as p
+from monitoring.main import main
+from monitoring.main_legacy import main_legacy
 
-if p.get_stack() == 'dev':
-    from monitoring.main_legacy import main_legacy
+main_legacy()
 
-    main_legacy()
-else:
-    from monitoring.main import main
-
-    main()
+main()

@@ -41,7 +41,7 @@ class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig | None = None
     alloy: AlloyConfig | None = None
     alloy_legacy: AlloyLegacyConfig | None = None
-    cadvisor: CAdvisorConfig | None = None
+    cadvisor_legacy: CAdvisorConfig | None = None
     cloudflare: utils.model.CloudflareConfig | None = None
     grafana: GrafanaConfig | None = None
     grafana_cloud: GrafanaCloudConfig | None = None

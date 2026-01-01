@@ -3,10 +3,25 @@ environment:
 
 config:
   monitoring:config:
+    target:
+      host: synology.tobiash.net
+      user: tobias
+      root-dir: /volume2/docker
+    alloy-legacy:
+      # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
+      version: v1.12.1
+    cadvisor-legacy:
+      # renovate: datasource=github-releases packageName=google/cadvisor versioning=semver
+      version: 0.55.1
     alloy:
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
       version: v1.12.1
       hostname: alloy.tobiash.net
+    cloudflare:
+      email: tobias_henkel@gmx.de
+      api-key:
+        ref: op://Pulumi/Cloudflare Global API Key/password
+      zone: tobiash.net
     grafana-cloud:
       username: "1115202"
       token:
@@ -15,6 +30,9 @@ config:
       # renovate: datasource=github-releases packageName=grafana/grafana versioning=semver
       version: 12.3.1
       hostname: grafana.tobiash.net
+    mimir:
+      # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
+      version: 2.17.4
     prometheus-operator-crds:
       # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^prometheus-operator-crds-(?<version>.*)$ versioning=semver
       version: 25.0.1
