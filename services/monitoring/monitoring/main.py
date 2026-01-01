@@ -12,7 +12,7 @@ from monitoring.grafana import Grafana
 from monitoring.mimir_buckets import MimirBuckets
 from monitoring.mimir_legacy import MimirLegacy
 from monitoring.prometheus_operator_crds import create_prometheus_operator_crds
-from monitoring.speedtest import create_speedtest_exporter
+from monitoring.speedtest import SpeedtestExporter
 
 
 def main():
@@ -41,5 +41,5 @@ def main():
     k8s_provider = utils.k8s.get_k8s_provider()
     Alloy('default', component_config, k8s_provider)
     Grafana('default', component_config, k8s_provider)
+    SpeedtestExporter('default', component_config, k8s_provider)
     create_prometheus_operator_crds(component_config, k8s_provider)
-    create_speedtest_exporter(component_config, k8s_provider)
