@@ -3,8 +3,10 @@ import pulumi_cloudflare as cloudflare
 import pulumi_command
 import pulumi_docker as docker
 import pulumi_minio
+import pulumi_pulumiservice as pulumiservice
 import pulumi_random
 import utils.cloudflare
+import yaml
 
 from s3.config import ComponentConfig
 from s3.pulumi import create_pulumi_bucket
@@ -89,6 +91,27 @@ def create_minio(
     )
 
     create_pulumi_bucket(minio_provider)
+
+    # Export connection details to an ESC environment
+    esc_config = p.Output.from_input(
+        {
+            'values': {
+                's3': {
+                    'endpoint': f's3.{component_config.cloudflare.zone}',
+                    'admin-user': 'admin',
+                    'admin-password': {'fn::secret': minio_password.result},
+                },
+                'pulumiConfig': {'s3': '${s3}'},
+            },
+        }
+    )
+    pulumiservice.Environment(
+        'minio-esc-environment',
+        organization=p.get_organization(),
+        project=p.get_project(),
+        name=f's3-{p.get_stack()}',
+        yaml=esc_config.apply(lambda c: p.StringAsset(yaml.safe_dump(c))),
+    )
 
     p.export('minio-s3', f'https://s3.{component_config.cloudflare.zone}')
     p.export('minio-s3-hostname', f's3.{component_config.cloudflare.zone}')
