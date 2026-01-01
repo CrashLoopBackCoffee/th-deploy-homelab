@@ -3,6 +3,7 @@ import pathlib
 import pulumi as p
 import pulumi_cloudflare as cloudflare
 import pulumi_kubernetes as k8s
+import utils.opnsense.unbound.host_override
 
 from monitoring.config import ComponentConfig
 from monitoring.mimir_buckets import MimirBuckets
@@ -232,14 +233,59 @@ class Mimir(p.ComponentResource):
             opts=k8s_opts,
         )
 
+        # Create local DNS record pointing to Traefik service
+        traefik_service = k8s.core.v1.Service.get(
+            'traefik-service', 'traefik/traefik', opts=k8s_opts
+        )
+        record = utils.opnsense.unbound.host_override.HostOverride(
+            'mimir',
+            host='mimir',
+            domain=component_config.cloudflare.zone,
+            record_type='A',
+            ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
+            opts=p.ResourceOptions(parent=self),
+        )
+
+        # Create IngressRoute for web UI access
+        fqdn = p.Output.concat('mimir.', component_config.cloudflare.zone)
+        k8s.apiextensions.CustomResource(
+            'mimir-ingress',
+            api_version='traefik.io/v1alpha1',
+            kind='IngressRoute',
+            metadata={
+                'name': 'mimir',
+                'namespace': namespace.metadata.name,
+            },
+            spec={
+                'entryPoints': ['websecure'],
+                'routes': [
+                    {
+                        'kind': 'Rule',
+                        'match': p.Output.concat('Host(`', fqdn, '`)'),
+                        'services': [
+                            {
+                                'name': service.metadata.name,
+                                'namespace': service.metadata.namespace,
+                                'port': 9009,
+                            },
+                        ],
+                    }
+                ],
+                'tls': {},
+            },
+            opts=k8s_opts,
+        )
+
         self.namespace = namespace.metadata.name
         self.service_name = service.metadata.name
         self.service_port = 9009
+        self.url = p.Output.concat('https://', record.host, '.', record.domain)
 
         self.register_outputs(
             {
                 'namespace': self.namespace,
                 'service_name': self.service_name,
                 'service_port': self.service_port,
+                'url': self.url,
             }
         )
