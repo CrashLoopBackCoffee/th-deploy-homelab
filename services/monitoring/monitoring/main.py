@@ -5,7 +5,7 @@ import utils.docker
 import utils.k8s
 
 from monitoring.alloy import Alloy
-from monitoring.alloy_legacy import create_alloy_legacy
+from monitoring.alloy_legacy import AlloyLegacy
 from monitoring.cadvisor_legacy import create_cadvisor_legacy
 from monitoring.config import ComponentConfig
 from monitoring.grafana import Grafana
@@ -32,7 +32,7 @@ def main():
 
     # Create node-exporter container
     create_cadvisor_legacy(component_config, network, docker_opts)
-    create_alloy_legacy(component_config, network, cloudflare_provider, docker_opts)
+    AlloyLegacy('default', component_config, cloudflare_provider, docker_provider)
     MimirLegacy(
         'default', component_config, network, cloudflare_provider, mimir_buckets, docker_provider
     )

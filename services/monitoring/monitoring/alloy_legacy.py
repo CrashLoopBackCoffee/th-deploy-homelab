@@ -12,114 +12,128 @@ from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path
 
 
-def create_alloy_legacy(
-    component_config: ComponentConfig,
-    network: docker.Network,
-    cloudflare_provider: cloudflare.Provider,
-    opts: p.ResourceOptions,
-):
-    """
-    Deploys Alloy to the target host.
-    """
-    target_root_dir = component_config.target.root_dir
-    target_host = component_config.target.host
-    target_user = component_config.target.user
+class AlloyLegacy(p.ComponentResource):
+    def __init__(
+        self,
+        name: str,
+        component_config: ComponentConfig,
+        cloudflare_provider: cloudflare.Provider,
+        docker_provider: docker.Provider,
+    ):
+        """
+        Deploys Alloy to the target host.
+        """
+        super().__init__(f'lab:alloy_legacy:{name}', name)
 
-    alloy_path = get_assets_path() / 'alloy_legacy'
+        docker_opts = p.ResourceOptions(
+            provider=docker_provider,
+            parent=self,
+        )
 
-    # Create alloy DNS record
-    dns_record = utils.cloudflare.create_cloudflare_cname(
-        'alloy-legacy', component_config.cloudflare.zone, cloudflare_provider
-    )
+        target_root_dir = component_config.target.root_dir
+        target_host = component_config.target.host
+        target_user = component_config.target.user
 
-    # Create alloy-config folder
-    alloy_config_dir_resource = pulumi_command.remote.Command(
-        'create-alloy-config',
-        connection=pulumi_command.remote.ConnectionArgs(host=target_host, user=target_user),
-        create=f'mkdir -p {target_root_dir}/alloy-config',
-    )
-    alloy_data_dir_resource = pulumi_command.remote.Command(
-        'create-alloy-data',
-        connection=pulumi_command.remote.ConnectionArgs(host=target_host, user=target_user),
-        create=f'mkdir -p {target_root_dir}/alloy-data',
-    )
+        alloy_path = get_assets_path() / 'alloy_legacy'
 
-    sync_command = (
-        f'rsync --rsync-path /bin/rsync -av --delete '
-        f'{alloy_path}/ '
-        f'{target_user}@{target_host}:{target_root_dir}/alloy-config/'
-    )
+        # Create alloy DNS record
+        dns_record = utils.cloudflare.create_cloudflare_cname(
+            'alloy-legacy', component_config.cloudflare.zone, cloudflare_provider, docker_opts
+        )
 
-    alloy_config = utils.utils.directory_content(alloy_path)
-    alloy_config = pulumi_command.local.Command(
-        'alloy-config',
-        create=sync_command,
-        triggers=[alloy_config, alloy_config_dir_resource.id],
-    )
+        # Create alloy-config folder
+        alloy_config_dir_resource = pulumi_command.remote.Command(
+            'create-alloy-config',
+            connection=pulumi_command.remote.ConnectionArgs(host=target_host, user=target_user),
+            create=f'mkdir -p {target_root_dir}/alloy-config',
+            opts=docker_opts,
+        )
+        alloy_data_dir_resource = pulumi_command.remote.Command(
+            'create-alloy-data',
+            connection=pulumi_command.remote.ConnectionArgs(host=target_host, user=target_user),
+            create=f'mkdir -p {target_root_dir}/alloy-data',
+            opts=docker_opts,
+        )
 
-    image = docker.RemoteImage(
-        'alloy',
-        name=f'grafana/alloy:{component_config.alloy_legacy.version}',
-        keep_locally=True,
-        opts=opts,
-    )
+        sync_command = (
+            f'rsync --rsync-path /bin/rsync -av --delete '
+            f'{alloy_path}/ '
+            f'{target_user}@{target_host}:{target_root_dir}/alloy-config/'
+        )
 
-    container = docker.Container(
-        'alloy',
-        image=image.image_id,
-        name='alloy',
-        command=[
-            'run',
-            '--server.http.listen-addr=0.0.0.0:9091',
-            '--storage.path=/var/lib/alloy/data',
-            '--disable-reporting',
-            # Required for live debugging
-            '--stability.level=experimental',
-            '/etc/alloy/',
-        ],
-        envs=[],
-        volumes=[
-            {
-                'host_path': f'{target_root_dir}/alloy-config',
-                'container_path': '/etc/alloy',
-            },
-            {
-                'host_path': f'{target_root_dir}/alloy-data',
-                'container_path': '/var/lib/alloy/data',
-            },
-            {
-                'host_path': '/var/run/docker.sock',
-                'container_path': '/var/run/docker.sock',
-            },
-            {
-                'host_path': '/var/log',
-                'container_path': '/mnt/var/log',
-                'read_only': True,
-            },
-        ],
-        network_mode='host',
-        restart='always',
-        start=True,
-        opts=p.ResourceOptions.merge(
-            opts,
-            p.ResourceOptions(depends_on=[alloy_config, alloy_data_dir_resource]),
-        ),
-    )
+        alloy_config = utils.utils.directory_content(alloy_path)
+        alloy_config = pulumi_command.local.Command(
+            'alloy-config',
+            create=sync_command,
+            triggers=[alloy_config, alloy_config_dir_resource.id],
+            opts=docker_opts,
+        )
 
-    def reload_alloy(args):
-        if p.runtime.is_dry_run():
-            return
+        image = docker.RemoteImage(
+            'alloy',
+            name=f'grafana/alloy:{component_config.alloy_legacy.version}',
+            keep_locally=True,
+            opts=docker_opts,
+        )
 
-        hostname = args[0]
-        print(f'Reloading alloy config for {hostname}')
+        container = docker.Container(
+            'alloy',
+            image=image.image_id,
+            name='alloy',
+            command=[
+                'run',
+                '--server.http.listen-addr=0.0.0.0:9091',
+                '--storage.path=/var/lib/alloy/data',
+                '--disable-reporting',
+                # Required for live debugging
+                '--stability.level=experimental',
+                '/etc/alloy/',
+            ],
+            envs=[],
+            volumes=[
+                {
+                    'host_path': f'{target_root_dir}/alloy-config',
+                    'container_path': '/etc/alloy',
+                },
+                {
+                    'host_path': f'{target_root_dir}/alloy-data',
+                    'container_path': '/var/lib/alloy/data',
+                },
+                {
+                    'host_path': '/var/run/docker.sock',
+                    'container_path': '/var/run/docker.sock',
+                },
+                {
+                    'host_path': '/var/log',
+                    'container_path': '/mnt/var/log',
+                    'read_only': True,
+                },
+            ],
+            network_mode='host',
+            restart='always',
+            start=True,
+            opts=p.ResourceOptions.merge(
+                docker_opts,
+                p.ResourceOptions(depends_on=[alloy_config, alloy_data_dir_resource]),
+            ),
+        )
 
-        req = urllib.request.Request(f'https://{hostname}/-/reload', method='POST')
-        try:
-            urllib.request.urlopen(req)
-        except urllib.error.HTTPError as e:
-            print(f'Error reloading alloy config:\n{e.read().decode()}')
-            raise
+        def reload_alloy(args):
+            if p.runtime.is_dry_run():
+                return
 
-    alloy_hostname = p.Output.format('{}.{}', dns_record.name, component_config.cloudflare.zone)
-    p.Output.all(alloy_hostname, alloy_config_dir_resource.id, container.id).apply(reload_alloy)
-    p.export('alloy_legacy_url', alloy_hostname)
+            hostname = args[0]
+            print(f'Reloading alloy config for {hostname}')
+
+            req = urllib.request.Request(f'https://{hostname}/-/reload', method='POST')
+            try:
+                urllib.request.urlopen(req)
+            except urllib.error.HTTPError as e:
+                print(f'Error reloading alloy config:\n{e.read().decode()}')
+                raise
+
+        alloy_hostname = p.Output.format('{}.{}', dns_record.name, component_config.cloudflare.zone)
+        p.Output.all(alloy_hostname, alloy_config_dir_resource.id, container.id).apply(reload_alloy)
+        p.export('alloy_legacy_url', alloy_hostname)
+
+        self.register_outputs({})
