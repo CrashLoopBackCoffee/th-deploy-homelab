@@ -6,8 +6,6 @@ discovery.relabel "static" {
 	targets = [
 		// Script exporter
 		{__address__ = "192.168.40.80:9469", job = "script_exporter", instance = "speedtest-exporter:9469"},
-		// Windows exporter
-		{__address__ = "192.168.2.10:9182", job = "windows_exporter"},
 		// Ohmgraphite
 		{__address__ = "192.168.2.10:9002", job = "ohmgraphite"},
 		// mqtt2prometheus
@@ -24,6 +22,6 @@ discovery.relabel "static" {
 		{__address__ = "opnsense.tobiash.net:9100", job = "integrations/unix", instance = "opnsense.tobiash.net"},
 		{__address__ = "pve.tobiash.net:9100", job = "integrations/unix", instance = "pve.tobiash.net"},
 		// Mimir
-		{__address__ = "mimir.tobiash.net:9009", job = "default/mimir", instance = "mimir.tobiash.net", cluster = "default", namespace = "mimir"},
+		{__address__ = "mimir.mimir.svc.cluster.local:9009", job = "default/mimir", instance = "mimir.tobiash.net", cluster = "default", namespace = "mimir"},
 	]
 }
