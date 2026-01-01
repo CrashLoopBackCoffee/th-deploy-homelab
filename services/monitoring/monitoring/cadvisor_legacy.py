@@ -14,10 +14,10 @@ def create_cadvisor_legacy(
     """
     Deploys cadvisor to the target host.
     """
-    assert component_config.cadvisor
+    assert component_config.cadvisor_legacy
     image = docker.RemoteImage(
         'cadvisor',
-        name=f'ghcr.io/google/cadvisor:{component_config.cadvisor.version}',
+        name=f'ghcr.io/google/cadvisor:{component_config.cadvisor_legacy.version}',
         keep_locally=True,
         opts=opts,
     )
