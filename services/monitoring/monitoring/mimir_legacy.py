@@ -14,7 +14,7 @@ from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path
 
 
-def create_mimir(
+def create_mimir_legacy(
     component_config: ComponentConfig,
     network: docker.Network,
     cloudflare_provider: cloudflare.Provider,

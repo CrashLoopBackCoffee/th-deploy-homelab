@@ -12,7 +12,7 @@ from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path
 
 
-def create_alloy(
+def create_alloy_legacy(
     component_config: ComponentConfig,
     network: docker.Network,
     cloudflare_provider: cloudflare.Provider,
