@@ -24,7 +24,6 @@ dependencies = [
     "kubernetes",
     "monitoring",
     "n8n",
-    "obsidian",
     "ollama",
     "paperless",
     "proxmox",
@@ -56,7 +55,6 @@ iot = { workspace = true }
 kubernetes = { workspace = true }
 monitoring = { workspace = true }
 n8n = { workspace = true }
-obsidian = { workspace = true }
 ollama = { workspace = true }
 paperless = { workspace = true }
 proxmox = { workspace = true }
@@ -166,10 +164,6 @@ model = "monitoring.config:PulumiConfigRoot"
 [tool.config-models.n8n]
 root = "services/n8n"
 model = "n8n.config:PulumiConfigRoot"
-
-[tool.config-models.obsidian]
-root = "services/obsidian"
-model = "obsidian.config:PulumiConfigRoot"
 
 [tool.config-models.ollama]
 root = "services/ollama"
