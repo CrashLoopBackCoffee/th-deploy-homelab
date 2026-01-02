@@ -30,6 +30,7 @@ ruler_storage:
 
 compactor:
   data_dir: /data/compactor
+  upload_sparse_index_headers: true
 
 # stay on classic ingest architecture
 ingest_storage:
