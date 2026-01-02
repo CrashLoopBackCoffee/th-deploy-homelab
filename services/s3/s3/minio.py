@@ -61,6 +61,7 @@ def create_minio(
         image=image.image_id,
         command=['server', '/data', '--console-address', ':9001'],
         envs=[
+            'MINIO_PROMETHEUS_AUTH_TYPE=public',
             'MINIO_ROOT_USER=admin',
             p.Output.format('MINIO_ROOT_PASSWORD={}', minio_password.result),
         ],
