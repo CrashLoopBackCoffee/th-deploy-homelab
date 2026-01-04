@@ -50,5 +50,5 @@ config:
             # Data disk
             - size: 100
     traefik:
-      # renovate: datasource=github-releases packageName=traefik/traefik versioning=semver
-      version: v34.3.0
+      # renovate: datasource=github-releases packageName=traefik/traefik-helm-chart extractVersion=^v(?<version>.*)$ versioning=semver
+      version: 34.3.0
