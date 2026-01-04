@@ -29,7 +29,7 @@ def create_traefik(
         'traefik',
         chart='traefik',
         namespace=namespace.metadata.name,
-        version=component_config.traefik.version,
+        version=f'v{component_config.traefik.version}',
         repository_opts={
             'repo': 'https://traefik.github.io/charts',
         },
