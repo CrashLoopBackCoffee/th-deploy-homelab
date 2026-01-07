@@ -19,6 +19,11 @@ def _get_grafana_config(hostname: str):
         cert_key = /etc/grafana/certs/tls.key
         cert_file = /etc/grafana/certs/tls.crt
         protocol = https
+
+        [analytics]
+        check_for_updates = false
+        reporting_enabled = false
+        check_for_plugin_updates = false
         """
     )
 

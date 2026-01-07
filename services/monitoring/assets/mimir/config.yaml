@@ -57,3 +57,6 @@ limits:
   max_cache_freshness: 10m
   ingestion_rate: 100000
   ingestion_burst_size: 2000000
+
+usage_stats:
+  enabled: false
