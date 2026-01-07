@@ -87,6 +87,12 @@ prometheus.exporter.blackbox "default" {
 	// HTTPS Targets
 
 	target {
+		name    = "adguard.tobiash.net"
+		address = "https://adguard.tobiash.net:8443"
+		module  = "https_2xx"
+	}
+
+	target {
 		name    = "alloy.tobiash.net"
 		address = "https://alloy.tobiash.net"
 		module  = "https_2xx"
