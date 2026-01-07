@@ -33,6 +33,13 @@ class SpeedtestExporterConfig(utils.model.LocalBaseModel):
     version: str
 
 
+class AdGuardExporterConfig(utils.model.LocalBaseModel):
+    version: str
+    server: str
+    username: utils.model.OnePasswordRef
+    password: utils.model.OnePasswordRef
+
+
 class PrometheusOperatorCrdsConfig(utils.model.LocalBaseModel):
     version: str
 
@@ -48,6 +55,7 @@ class ComponentConfig(utils.model.LocalBaseModel):
     mimir: MimirConfig
     prometheus_operator_crds: PrometheusOperatorCrdsConfig
     speedtest_exporter: SpeedtestExporterConfig
+    adguard_exporter: AdGuardExporterConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

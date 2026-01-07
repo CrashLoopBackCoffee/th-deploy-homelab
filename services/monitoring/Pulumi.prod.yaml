@@ -40,3 +40,11 @@ config:
     speedtest-exporter:
       # renovate: datasource=github-releases packageName=billimek/prometheus-speedtest-exporter versioning=semver
       version: 1.3.1
+    adguard-exporter:
+      # renovate: datasource=github-releases packageName=henrywhitaker3/adguard-exporter extractVersion=^v(?<version>.*)$ versioning=semver
+      version: 1.2.0
+      server: https://adguard.tobiash.net:8443
+      username:
+        ref: op://Pulumi/Adguard Home/username
+      password:
+        ref: op://Pulumi/Adguard Home/password

@@ -112,6 +112,9 @@ services/
 
 ### 8. Kubernetes
 - Never set CPU limits on pods.
+- **PREFER typed-dict notation** over `Args` classes when creating Pulumi Kubernetes resources.
+  - Use `metadata={'name': 'foo'}` instead of `metadata=k8s.meta.v1.ObjectMetaArgs(name='foo')`.
+  - This style is more concise and aligns with the project's Python idioms.
 
 ## Common Commands
 
