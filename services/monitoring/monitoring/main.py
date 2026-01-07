@@ -4,6 +4,7 @@ import utils.cloudflare
 import utils.docker
 import utils.k8s
 
+from monitoring.adguard_exporter import AdGuardExporter
 from monitoring.alloy import Alloy
 from monitoring.alloy_legacy import AlloyLegacy
 from monitoring.cadvisor_legacy import CAdvisorLegacy
@@ -46,4 +47,5 @@ def main():
     Alloy('default', component_config, k8s_provider)
     Grafana('default', component_config, k8s_provider)
     SpeedtestExporter('default', component_config, k8s_provider)
+    AdGuardExporter('default', component_config, k8s_provider)
     create_prometheus_operator_crds(component_config, k8s_provider)
