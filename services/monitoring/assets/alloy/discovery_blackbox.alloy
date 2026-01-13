@@ -53,6 +53,17 @@ prometheus.exporter.blackbox "default" {
 					}
 				}
 			},
+			https_k8s_api: {
+				prober: http,
+				timeout: 5s,
+				http: {
+					preferred_ip_protocol: ip4,
+					tls_config: {
+						ca_file: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+					},
+					bearer_token_file: "/var/run/secrets/kubernetes.io/serviceaccount/token"
+				}
+			},
 			tls_connect: {
 				prober: tcp,
 				timeout: 5s,
@@ -206,6 +217,13 @@ prometheus.exporter.blackbox "default" {
 		name    = "mosquitto"
 		address = "mqtt.tobiash.net:8883"
 		module  = "tls_connect"
+	}
+
+	// Kubernetes API
+	target {
+		name    = "kubernetes-api"
+		address = "https://kubernetes.default.svc/readyz"
+		module  = "https_k8s_api"
 	}
 }
 
