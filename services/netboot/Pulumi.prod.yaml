@@ -11,7 +11,7 @@ config:
       zone: tobiash.net
     netboot:
       # renovate: datasource=docker packageName=ghcr.io/netbootxyz/netbootxyz versioning=loose
-      version: 0.7.6-nbxyz9
+      version: 0.7.6-nbxyz10
       menu-version: 2.0.84
       web-port: 3000
       tftp-port: 69
