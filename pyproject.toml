@@ -24,6 +24,7 @@ dependencies = [
     "kubernetes",
     "monitoring",
     "n8n",
+    "netboot",
     "ollama",
     "paperless",
     "proxmox",
@@ -55,6 +56,7 @@ iot = { workspace = true }
 kubernetes = { workspace = true }
 monitoring = { workspace = true }
 n8n = { workspace = true }
+netboot = { workspace = true }
 ollama = { workspace = true }
 paperless = { workspace = true }
 proxmox = { workspace = true }
@@ -192,3 +194,7 @@ model = "svn.config:PulumiConfigRoot"
 [tool.config-models.tandoor]
 root = "services/tandoor"
 model = "tandoor.config:PulumiConfigRoot"
+
+[tool.config-models.netboot]
+root = "services/netboot"
+model = "netboot.config:PulumiConfigRoot"
