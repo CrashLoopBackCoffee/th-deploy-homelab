@@ -17,6 +17,7 @@ members = [
     "kubernetes",
     "monitoring",
     "n8n",
+    "netboot",
     "ollama",
     "paperless",
     "proxmox",
@@ -473,6 +474,7 @@ dependencies = [
     { name = "kubernetes" },
     { name = "monitoring" },
     { name = "n8n" },
+    { name = "netboot" },
     { name = "ollama" },
     { name = "paperless" },
     { name = "proxmox" },
@@ -515,6 +517,7 @@ requires-dist = [
     { name = "kubernetes", editable = "services/kubernetes" },
     { name = "monitoring", editable = "services/monitoring" },
     { name = "n8n", editable = "services/n8n" },
+    { name = "netboot", editable = "services/netboot" },
     { name = "ollama", editable = "services/ollama" },
     { name = "paperless", editable = "services/paperless" },
     { name = "proxmox", editable = "services/proxmox" },
@@ -737,6 +740,17 @@ requires-dist = [
     { name = "pulumi-random", specifier = ">=4.18.0" },
     { name = "utils", editable = "utils" },
 ]
+
+[[package]]
+name = "netboot"
+version = "0.1.0"
+source = { editable = "services/netboot" }
+dependencies = [
+    { name = "utils" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "utils", editable = "utils" }]
 
 [[package]]
 name = "nodeenv"
