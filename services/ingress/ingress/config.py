@@ -1,6 +1,19 @@
 import utils.model
 
 
+class SynologyCertConfig(utils.model.LocalBaseModel):
+    hostname: str
+
+
+class SynologyConfig(utils.model.LocalBaseModel):
+    host: str
+    port: int = 5000
+    scheme: str = 'http'
+    username: utils.model.OnePasswordRef
+    password: utils.model.OnePasswordRef
+    certs: list[SynologyCertConfig] = []
+
+
 class CloudflareIngressConfig(utils.model.LocalBaseModel):
     service: str
     hostname: str
@@ -15,6 +28,7 @@ class CloudflaredConfig(utils.model.LocalBaseModel):
 class ComponentConfig(utils.model.LocalBaseModel):
     cloudflare: utils.model.CloudflareConfig
     cloudflared: CloudflaredConfig
+    synology: SynologyConfig | None = None
 
 
 class StackConfig(utils.model.LocalBaseModel):
