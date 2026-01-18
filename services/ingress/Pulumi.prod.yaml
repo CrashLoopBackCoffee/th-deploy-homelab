@@ -21,3 +21,18 @@ config:
         # Immich
         - service: http://immich-server.immich:2283
           hostname: immich.tobiash.net
+
+    synology:
+      host: synology.tobiash.net
+      port: 5001
+      scheme: https
+      username:
+        ref: op://Pulumi/Synology cert-manager/username
+      password:
+        ref: op://Pulumi/Synology cert-manager/password
+      certs:
+        - hostname: alloy-legacy.tobiash.net
+        - hostname: minio-console.tobiash.net
+        - hostname: netboot.tobiash.net
+        - hostname: s3.tobiash.net
+        - hostname: synology.tobiash.net
