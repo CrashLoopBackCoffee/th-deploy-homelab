@@ -6,19 +6,19 @@ metadata:
     images.cnpg.io/family: postgresql
     images.cnpg.io/type: standard
     images.cnpg.io/os: bullseye
-    images.cnpg.io/date: '20260105'
+    images.cnpg.io/date: '20260119'
     images.cnpg.io/publisher: cnpg.io
 spec:
   images:
   - major: 13
     image: ghcr.io/cloudnative-pg/postgresql:13.22-202511100817-standard-bullseye@sha256:bdf11cbefce25a4cdad91dbd30caf00d7efc2fd54319e7ab6195814b41ba8f66
   - major: 14
-    image: ghcr.io/cloudnative-pg/postgresql:14.20-202601050807-standard-bullseye@sha256:5d6a11f52a2e338fb4ea090621ecbf88f8958ba744998d0e3e7d05fd5612a53c
+    image: ghcr.io/cloudnative-pg/postgresql:14.20-202601190807-standard-bullseye@sha256:15ce3adf9ecf05f7e51e129a618a4977c64117f22025a3c0c21e5471d98a6926
   - major: 15
-    image: ghcr.io/cloudnative-pg/postgresql:15.15-202601050807-standard-bullseye@sha256:fd59b002c948570223a81005a898a1bdabb9aac2cd39d16609e5bb485af8ecb6
+    image: ghcr.io/cloudnative-pg/postgresql:15.15-202601190807-standard-bullseye@sha256:a41fde5e424d2fcee554a3c55038481842d904b49a3be8a467d3fc85a2876474
   - major: 16
-    image: ghcr.io/cloudnative-pg/postgresql:16.11-202601050808-standard-bullseye@sha256:cbed35b00da6094060f545286b475f69c06a57ed0b1ea82bf22a63f2564b9061
+    image: ghcr.io/cloudnative-pg/postgresql:16.11-202601190807-standard-bullseye@sha256:c4618beef03daec0a25bac9ee6eacd2c98764d2d807662f27c11bad3a71dc4a4
   - major: 17
-    image: ghcr.io/cloudnative-pg/postgresql:17.7-202601050807-standard-bullseye@sha256:b7bd539a5f541738fa845e30ab879d5180290e406c9fca056c84854e26d1c88c
+    image: ghcr.io/cloudnative-pg/postgresql:17.7-202601190807-standard-bullseye@sha256:aff33e4f0d71a6a5bf8164c0b0a53261a1d4cc1883a86bf9d8a0437e931c283d
   - major: 18
-    image: ghcr.io/cloudnative-pg/postgresql:18.1-202601050807-standard-bullseye@sha256:24e5db4ef1dc10d906583f2b5afbcf6b2d7e811a224d8c06e6b4f7b955ac5c5c
+    image: ghcr.io/cloudnative-pg/postgresql:18.1-202601190807-standard-bullseye@sha256:1c9886fc4cbee9dbb94dfd4ed937f288626bd1c6f4f97eea3474ebb06f34fe95
