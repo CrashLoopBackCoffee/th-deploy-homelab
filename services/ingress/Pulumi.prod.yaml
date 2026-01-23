@@ -11,7 +11,7 @@ config:
 
     cloudflared:
       # renovate: datasource=github-releases packageName=cloudflare/cloudflared versioning=semver
-      version: 2025.11.1
+      version: 2026.1.1
       ingress:
         # Grafana
         - service: https://grafana.grafana
