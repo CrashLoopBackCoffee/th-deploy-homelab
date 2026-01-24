@@ -2,6 +2,7 @@ import pulumi as p
 import pulumi_kubernetes as k8s
 import pulumi_minio as minio
 import pulumi_random as random
+import utils.opnsense.unbound.host_override
 import utils.postgres
 import yaml
 
@@ -260,7 +261,7 @@ class Netbox(p.ComponentResource):
             ],
         }
 
-        k8s.helm.v4.Chart(
+        chart = k8s.helm.v4.Chart(
             'netbox',
             chart='oci://ghcr.io/netbox-community/netbox-chart/netbox',
             version=component_config.netbox.chart_version,
@@ -269,8 +270,60 @@ class Netbox(p.ComponentResource):
             opts=k8s_opts,
         )
 
+        netbox_service = k8s.core.v1.Service.get(
+            'netbox-service',
+            p.Output.concat(namespace, '/netbox'),
+            opts=p.ResourceOptions(
+                provider=k8s_provider,
+                depends_on=chart.resources,  # type: ignore[reportArgumentType]
+                parent=self,
+            ),
+        )
+
+        traefik_service = k8s.core.v1.Service.get(
+            'traefik-service', 'traefik/traefik', opts=k8s_opts
+        )
+        record = utils.opnsense.unbound.host_override.HostOverride(
+            'netbox',
+            host='netbox',
+            domain=component_config.cloudflare.zone,
+            record_type='A',
+            ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
+            opts=p.ResourceOptions(parent=self),
+        )
+
+        fqdn = p.Output.concat('netbox.', component_config.cloudflare.zone)
+        k8s.apiextensions.CustomResource(
+            'netbox-ingress',
+            api_version='traefik.io/v1alpha1',
+            kind='IngressRoute',
+            metadata={
+                'name': 'netbox',
+                'namespace': namespace,
+            },
+            spec={
+                'entryPoints': ['websecure'],
+                'routes': [
+                    {
+                        'kind': 'Rule',
+                        'match': p.Output.concat('Host(`', fqdn, '`)'),
+                        'services': [
+                            {
+                                'name': netbox_service.metadata.name,
+                                'namespace': netbox_service.metadata.namespace,
+                                'port': 80,
+                            },
+                        ],
+                    }
+                ],
+                'tls': {},
+            },
+            opts=k8s_opts,
+        )
+
         p.export('netbox_admin_username', component_config.netbox.superuser.name)
         p.export('netbox_admin_password', admin_password)
         p.export('netbox_admin_api_token', admin_api_token)
+        p.export('netbox_url', p.Output.concat('https://', record.host, '.', record.domain))
 
         self.register_outputs({})
