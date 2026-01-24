@@ -25,6 +25,7 @@ dependencies = [
     "monitoring",
     "n8n",
     "netboot",
+    "netbox",
     "ollama",
     "paperless",
     "proxmox",
@@ -57,6 +58,7 @@ kubernetes = { workspace = true }
 monitoring = { workspace = true }
 n8n = { workspace = true }
 netboot = { workspace = true }
+netbox = { workspace = true }
 ollama = { workspace = true }
 paperless = { workspace = true }
 proxmox = { workspace = true }
@@ -198,3 +200,7 @@ model = "tandoor.config:PulumiConfigRoot"
 [tool.config-models.netboot]
 root = "services/netboot"
 model = "netboot.config:PulumiConfigRoot"
+
+[tool.config-models.netbox]
+root = "services/netbox"
+model = "netbox.config:PulumiConfigRoot"

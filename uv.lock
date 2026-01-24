@@ -18,6 +18,7 @@ members = [
     "monitoring",
     "n8n",
     "netboot",
+    "netbox",
     "ollama",
     "paperless",
     "proxmox",
@@ -475,6 +476,7 @@ dependencies = [
     { name = "monitoring" },
     { name = "n8n" },
     { name = "netboot" },
+    { name = "netbox" },
     { name = "ollama" },
     { name = "paperless" },
     { name = "proxmox" },
@@ -518,6 +520,7 @@ requires-dist = [
     { name = "monitoring", editable = "services/monitoring" },
     { name = "n8n", editable = "services/n8n" },
     { name = "netboot", editable = "services/netboot" },
+    { name = "netbox", editable = "services/netbox" },
     { name = "ollama", editable = "services/ollama" },
     { name = "paperless", editable = "services/paperless" },
     { name = "proxmox", editable = "services/proxmox" },
@@ -745,6 +748,17 @@ requires-dist = [
 name = "netboot"
 version = "0.1.0"
 source = { editable = "services/netboot" }
+dependencies = [
+    { name = "utils" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "utils", editable = "utils" }]
+
+[[package]]
+name = "netbox"
+version = "0.1.0"
+source = { editable = "services/netbox" }
 dependencies = [
     { name = "utils" },
 ]

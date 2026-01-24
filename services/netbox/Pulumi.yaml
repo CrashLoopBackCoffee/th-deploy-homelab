@@ -1,0 +1,7 @@
+name: netbox
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: ../../.venv
+description: NetBox deployment
