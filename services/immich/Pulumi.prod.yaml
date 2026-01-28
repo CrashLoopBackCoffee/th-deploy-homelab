@@ -33,7 +33,7 @@ config:
       preload-model: ViT-SO400M-16-SigLIP2-384__webli
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
-      version: "18.0"
+      version: "18.1"
       # renovate: datasource=github-releases packageName=tensorchord/VectorChord versioning=loose
       vectorchord-version: "1.0.0"
       backup:
