@@ -11,7 +11,7 @@ config:
       zone: tobiash.net
     tandoor:
       # renovate: datasource=github-releases packageName=TandoorRecipes/recipes versioning=semver
-      version: 2.4.0
+      version: 2.4.1
       hostname: tandoor.tobiash.net
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql extractVersion=^(?<version>\d+) versioning=loose
