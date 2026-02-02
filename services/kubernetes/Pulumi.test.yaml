@@ -20,7 +20,7 @@ config:
       zone: tobiash.net
     csi-nfs-driver:
       # renovate: datasource=github-releases packageName=kubernetes-csi/csi-driver-nfs versioning=semver
-      version: v4.12.1
+      version: v4.13.0
     microk8s:
       # renovate: datasource=github-tags packageName=canonical/microk8s versioning=loose
       version: "1.35"
