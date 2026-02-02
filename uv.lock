@@ -524,7 +524,7 @@ requires-dist = [
     { name = "ollama", editable = "services/ollama" },
     { name = "paperless", editable = "services/paperless" },
     { name = "proxmox", editable = "services/proxmox" },
-    { name = "pulumi", specifier = "==3.217.1" },
+    { name = "pulumi", specifier = "==3.218.0" },
     { name = "pulumi-cloudflare", specifier = "==6.13.0" },
     { name = "pulumi-command", specifier = "==1.1.3" },
     { name = "pulumi-docker", specifier = "==4.11.0" },
@@ -898,7 +898,7 @@ requires-dist = [
 
 [[package]]
 name = "pulumi"
-version = "3.217.1"
+version = "3.218.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "debugpy" },
@@ -910,7 +910,7 @@ dependencies = [
     { name = "semver" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/5c/4e9046afb24adad53752cf018857ab624ef983e0fa4cac0fcd435ff73f0c/pulumi-3.217.1-py3-none-any.whl", hash = "sha256:9e06ec1e5cbf4e9504e04412cc5ecae90e3ed25fce3bbda8f091f51c995ad3f8", size = 388428, upload-time = "2026-01-27T16:13:01.34Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/ed/54f724e2ed465c7caaa2e32552a8d3ac65f719c7e7d66097e79d7cbfb4b4/pulumi-3.218.0-py3-none-any.whl", hash = "sha256:eaf14bffed85995a2754760b1da36999ed43b1062edbab11541d90fc6743a86c", size = 388429, upload-time = "2026-01-29T16:07:27.411Z" },
 ]
 
 [[package]]
@@ -1053,16 +1053,16 @@ wheels = [
 
 [[package]]
 name = "pulumi-tls"
-version = "5.2.3"
+version = "5.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/4a/eda9909797bb898fbe97101ed1daeed31629f53bce24cf956e609ff55c9a/pulumi_tls-5.2.3.tar.gz", hash = "sha256:0a8c398d4daac34477d21d42f97a98c816f2d187775d0541b8b718464d9821cd", size = 26523, upload-time = "2025-11-13T22:46:09.338Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/85/be/2493f951ae78feae990f2c417eba6d21a1b7b307571310f515eb5634cec6/pulumi_tls-5.3.0.tar.gz", hash = "sha256:1f79463570c8f854ec1cb18758a121629b980b97f1d76db92767978c972673d9", size = 27035, upload-time = "2026-01-31T04:24:16.548Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8b/10/1a492d796ebec9182a3f8b8ec684f4eb53e663cca6e08eab7c97f7804968/pulumi_tls-5.2.3-py3-none-any.whl", hash = "sha256:74602f072312081966b92f51cce35f2b725f0fcd536e27382ea54b96406c47f5", size = 34983, upload-time = "2025-11-13T22:46:07.764Z" },
+    { url = "https://files.pythonhosted.org/packages/86/9d/ba374c13459e0b2dba11d3757922e482f806481e7b88fec0cc1a734c2f54/pulumi_tls-5.3.0-py3-none-any.whl", hash = "sha256:267ecebb2ac5a41fe764c1e08aa9f724a88e0615e731a809e8253a1b50b8f5c8", size = 35517, upload-time = "2026-01-31T04:24:15.242Z" },
 ]
 
 [[package]]
@@ -1433,7 +1433,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "pulumi-tls", specifier = "==5.2.3" },
+    { name = "pulumi-tls", specifier = "==5.3.0" },
     { name = "utils", editable = "utils" },
 ]
 
