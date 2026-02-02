@@ -7,7 +7,7 @@ config:
       node-name: pve
     cert-manager:
       # renovate: datasource=github-releases packageName=cert-manager/cert-manager versioning=semver
-      version: v1.19.2
+      version: v1.19.3
       use-staging: false
     cloudnative-pg:
       # renovate: datasource=github-releases packageName=cloudnative-pg/charts extractVersion=^cloudnative-pg-v(?<version>.*)$ versioning=semver
