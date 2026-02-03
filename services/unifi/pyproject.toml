@@ -7,7 +7,7 @@ name = "unifi"
 version = "0.1.0"
 requires-python = ">=3.11"
 
-dependencies = ["pulumi-tls==5.2.3", "utils"]
+dependencies = ["pulumi-tls==5.3.0", "utils"]
 
 [tool.uv.build-backend]
 module-name = "unifi"
