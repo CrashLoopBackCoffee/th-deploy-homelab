@@ -7,7 +7,9 @@ class ComponentConfig(utils.model.LocalBaseModel):
 
 class StackConfig(utils.model.LocalBaseModel):
     model_config = {
-        'alias_generator': lambda field_name: f'{utils.model.get_pulumi_project(__file__)}:{field_name}'
+        'alias_generator': lambda field_name: (
+            f'{utils.model.get_pulumi_project(__file__)}:{field_name}'
+        )
     }
     config: ComponentConfig
 
