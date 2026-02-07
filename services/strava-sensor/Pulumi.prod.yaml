@@ -1,0 +1,33 @@
+environment:
+  - kubernetes/kubeconfig-prod
+
+config:
+  strava-sensor:config:
+    strava-sensor:
+      # renovate: datasource=github-releases packageName=CrashLoopBackCoffee/th-strava-sensor versioning=semver
+      version: 2.1.0
+      webhook-url: https://strava-sensor.tobiash.net/strava/webhook
+      webhook-registration-delay: 15
+      resources:
+        memory: 256Mi
+        cpu: 100m
+      storage:
+        state-size: 256Mi
+      garmin:
+        username:
+          ref: op://Pulumi/sso.garmin.com/username
+        password:
+          ref: op://Pulumi/sso.garmin.com/password
+      strava:
+        refresh-token:
+          ref: op://Pulumi/Strava Sensor/Refresh Token
+        client-id:
+          ref: op://Pulumi/Strava Sensor/Client ID
+        client-secret:
+          ref: op://Pulumi/Strava Sensor/Client Secret
+      mqtt:
+        broker-url: mqtts://mqtt.tobiash.net:8883
+        username:
+          ref: op://Pulumi/Mosquitto/username
+        password:
+          ref: op://Pulumi/Mosquitto/password

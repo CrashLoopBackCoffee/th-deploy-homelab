@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -23,6 +23,7 @@ members = [
     "paperless",
     "proxmox",
     "s3",
+    "strava-sensor",
     "svn",
     "tandoor",
     "unifi",
@@ -488,6 +489,7 @@ dependencies = [
     { name = "pulumi-pulumiservice" },
     { name = "pulumi-random" },
     { name = "s3" },
+    { name = "strava-sensor" },
     { name = "svn" },
     { name = "tandoor" },
     { name = "unifi" },
@@ -532,6 +534,7 @@ requires-dist = [
     { name = "pulumi-pulumiservice", specifier = ">=0.32.0" },
     { name = "pulumi-random", specifier = "==4.19.1" },
     { name = "s3", editable = "services/s3" },
+    { name = "strava-sensor", editable = "services/strava-sensor" },
     { name = "svn", editable = "services/svn" },
     { name = "tandoor", editable = "services/tandoor" },
     { name = "unifi", editable = "services/unifi" },
@@ -1350,6 +1353,17 @@ sdist = { url = "https://files.pythonhosted.org/packages/72/d1/d3159231aec234a59
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/24/4d91e05817e92e3a61c8a21e08fd0f390f5301f1c448b137c57c4bc6e543/semver-3.0.4-py3-none-any.whl", hash = "sha256:9c824d87ba7f7ab4a1890799cec8596f15c1241cb473404ea1cb0c55e4b04746", size = 17912, upload-time = "2025-01-24T13:19:24.949Z" },
 ]
+
+[[package]]
+name = "strava-sensor"
+version = "0.1.0"
+source = { editable = "services/strava-sensor" }
+dependencies = [
+    { name = "utils" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "utils", editable = "utils" }]
 
 [[package]]
 name = "svn"

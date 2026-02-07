@@ -30,6 +30,7 @@ dependencies = [
     "paperless",
     "proxmox",
     "s3",
+    "strava-sensor",
     "svn",
     "tandoor",
     "unifi",
@@ -63,6 +64,7 @@ ollama = { workspace = true }
 paperless = { workspace = true }
 proxmox = { workspace = true }
 s3 = { workspace = true }
+strava-sensor = { workspace = true }
 svn = { workspace = true }
 tandoor = { workspace = true }
 unifi = { workspace = true }
@@ -204,3 +206,7 @@ model = "netboot.config:PulumiConfigRoot"
 [tool.config-models.netbox]
 root = "services/netbox"
 model = "netbox.config:PulumiConfigRoot"
+
+[tool.config-models.strava-sensor]
+root = "services/strava-sensor"
+model = "strava_sensor.config:PulumiConfigRoot"
