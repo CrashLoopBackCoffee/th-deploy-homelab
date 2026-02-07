@@ -22,6 +22,14 @@ config:
         - service: http://immich-server.immich:2283
           hostname: immich.tobiash.net
 
+        # Strava Sensor
+        - service: http://strava-sensor.strava-sensor:8000
+          hostname: strava-sensor.tobiash.net
+
+    local-cloudflared:
+      - service: http://localhost:8000
+        hostname: strava-sensor-dev.tobiash.net
+
     synology:
       host: synology.tobiash.net
       port: 5001
