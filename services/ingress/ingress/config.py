@@ -28,6 +28,7 @@ class CloudflaredConfig(utils.model.LocalBaseModel):
 class ComponentConfig(utils.model.LocalBaseModel):
     cloudflare: utils.model.CloudflareConfig
     cloudflared: CloudflaredConfig
+    local_cloudflared: list[CloudflareIngressConfig] = []
     synology: SynologyConfig | None = None
 
 
