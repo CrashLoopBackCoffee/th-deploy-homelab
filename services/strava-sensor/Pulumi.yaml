@@ -1,0 +1,7 @@
+name: strava-sensor
+runtime:
+  name: python
+  options:
+    toolchain: uv
+    virtualenv: ../../.venv
+description: Strava Sensor deployment
