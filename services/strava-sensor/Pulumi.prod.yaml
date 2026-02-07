@@ -5,7 +5,7 @@ config:
   strava-sensor:config:
     strava-sensor:
       # renovate: datasource=github-releases packageName=CrashLoopBackCoffee/th-strava-sensor versioning=semver
-      version: 2.1.0
+      version: 2.1.1
       webhook-url: https://strava-sensor.tobiash.net/strava/webhook
       webhook-registration-delay: 15
       resources:
