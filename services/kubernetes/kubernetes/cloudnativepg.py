@@ -81,7 +81,7 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
                         },
                     },
                 },
-            ).apply(lambda c: yaml.safe_dump(c)),
+            ).apply(lambda c: yaml.safe_dump(c)),  # noqa: PLW0108
         )
 
     # Create PodMonitor for Prometheus operator to monitor the CloudNativePG operator
