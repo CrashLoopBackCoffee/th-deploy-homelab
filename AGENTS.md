@@ -1,6 +1,9 @@
 # Agent Instructions for deploy-homelab
 
 This document provides guidance for AI assistants working with code in this repository.
+It is the single source of truth for agent steering, consolidating prior guidance that
+was previously duplicated in other instruction files (CLAUDE.md, GEMINI.md, and
+.github/copilot-instructions.md), which have now been removed.
 
 ## Project Overview
 
