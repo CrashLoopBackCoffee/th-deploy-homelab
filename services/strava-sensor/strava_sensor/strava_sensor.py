@@ -209,8 +209,17 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
                                     'path': '/healthz',
                                     'port': STRAVA_SENSOR_PORT,
                                 },
-                                'period_seconds': 10,
+                                'period_seconds': 30,
                                 'timeout_seconds': 5,
+                            },
+                            'startup_probe': {
+                                'http_get': {
+                                    'path': '/healthz',
+                                    'port': STRAVA_SENSOR_PORT,
+                                },
+                                'period_seconds': 2,
+                                'timeout_seconds': 1,
+                                'failure_threshold': 30,
                             },
                         }
                     ],
