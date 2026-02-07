@@ -5,6 +5,10 @@ from strava_sensor.config import ComponentConfig
 
 STRAVA_SENSOR_PORT = 8000
 STRAVA_SENSOR_STATE_PATH = '/app/local_state'
+STRAVA_SENSOR_LAST_ACTIVITY_METADATA_PATH = (
+    f'{STRAVA_SENSOR_STATE_PATH}/strava_sensor_last_activity.json'
+)
+GARMIN_TOKENS_PATH = f'{STRAVA_SENSOR_STATE_PATH}/garminconnect'
 ALLOY_OTEL_GRPC_ENDPOINT = 'http://alloy.alloy.cluster.svc.local:4317'
 
 
@@ -87,6 +91,10 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
             'value': strava_sensor.webhook_url,
         },
         {
+            'name': 'STRAVA_SENSOR_LAST_ACTIVITY_METADATA_PATH',
+            'value': STRAVA_SENSOR_LAST_ACTIVITY_METADATA_PATH,
+        },
+        {
             'name': 'MQTT_BROKER_URL',
             'value': strava_sensor.mqtt.broker_url,
         },
@@ -137,6 +145,10 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
     if strava_sensor.garmin:
         env_vars.extend(
             [
+                {
+                    'name': 'GARMINTOKENS',
+                    'value': GARMIN_TOKENS_PATH,
+                },
                 {
                     'name': 'GARMIN_USERNAME',
                     'value_from': {
@@ -194,7 +206,7 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
                             ],
                             'readiness_probe': {
                                 'http_get': {
-                                    'path': '/',
+                                    'path': '/healthz',
                                     'port': STRAVA_SENSOR_PORT,
                                 },
                                 'period_seconds': 10,
