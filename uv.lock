@@ -521,14 +521,14 @@ requires-dist = [
     { name = "ollama", editable = "services/ollama" },
     { name = "paperless", editable = "services/paperless" },
     { name = "proxmox", editable = "services/proxmox" },
-    { name = "pulumi", specifier = "==3.218.0" },
+    { name = "pulumi", specifier = "==3.219.0" },
     { name = "pulumi-cloudflare", specifier = "==6.13.0" },
     { name = "pulumi-command", specifier = "==1.1.3" },
     { name = "pulumi-docker", specifier = "==4.11.0" },
     { name = "pulumi-kubernetes", specifier = "==4.25.0" },
     { name = "pulumi-minio", specifier = "==0.16.7" },
     { name = "pulumi-onepassword", specifier = "==1.1.3" },
-    { name = "pulumi-proxmoxve", specifier = "==7.11.0" },
+    { name = "pulumi-proxmoxve", specifier = "==7.12.0" },
     { name = "pulumi-pulumiservice", specifier = ">=0.32.0" },
     { name = "pulumi-random", specifier = "==4.19.1" },
     { name = "s3", editable = "services/s3" },
@@ -895,7 +895,7 @@ requires-dist = [
 
 [[package]]
 name = "pulumi"
-version = "3.218.0"
+version = "3.219.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "debugpy" },
@@ -907,7 +907,7 @@ dependencies = [
     { name = "semver" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4a/ed/54f724e2ed465c7caaa2e32552a8d3ac65f719c7e7d66097e79d7cbfb4b4/pulumi-3.218.0-py3-none-any.whl", hash = "sha256:eaf14bffed85995a2754760b1da36999ed43b1062edbab11541d90fc6743a86c", size = 388429, upload-time = "2026-01-29T16:07:27.411Z" },
+    { url = "https://files.pythonhosted.org/packages/36/55/a644cbc281475c9f4f85f72165629d87d93d50020c543f05ffafc5c3e348/pulumi-3.219.0-py3-none-any.whl", hash = "sha256:4211bf57c59f0063902e71b7b541284d66545de0f00715fb877e84876e401795", size = 389484, upload-time = "2026-02-05T15:11:21.931Z" },
 ]
 
 [[package]]
@@ -1008,16 +1008,16 @@ wheels = [
 
 [[package]]
 name = "pulumi-proxmoxve"
-version = "7.11.0"
+version = "7.12.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
     { name = "pulumi" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/48/0e/99aebb9ce45af2c153301066e17cc6a8ef91e2938bbd00b12eb025c3157e/pulumi_proxmoxve-7.11.0.tar.gz", hash = "sha256:a209c74838321d0689e2e122e30a1c7580997c765306ecf64cc7540e0379bfb8", size = 214614, upload-time = "2025-12-13T08:08:57.656Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/83/f6af207cc43b8be0d0c204e4b5ac899f119184b4e25d596f04d72368e90e/pulumi_proxmoxve-7.12.0.tar.gz", hash = "sha256:4e925e424c3e4c99bef71e1aa5599a5fb83de4864468a16e388eaaf3aae48c02", size = 262863, upload-time = "2026-02-07T15:38:13.466Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/04/d9/46efbb94373576462c4b7961160f385016fe054ed780a5798b7a91a8ac5d/pulumi_proxmoxve-7.11.0-py3-none-any.whl", hash = "sha256:1725409616c945fc09ac17f980b9f59f9aaa6150df5f2394b6661b2b888e4299", size = 330128, upload-time = "2025-12-13T08:08:56.298Z" },
+    { url = "https://files.pythonhosted.org/packages/95/78/f4790487cf7e525f9a99e235ba5181e2d998907a7742f4509547ff54ab8e/pulumi_proxmoxve-7.12.0-py3-none-any.whl", hash = "sha256:1427f8cf825687c0288f43e35c7fdda341e0b1032f9542d46739f835481abc13", size = 404408, upload-time = "2026-02-07T15:38:11.736Z" },
 ]
 
 [[package]]
