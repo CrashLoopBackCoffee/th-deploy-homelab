@@ -8,7 +8,7 @@ STRAVA_SENSOR_STATE_PATH = '/app/local_state'
 STRAVA_SENSOR_LAST_ACTIVITY_METADATA_PATH = (
     f'{STRAVA_SENSOR_STATE_PATH}/strava_sensor_last_activity.json'
 )
-GARMIN_TOKENS_PATH = f'{STRAVA_SENSOR_STATE_PATH}/garminconnect'
+GARMIN_TOKENS_PATH = f'{STRAVA_SENSOR_STATE_PATH}/.garminconnect'
 ALLOY_OTEL_GRPC_ENDPOINT = 'http://alloy.alloy.cluster.svc.local:4317'
 
 
