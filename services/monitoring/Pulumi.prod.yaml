@@ -33,7 +33,7 @@ config:
       hostname: grafana.tobiash.net
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
-      version: 3.0.2
+      version: 3.0.3
     prometheus-operator-crds:
       # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^prometheus-operator-crds-(?<version>.*)$ versioning=semver
       version: 27.0.0
