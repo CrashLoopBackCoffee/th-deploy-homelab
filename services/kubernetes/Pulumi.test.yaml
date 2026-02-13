@@ -43,4 +43,4 @@ config:
             - size: 20
     traefik:
       # renovate: datasource=github-releases packageName=traefik/traefik-helm-chart extractVersion=^v(?<version>.*)$ versioning=semver
-      version: 39.0.0
+      version: 39.0.1
