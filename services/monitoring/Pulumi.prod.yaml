@@ -29,7 +29,7 @@ config:
         secure: AAABAAWcXsBwv+5JSebjMo2R3gFx4zNpxBdzMIU4JVTUlTtu9LCPAxtTiYIRm4ON7d13/nTxAMq/sJo9crogRyUvlOamg1wALd4cQhpnHIFMGpEyFwwuh2qPecn7BMwN+g4/jHlaSCJbLjmnBlBgNHr4A2cJ8Cf1BCNYjIPnvYp3DLEG9AFagYaZilQlMEQx07KYDKGCz4GuMCo9rx+GYf9Xe5pdnNFNJB9PwqUfOwU=
     grafana:
       # renovate: datasource=github-releases packageName=grafana/grafana versioning=semver
-      version: 12.3.2
+      version: 12.3.3
       hostname: grafana.tobiash.net
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
