@@ -299,11 +299,6 @@ class ZwaveeController(p.ComponentResource):
                     'container_path': '/var/run/docker.sock',
                 },
                 {
-                    'host_path': '/run/log/journal',
-                    'container_path': '/run/log/journal',
-                    'read_only': True,
-                },
-                {
                     'host_path': '/var/log/journal',
                     'container_path': '/var/log/journal',
                     'read_only': True,
