@@ -18,9 +18,7 @@ otelcol.processor.transform "set_service_name" {
 		statements = [
 			// Docker container logs: use container name
 			"set(resource.attributes[\"service.name\"], log.attributes[\"container\"]) where log.attributes[\"container\"] != nil",
-			// Journal logs: use systemd unit name
-			"set(resource.attributes[\"service.name\"], log.attributes[\"unit\"]) where log.attributes[\"container\"] == nil and log.attributes[\"unit\"] != nil",
-			// Fallback
+			// Journal logs and fallback: use zwave-controller
 			"set(resource.attributes[\"service.name\"], \"zwave-controller\") where resource.attributes[\"service.name\"] == nil",
 		]
 	}

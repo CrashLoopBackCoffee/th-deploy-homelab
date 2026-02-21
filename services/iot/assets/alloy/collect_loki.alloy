@@ -44,7 +44,7 @@ loki.relabel "journal" {
 
 	rule {
 		source_labels = ["__journal__systemd_unit"]
-		target_label  = "unit"
+		target_label  = "systemd.unit"
 	}
 
 	rule {
