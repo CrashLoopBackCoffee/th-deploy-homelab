@@ -44,17 +44,17 @@ loki.relabel "journal" {
 	forward_to = [otelcol.receiver.loki.default.receiver]
 
 	rule {
-		source_labels = ["__journal__SYSTEMD_UNIT"]
-		target_label  = "systemd.unit"
+		source_labels = ["__journal__systemd_unit"]
+		target_label  = "systemd_unit"
 	}
 
 	rule {
-		source_labels = ["__journal__HOSTNAME"]
+		source_labels = ["__journal__hostname"]
 		target_label  = "host"
 	}
 
 	rule {
-		source_labels = ["__journal___TRANSPORT"]
+		source_labels = ["__journal__transport"]
 		target_label  = "transport"
 	}
 }
