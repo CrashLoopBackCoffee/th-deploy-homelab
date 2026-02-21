@@ -35,13 +35,9 @@ loki.relabel "docker" {
 // Systemd journal logs
 //===========================================================
 
-loki.source.journal "default" {
-	path       = "/var/log/journal"
-	forward_to = [loki.relabel.journal.receiver]
-}
-
 loki.relabel "journal" {
-	forward_to = [otelcol.receiver.loki.default.receiver]
+	// Rules are applied inside loki.source.journal before __journal_* labels are dropped
+	forward_to = []
 
 	rule {
 		source_labels = ["__journal__systemd_unit"]
@@ -57,6 +53,12 @@ loki.relabel "journal" {
 		source_labels = ["__journal__transport"]
 		target_label  = "transport"
 	}
+}
+
+loki.source.journal "default" {
+	path          = "/var/log/journal"
+	relabel_rules = loki.relabel.journal.rules
+	forward_to    = [otelcol.receiver.loki.default.receiver]
 }
 
 //===========================================================
