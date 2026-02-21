@@ -51,6 +51,7 @@ class ZwaveControllerConfig(utils.model.LocalBaseModel):
     memory_max: int = 2048
     disk_size: int = 20
     version: str
+    alloy_version: str
     zwave_adapter: ZwaveAdapterConfig
 
 

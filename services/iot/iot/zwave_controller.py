@@ -1,4 +1,8 @@
+import urllib.error
+import urllib.request
+
 import pulumi as p
+import pulumi_command
 import pulumi_docker as docker
 import pulumi_proxmoxve as proxmoxve
 import pulumi_random
@@ -7,6 +11,7 @@ import utils.utils
 import yaml
 
 from iot.config import ComponentConfig
+from iot.utils import get_assets_path
 
 
 def _get_cloud_config(hostname: str, username: str, ssh_public_key: str) -> str:
@@ -230,3 +235,94 @@ class ZwaveeController(p.ComponentResource):
             ],
             opts=docker_opts,
         )
+
+        # Deploy Alloy for log shipping
+        alloy_path = get_assets_path() / 'alloy'
+        ssh_connection = pulumi_command.remote.ConnectionArgs(host=unifi_host, user='ubuntu')
+        remote_opts = p.ResourceOptions(parent=self)
+
+        alloy_config_dir = pulumi_command.remote.Command(
+            'create-alloy-config',
+            connection=ssh_connection,
+            create='mkdir -p /home/ubuntu/alloy-config',
+            opts=remote_opts,
+        )
+        alloy_data_dir = pulumi_command.remote.Command(
+            'create-alloy-data',
+            connection=ssh_connection,
+            create='mkdir -p /home/ubuntu/alloy-data',
+            opts=remote_opts,
+        )
+
+        alloy_config_content = utils.utils.directory_content(alloy_path)
+        alloy_config = pulumi_command.local.Command(
+            'alloy-config',
+            create=p.Output.format(
+                'rsync -av --delete {} ubuntu@{}:/home/ubuntu/alloy-config/',
+                str(alloy_path) + '/',
+                unifi_host,
+            ),
+            triggers=[alloy_config_content, alloy_config_dir.id],
+            opts=remote_opts,
+        )
+
+        alloy_image = docker.RemoteImage(
+            'alloy',
+            name=f'grafana/alloy:{component_config.zwave_controller.alloy_version}',
+            keep_locally=True,
+            opts=docker_opts,
+        )
+
+        alloy_container = docker.Container(
+            'alloy',
+            image=alloy_image.image_id,
+            name='alloy',
+            command=[
+                'run',
+                '--server.http.listen-addr=0.0.0.0:9091',
+                '--storage.path=/var/lib/alloy/data',
+                '--disable-reporting',
+                '--stability.level=experimental',
+                '/etc/alloy/',
+            ],
+            volumes=[
+                {
+                    'host_path': '/home/ubuntu/alloy-config',
+                    'container_path': '/etc/alloy',
+                },
+                {
+                    'host_path': '/home/ubuntu/alloy-data',
+                    'container_path': '/var/lib/alloy/data',
+                },
+                {
+                    'host_path': '/var/run/docker.sock',
+                    'container_path': '/var/run/docker.sock',
+                },
+                {
+                    'host_path': '/var/log/journal',
+                    'container_path': '/var/log/journal',
+                    'read_only': True,
+                },
+            ],
+            network_mode='host',
+            restart='always',
+            start=True,
+            opts=p.ResourceOptions.merge(
+                docker_opts,
+                p.ResourceOptions(depends_on=[alloy_config, alloy_data_dir]),
+            ),
+        )
+
+        def reload_alloy(args: list[object]) -> None:
+            if p.runtime.is_dry_run():
+                return
+            host_ip = args[0]
+            print(f'Reloading alloy config for {host_ip}')
+            req = urllib.request.Request(f'http://{host_ip}:9091/-/reload', method='POST')
+            try:
+                urllib.request.urlopen(req)
+            except urllib.error.HTTPError as e:
+                print(f'Error reloading alloy config:\n{e.read().decode()}')
+                raise
+
+        p.Output.all(unifi_host, alloy_config.stdout, alloy_container.id).apply(reload_alloy)

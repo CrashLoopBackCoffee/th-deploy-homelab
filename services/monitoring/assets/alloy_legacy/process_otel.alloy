@@ -19,8 +19,8 @@ otelcol.processor.transform "set_service_name" {
 	log_statements {
 		context    = "log"
 		statements = [
-			"set(resource.attributes[\"service.name\"], attributes[\"container\"]) where attributes[\"container\"] != nil",
-			"set(resource.attributes[\"service.name\"], \"synology\") where attributes[\"container\"] == nil",
+			"set(resource.attributes[\"service.name\"], log.attributes[\"container\"]) where log.attributes[\"container\"] != nil",
+			"set(resource.attributes[\"service.name\"], \"synology\") where log.attributes[\"container\"] == nil",
 		]
 	}
 
@@ -28,7 +28,7 @@ otelcol.processor.transform "set_service_name" {
 	metric_statements {
 		context    = "resource"
 		statements = [
-			"set(attributes[\"service.name\"], \"synology\") where attributes[\"service.name\"] == nil",
+			"set(resource.attributes[\"service.name\"], \"synology\") where resource.attributes[\"service.name\"] == nil",
 		]
 	}
 
@@ -36,7 +36,7 @@ otelcol.processor.transform "set_service_name" {
 	trace_statements {
 		context    = "resource"
 		statements = [
-			"set(attributes[\"service.name\"], \"synology\") where attributes[\"service.name\"] == nil",
+			"set(resource.attributes[\"service.name\"], \"synology\") where resource.attributes[\"service.name\"] == nil",
 		]
 	}
 
@@ -54,45 +54,45 @@ otelcol.processor.transform "drop_unneeded_resource_attributes" {
 	trace_statements {
 		context    = "resource"
 		statements = [
-			"delete_key(attributes, \"k8s.pod.start_time\")",
-			"delete_key(attributes, \"os.description\")",
-			"delete_key(attributes, \"os.type\")",
-			"delete_key(attributes, \"process.command_args\")",
-			"delete_key(attributes, \"process.executable.path\")",
-			"delete_key(attributes, \"process.pid\")",
-			"delete_key(attributes, \"process.runtime.description\")",
-			"delete_key(attributes, \"process.runtime.name\")",
-			"delete_key(attributes, \"process.runtime.version\")",
+			"delete_key(resource.attributes, \"k8s.pod.start_time\")",
+			"delete_key(resource.attributes, \"os.description\")",
+			"delete_key(resource.attributes, \"os.type\")",
+			"delete_key(resource.attributes, \"process.command_args\")",
+			"delete_key(resource.attributes, \"process.executable.path\")",
+			"delete_key(resource.attributes, \"process.pid\")",
+			"delete_key(resource.attributes, \"process.runtime.description\")",
+			"delete_key(resource.attributes, \"process.runtime.name\")",
+			"delete_key(resource.attributes, \"process.runtime.version\")",
 		]
 	}
 
 	metric_statements {
 		context    = "resource"
 		statements = [
-			"delete_key(attributes, \"k8s.pod.start_time\")",
-			"delete_key(attributes, \"os.description\")",
-			"delete_key(attributes, \"os.type\")",
-			"delete_key(attributes, \"process.command_args\")",
-			"delete_key(attributes, \"process.executable.path\")",
-			"delete_key(attributes, \"process.pid\")",
-			"delete_key(attributes, \"process.runtime.description\")",
-			"delete_key(attributes, \"process.runtime.name\")",
-			"delete_key(attributes, \"process.runtime.version\")",
+			"delete_key(resource.attributes, \"k8s.pod.start_time\")",
+			"delete_key(resource.attributes, \"os.description\")",
+			"delete_key(resource.attributes, \"os.type\")",
+			"delete_key(resource.attributes, \"process.command_args\")",
+			"delete_key(resource.attributes, \"process.executable.path\")",
+			"delete_key(resource.attributes, \"process.pid\")",
+			"delete_key(resource.attributes, \"process.runtime.description\")",
+			"delete_key(resource.attributes, \"process.runtime.name\")",
+			"delete_key(resource.attributes, \"process.runtime.version\")",
 		]
 	}
 
 	log_statements {
 		context    = "resource"
 		statements = [
-			"delete_key(attributes, \"k8s.pod.start_time\")",
-			"delete_key(attributes, \"os.description\")",
-			"delete_key(attributes, \"os.type\")",
-			"delete_key(attributes, \"process.command_args\")",
-			"delete_key(attributes, \"process.executable.path\")",
-			"delete_key(attributes, \"process.pid\")",
-			"delete_key(attributes, \"process.runtime.description\")",
-			"delete_key(attributes, \"process.runtime.name\")",
-			"delete_key(attributes, \"process.runtime.version\")",
+			"delete_key(resource.attributes, \"k8s.pod.start_time\")",
+			"delete_key(resource.attributes, \"os.description\")",
+			"delete_key(resource.attributes, \"os.type\")",
+			"delete_key(resource.attributes, \"process.command_args\")",
+			"delete_key(resource.attributes, \"process.executable.path\")",
+			"delete_key(resource.attributes, \"process.pid\")",
+			"delete_key(resource.attributes, \"process.runtime.description\")",
+			"delete_key(resource.attributes, \"process.runtime.name\")",
+			"delete_key(resource.attributes, \"process.runtime.version\")",
 		]
 	}
 
