@@ -20,6 +20,8 @@ otelcol.processor.transform "set_service_name" {
 			"set(resource.attributes[\"service.name\"], log.attributes[\"container\"]) where log.attributes[\"container\"] != nil",
 			// Journal logs and fallback: use zwave-controller
 			"set(resource.attributes[\"service.name\"], \"zwave-controller\") where resource.attributes[\"service.name\"] == nil",
+			// Override hostname regardless of what resourcedetection detected
+			"set(resource.attributes[\"host.name\"], \"zwave-controller\")",
 		]
 	}
 
