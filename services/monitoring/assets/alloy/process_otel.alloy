@@ -3,6 +3,7 @@
 //===========================================================
 otelcol.processor.resourcedetection "default" {
 	detectors = ["env", "system"]
+	override  = false
 
 	output {
 		metrics = [otelcol.processor.transform.k8s_service_name_mapping.input]

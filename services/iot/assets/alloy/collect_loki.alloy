@@ -36,7 +36,7 @@ loki.relabel "docker" {
 //===========================================================
 
 loki.source.journal "default" {
-	path       = "/run/log/journal"
+	path       = "/var/log/journal"
 	forward_to = [loki.relabel.journal.receiver]
 }
 
