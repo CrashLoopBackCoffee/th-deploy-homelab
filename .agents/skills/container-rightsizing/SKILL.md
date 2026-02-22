@@ -63,6 +63,18 @@ The `-q` flag suppresses verbose output. krr uses 336 hours of history by defaul
 - **CPU Requests**: 95th percentile of CPU usage
 - **Memory Requests / Limits**: max observed usage + 15% buffer
 
+If the output appears truncated (rows cut off, incomplete table), re-run with CSV output instead:
+
+```bash
+krr simple -p https://mimir.tobiash.net/prometheus -n <namespace> -q -f csv
+```
+
+CSV output is never truncated and is easier to parse programmatically.
+
+> **NEVER use `--format json` / `-f json`** — JSON output includes full time-series data for every
+> container and produces tens of thousands of lines, consuming excessive context and making the
+> output impossible to work with. Always use the default table format or `-f csv`.
+
 If krr returns `?` or "No data" for every workload in a namespace, the namespace is almost
 certainly **wrong**. Go back to Step 1 and re-inspect the service code.
 

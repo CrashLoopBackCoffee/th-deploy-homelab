@@ -51,6 +51,7 @@ class SpeedtestExporter(p.ComponentResource):
                                         'container_port': SPEEDTEST_EXPORTER_PORT,
                                     },
                                 ],
+                                'resources': component_config.speedtest_exporter.resources.to_resource_requirements(),
                             },
                         ],
                     },

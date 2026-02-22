@@ -158,12 +158,7 @@ class Mimir(p.ComponentResource):
                                         'read_only': True,
                                     },
                                 ],
-                                'resources': {
-                                    'requests': {
-                                        'memory': '2Gi',
-                                        'cpu': '500m',
-                                    },
-                                },
+                                'resources': component_config.mimir.resources.to_resource_requirements(),
                                 'security_context': {
                                     'allow_privilege_escalation': False,
                                     'read_only_root_filesystem': True,

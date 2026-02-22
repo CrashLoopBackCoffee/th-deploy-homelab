@@ -8,6 +8,7 @@ class AlloyLegacyConfig(utils.model.LocalBaseModel):
 class AlloyConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str | None = None
+    resources: utils.model.ResourcesConfig
 
 
 class GrafanaCloudConfig(utils.model.LocalBaseModel):
@@ -21,16 +22,18 @@ class CAdvisorConfig(utils.model.LocalBaseModel):
 
 class GrafanaConfig(utils.model.LocalBaseModel):
     version: str
-
     hostname: str
+    resources: utils.model.ResourcesConfig
 
 
 class MimirConfig(utils.model.LocalBaseModel):
     version: str
+    resources: utils.model.ResourcesConfig
 
 
 class SpeedtestExporterConfig(utils.model.LocalBaseModel):
     version: str
+    resources: utils.model.ResourcesConfig
 
 
 class AdGuardExporterConfig(utils.model.LocalBaseModel):
@@ -38,23 +41,32 @@ class AdGuardExporterConfig(utils.model.LocalBaseModel):
     server: str
     username: utils.model.OnePasswordRef
     password: utils.model.OnePasswordRef
+    resources: utils.model.ResourcesConfig
 
 
 class PrometheusOperatorCrdsConfig(utils.model.LocalBaseModel):
     version: str
 
 
+class GoldilocksResourcesConfig(utils.model.LocalBaseModel):
+    controller: utils.model.ResourcesConfig
+    dashboard: utils.model.ResourcesConfig
+
+
 class GoldilocksConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str
+    resources: GoldilocksResourcesConfig
 
 
 class NodeExporterConfig(utils.model.LocalBaseModel):
     version: str
+    resources: utils.model.ResourcesConfig
 
 
 class KubeStateMetricsConfig(utils.model.LocalBaseModel):
     version: str
+    resources: utils.model.ResourcesConfig
 
 
 class ComponentConfig(utils.model.LocalBaseModel):

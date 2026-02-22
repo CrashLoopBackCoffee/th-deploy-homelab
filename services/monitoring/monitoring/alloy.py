@@ -267,14 +267,7 @@ class Alloy(p.ComponentResource):
                                         'read_only': True,
                                     },
                                 ],
-                                'resources': {
-                                    'requests': {
-                                        'memory': '256Mi',
-                                    },
-                                    'limits': {
-                                        'memory': '512Mi',
-                                    },
-                                },
+                                'resources': component_config.alloy.resources.to_resource_requirements(),
                                 'readiness_probe': {
                                     'http_get': {
                                         'path': '/-/ready',

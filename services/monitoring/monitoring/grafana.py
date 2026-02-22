@@ -172,6 +172,7 @@ class Grafana(p.ComponentResource):
                                         'mount_path': '/etc/grafana/certs',
                                     },
                                 ],
+                                'resources': component_config.grafana.resources.to_resource_requirements(),
                             },
                         ],
                         'readiness_probe': {

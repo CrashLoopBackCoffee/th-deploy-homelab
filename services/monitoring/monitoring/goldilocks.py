@@ -29,11 +29,15 @@ class Goldilocks(p.ComponentResource):
             namespace=namespace.metadata.name,
             repository_opts={'repo': 'https://charts.fairwinds.com/stable'},
             values={
+                'controller': {
+                    'resources': component_config.goldilocks.resources.controller.to_resource_requirements(),
+                },
                 'dashboard': {
                     'replicaCount': 1,
                     'flags': {
                         'enable-cost': False,
                     },
+                    'resources': component_config.goldilocks.resources.dashboard.to_resource_requirements(),
                 },
             },
             opts=k8s_opts,

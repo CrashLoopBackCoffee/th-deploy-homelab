@@ -30,6 +30,7 @@ def create_node_exporter(component_config: ComponentConfig, k8s_provider: k8s.Pr
                 'prometheus.io/scrape': 'true',
                 'prometheus.io/port': '9100',
             },
+            'resources': component_config.node_exporter.resources.to_resource_requirements(),
         },
         opts=p.ResourceOptions(provider=k8s_provider, depends_on=[namespace]),
     )
