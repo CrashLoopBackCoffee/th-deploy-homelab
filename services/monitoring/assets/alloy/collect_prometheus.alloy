@@ -5,7 +5,6 @@
 prometheus.scrape "default" {
 	targets = array.concat(
 		discovery.relabel.blackbox.output,
-		discovery.relabel.kube_state_metrics.output,
 		discovery.relabel.pods_metrics_with_port.output,
 		discovery.relabel.pods_metrics_without_port.output,
 		discovery.relabel.static.output,
@@ -15,6 +14,17 @@ prometheus.scrape "default" {
 	)
 
 	scrape_interval = "15s"
+	forward_to      = [otelcol.receiver.prometheus.default.receiver]
+}
+
+// kube-state-metrics needs honor_labels = true so that the real pod/resource
+// namespace (e.g. "immich") is preserved instead of being overwritten by the
+// KSM service's own namespace ("kube-state-metrics").
+prometheus.scrape "kube_state_metrics" {
+	targets = discovery.relabel.kube_state_metrics.output
+
+	scrape_interval = "15s"
+	honor_labels    = true
 	forward_to      = [otelcol.receiver.prometheus.default.receiver]
 }
 
