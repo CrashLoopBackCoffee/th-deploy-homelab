@@ -20,6 +20,7 @@ def create_tandoor(component_config: ComponentConfig, k8s_provider: k8s.Provider
         'tandoor',
         metadata={
             'name': 'tandoor',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
         },
         opts=k8s_opts,
     )

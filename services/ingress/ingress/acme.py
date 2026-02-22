@@ -39,7 +39,10 @@ class AcmeSynology(p.ComponentResource):
         # Create namespace
         namespace = k8s.core.v1.Namespace(
             'synology-certs-namespace',
-            metadata={'name': 'synology-certs'},
+            metadata={
+                'name': 'synology-certs',
+                'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+            },
             opts=p.ResourceOptions(parent=self, provider=k8s_provider),
         )
 

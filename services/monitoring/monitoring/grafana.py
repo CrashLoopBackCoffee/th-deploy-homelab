@@ -40,6 +40,7 @@ class Grafana(p.ComponentResource):
             'grafana',
             metadata={
                 'name': 'grafana',
+                'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
             },
             opts=k8s_opts,
         )

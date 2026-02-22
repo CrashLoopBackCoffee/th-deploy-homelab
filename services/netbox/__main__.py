@@ -12,7 +12,7 @@ k8s_provider = get_k8s_provider()
 
 namespace = k8s.core.v1.Namespace(
     'netbox-namespace',
-    metadata={'name': 'netbox'},
+    metadata={'name': 'netbox', 'labels': {'goldilocks.fairwinds.com/enabled': 'true'}},
     opts=p.ResourceOptions(
         provider=k8s_provider,
     ),

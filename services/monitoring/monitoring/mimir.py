@@ -25,7 +25,10 @@ class Mimir(p.ComponentResource):
         # Create namespace
         namespace = k8s.core.v1.Namespace(
             'mimir-namespace',
-            metadata={'name': 'mimir'},
+            metadata={
+                'name': 'mimir',
+                'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+            },
             opts=k8s_opts,
         )
 

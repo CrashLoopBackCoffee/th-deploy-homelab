@@ -21,6 +21,7 @@ class SpeedtestExporter(p.ComponentResource):
             'speedtest-exporter',
             metadata={
                 'name': 'speedtest-exporter',
+                'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
             },
             opts=k8s_opts,
         )

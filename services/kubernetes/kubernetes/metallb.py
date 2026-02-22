@@ -7,7 +7,10 @@ from kubernetes.config import ComponentConfig
 def create_metallb(component_config: ComponentConfig, k8s_provider: k8s.Provider):
     namespace = k8s.core.v1.Namespace(
         'metallb-system',
-        metadata={'name': 'metallb-system'},
+        metadata={
+            'name': 'metallb-system',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+        },
         opts=p.ResourceOptions(provider=k8s_provider),
     )
 

@@ -21,7 +21,10 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
     k8s_opts = p.ResourceOptions(provider=k8s_provider)
     namespace = k8s.core.v1.Namespace(
         'strava-sensor',
-        metadata={'name': 'strava-sensor'},
+        metadata={
+            'name': 'strava-sensor',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+        },
         opts=k8s_opts,
     )
 

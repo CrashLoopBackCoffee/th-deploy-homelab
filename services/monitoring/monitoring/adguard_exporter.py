@@ -21,6 +21,7 @@ class AdGuardExporter(p.ComponentResource):
             'adguard-exporter',
             metadata={
                 'name': 'adguard-exporter',
+                'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
             },
             opts=k8s_opts,
         )

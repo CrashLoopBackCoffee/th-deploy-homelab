@@ -14,6 +14,7 @@ def create_traefik(
         'traefik',
         metadata={
             'name': 'traefik',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
         },
         opts=p.ResourceOptions(provider=k8s_provider),
     )

@@ -21,7 +21,10 @@ def create_svn(component_config: ComponentConfig, k8s_provider: k8s.Provider) ->
 
     namespace = k8s.core.v1.Namespace(
         'svn',
-        metadata={'name': 'svn'},
+        metadata={
+            'name': 'svn',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+        },
         opts=k8s_opts,
     )
 

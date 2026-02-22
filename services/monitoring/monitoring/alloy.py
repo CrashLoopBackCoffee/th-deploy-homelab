@@ -19,7 +19,10 @@ class Alloy(p.ComponentResource):
 
         namespace = k8s.core.v1.Namespace(
             'alloy',
-            metadata={'name': 'alloy'},
+            metadata={
+                'name': 'alloy',
+                'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+            },
             opts=p.ResourceOptions(provider=k8s_provider, parent=self),
         )
 

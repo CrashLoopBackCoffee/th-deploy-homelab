@@ -10,7 +10,10 @@ def create_node_exporter(component_config: ComponentConfig, k8s_provider: k8s.Pr
     """
     namespace = k8s.core.v1.Namespace(
         'node-exporter',
-        metadata={'name': 'node-exporter'},
+        metadata={
+            'name': 'node-exporter',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+        },
         opts=p.ResourceOptions(provider=k8s_provider),
     )
 

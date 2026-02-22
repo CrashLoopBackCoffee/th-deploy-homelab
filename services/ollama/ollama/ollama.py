@@ -18,6 +18,7 @@ def create_ollama(component_config: ComponentConfig, k8s_provider: k8s.Provider)
         'ollama',
         metadata={
             'name': 'ollama',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
         },
         opts=k8s_opts,
     )

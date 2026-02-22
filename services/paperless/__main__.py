@@ -14,6 +14,7 @@ namespace = k8s.core.v1.Namespace(
     'paperless-namespace',
     metadata=k8s.meta.v1.ObjectMetaArgs(
         name='paperless',
+        labels={'goldilocks.fairwinds.com/enabled': 'true'},
     ),
     opts=p.ResourceOptions(
         provider=k8s_provider,

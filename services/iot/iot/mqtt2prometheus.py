@@ -20,7 +20,10 @@ class Mqtt2Prometheus(p.ComponentResource):
 
         namespace = k8s.core.v1.Namespace(
             'mqtt2prometheus',
-            metadata={'name': 'mqtt2prometheus'},
+            metadata={
+                'name': 'mqtt2prometheus',
+                'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+            },
             opts=p.ResourceOptions(provider=k8s_provider, parent=self),
         )
 

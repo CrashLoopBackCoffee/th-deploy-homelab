@@ -11,7 +11,10 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
     """Create CloudNativePG operator for PostgreSQL cluster management."""
     namespace = k8s.core.v1.Namespace(
         'cnpg-system',
-        metadata={'name': 'cnpg-system'},
+        metadata={
+            'name': 'cnpg-system',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+        },
         opts=p.ResourceOptions(provider=k8s_provider),
     )
 

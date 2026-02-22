@@ -14,7 +14,10 @@ def create_certmanager(
 ) -> k8s.apiextensions.CustomResource:
     namespace = k8s.core.v1.Namespace(
         'cert-manager',
-        metadata={'name': 'cert-manager'},
+        metadata={
+            'name': 'cert-manager',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+        },
         opts=p.ResourceOptions(provider=k8s_provider),
     )
 

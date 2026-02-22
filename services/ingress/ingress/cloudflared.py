@@ -37,7 +37,10 @@ def create_cloudflared(
 
     namespace = k8s.core.v1.Namespace(
         'cloudflared',
-        metadata={'name': 'cloudflared'},
+        metadata={
+            'name': 'cloudflared',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+        },
         opts=k8s_opts,
     )
 

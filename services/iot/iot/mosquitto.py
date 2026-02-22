@@ -33,7 +33,10 @@ class Mosquitto(p.ComponentResource):
 
         namespace = k8s.core.v1.Namespace(
             'mosquitto',
-            metadata={'name': 'mosquitto'},
+            metadata={
+                'name': 'mosquitto',
+                'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+            },
             opts=p.ResourceOptions(provider=k8s_provider, parent=self),
         )
 

@@ -19,6 +19,7 @@ def create_n8n(component_config: ComponentConfig, k8s_provider: k8s.Provider) ->
         'n8n',
         metadata={
             'name': 'n8n',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
         },
         opts=k8s_opts,
     )

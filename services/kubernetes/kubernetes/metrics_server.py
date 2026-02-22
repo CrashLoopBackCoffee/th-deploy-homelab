@@ -7,7 +7,10 @@ from kubernetes.config import ComponentConfig
 def create_metrics_server(component_config: ComponentConfig, k8s_provider: k8s.Provider):
     namespace = k8s.core.v1.Namespace(
         'metrics-server',
-        metadata={'name': 'metrics-server'},
+        metadata={
+            'name': 'metrics-server',
+            'labels': {'goldilocks.fairwinds.com/enabled': 'true'},
+        },
         opts=p.ResourceOptions(provider=k8s_provider),
     )
 
