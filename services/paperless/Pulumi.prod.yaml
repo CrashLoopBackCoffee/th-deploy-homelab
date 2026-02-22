@@ -22,7 +22,7 @@ config:
         secure: AAABADJWFhyDQEeCnOudImXSDQmZT38y5lHhkieOIOjtGGraR8TAtdHm7dCpP6yKeOuc8hmVzj91W4uj272+EbOsKQ==
     paperless:
       # renovate: datasource=github-releases packageName=paperless-ngx/paperless-ngx versioning=semver
-      version: 2.20.7
+      version: 2.20.8
       consume-server: synology.tobiash.net
       consume-share: /volume2/paperless
     backup:
