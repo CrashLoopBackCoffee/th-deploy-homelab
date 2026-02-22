@@ -71,17 +71,17 @@ config:
       version: 8.27.0
     resources:
       paperless:
-        cpu: 100m
-        memory: 1Gi
+        cpu: 10m
+        memory: 1516Mi
       redis:
         cpu: 10m
-        memory: 64Mi
+        memory: 100Mi
       tika:
-        cpu: 50m
-        memory: 512Mi
+        cpu: 34m
+        memory: 317Mi
       gotenberg:
-        cpu: 50m
-        memory: 256Mi
+        cpu: 10m
+        memory: 247Mi
       restic:
         cpu: 10m
-        memory: 64Mi
+        memory: 100Mi
