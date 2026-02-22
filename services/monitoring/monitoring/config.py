@@ -44,6 +44,11 @@ class PrometheusOperatorCrdsConfig(utils.model.LocalBaseModel):
     version: str
 
 
+class GoldilocksConfig(utils.model.LocalBaseModel):
+    version: str
+    hostname: str
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig
     alloy: AlloyConfig
@@ -53,6 +58,7 @@ class ComponentConfig(utils.model.LocalBaseModel):
     grafana: GrafanaConfig
     grafana_cloud: GrafanaCloudConfig
     mimir: MimirConfig
+    goldilocks: GoldilocksConfig
     prometheus_operator_crds: PrometheusOperatorCrdsConfig
     speedtest_exporter: SpeedtestExporterConfig
     adguard_exporter: AdGuardExporterConfig

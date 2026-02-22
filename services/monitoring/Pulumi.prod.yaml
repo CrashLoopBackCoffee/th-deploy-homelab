@@ -31,6 +31,10 @@ config:
       # renovate: datasource=github-releases packageName=grafana/grafana versioning=semver
       version: 12.3.3
       hostname: grafana.tobiash.net
+    goldilocks:
+      # renovate: datasource=helm packageName=fairwinds-stable/goldilocks registryUrl=https://charts.fairwinds.com/stable
+      version: 10.2.0
+      hostname: goldilocks.tobiash.net
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
       version: 3.0.3
