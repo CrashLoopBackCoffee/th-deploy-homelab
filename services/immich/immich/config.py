@@ -11,11 +11,18 @@ class PersistenceShareConfig(utils.model.LocalBaseModel):
     size: str = '100Gi'
 
 
+class ImmichResourcesConfig(utils.model.LocalBaseModel):
+    server: utils.model.ResourcesConfig
+    machine_learning: utils.model.ResourcesConfig
+    valkey: utils.model.ResourcesConfig
+
+
 class ImmichConfig(utils.model.LocalBaseModel):
     version: str
     chart_version: str
     persistence: dict[str, PersistenceShareConfig]
     preload_model: str = ''
+    resources: ImmichResourcesConfig
 
 
 class PostgresConfig(utils.model.LocalBaseModel):

@@ -31,6 +31,16 @@ config:
           nfs-mount-options: "nfsvers=4.1,sec=sys"
           size: "10Gi"
       preload-model: ViT-SO400M-16-SigLIP2-384__webli
+      resources:
+        server:
+          cpu: 11m
+          memory: 835Mi
+        machine-learning:
+          cpu: 10m
+          memory: 6093Mi
+        valkey:
+          cpu: 10m
+          memory: 100Mi
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql versioning=loose
       version: "18.1"

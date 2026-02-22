@@ -135,6 +135,7 @@ def create_immich(
                     'main': {
                         'containers': {
                             'main': {
+                                'resources': component_config.immich.resources.server.to_resource_requirements(),
                                 'env': {
                                     'DB_HOSTNAME': {
                                         'valueFrom': {
@@ -189,6 +190,15 @@ def create_immich(
                 'auth': {
                     'enabled': False,
                 },
+                'controllers': {
+                    'main': {
+                        'containers': {
+                            'main': {
+                                'resources': component_config.immich.resources.valkey.to_resource_requirements(),
+                            },
+                        },
+                    },
+                },
             },
             'immich': {
                 'persistence': {
@@ -203,6 +213,7 @@ def create_immich(
                     'main': {
                         'containers': {
                             'main': {
+                                'resources': component_config.immich.resources.machine_learning.to_resource_requirements(),
                                 'env': {
                                     'MACHINE_LEARNING_PRELOAD__CLIP': component_config.immich.preload_model,
                                 },
