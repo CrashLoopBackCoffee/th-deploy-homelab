@@ -11,6 +11,7 @@ from monitoring.cadvisor_legacy import CAdvisorLegacy
 from monitoring.config import ComponentConfig
 from monitoring.goldilocks import Goldilocks
 from monitoring.grafana import Grafana
+from monitoring.kube_state_metrics import create_kube_state_metrics
 from monitoring.mimir import Mimir
 from monitoring.mimir_buckets import MimirBuckets
 from monitoring.node_exporter import create_node_exporter
@@ -52,4 +53,5 @@ def main():
     SpeedtestExporter('default', component_config, k8s_provider)
     AdGuardExporter('default', component_config, k8s_provider)
     create_node_exporter(component_config, k8s_provider)
+    create_kube_state_metrics(component_config, k8s_provider)
     create_prometheus_operator_crds(component_config, k8s_provider)

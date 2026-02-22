@@ -60,3 +60,35 @@ discovery.relabel "svc_metrics" {
 		replacement  = "kubernetes-services"
 	}
 }
+
+//-----------------------------------------------------------
+// kube-state-metrics dedicated discovery
+// The chart hardcodes the service port name as "http", which
+// does not match the generic metrics port-name filter above.
+//-----------------------------------------------------------
+discovery.relabel "kube_state_metrics" {
+	targets = discovery.kubernetes.services.targets
+
+	// Keep only the kube-state-metrics service
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		regex         = "kube-state-metrics"
+		action        = "keep"
+	}
+
+	// Kubernetes Metadata
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		target_label  = "namespace"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_service_name"]
+		target_label  = "service_name"
+	}
+
+	rule {
+		target_label = "job"
+		replacement  = "kube-state-metrics"
+	}
+}
