@@ -50,10 +50,20 @@ version: 3.0.3
 
 ### Helm chart versions
 
+Prefer `github-releases` over `helm` when the chart's GitHub repository publishes
+tagged releases (use `extractVersion` to strip the chart-name prefix from the tag):
+
 ```yaml
-# renovate: datasource=helm packageName=prometheus-community/kube-state-metrics
+# renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^kube-state-metrics-(?<version>.*)$ versioning=semver
 version: 7.1.0
 ```
+
+```yaml
+# renovate: datasource=github-releases packageName=immich-app/immich-charts extractVersion=^immich-(?<version>.*)$ versioning=semver
+chart-version: "0.10.0"
+```
+
+Fall back to `datasource=helm` only when no matching GitHub releases exist:
 
 ```yaml
 # renovate: datasource=helm packageName=fairwinds-stable/goldilocks
