@@ -48,5 +48,5 @@ config:
       # renovate: datasource=github-releases packageName=kubernetes-sigs/metrics-server extractVersion=^metrics-server-helm-chart-(?<version>.*)$ versioning=semver
       version: 3.12.2
     vertical-pod-autoscaler:
-      # renovate: datasource=helm packageName=fairwinds-stable/vpa registryUrl=https://charts.fairwinds.com/stable versioning=semver
-      version: 4.10.1
+      # renovate: datasource=helm packageName=autoscaler/vertical-pod-autoscaler registryUrl=https://kubernetes.github.io/autoscaler versioning=semver
+      version: 0.8.0

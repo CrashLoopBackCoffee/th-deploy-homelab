@@ -7,10 +7,10 @@ from kubernetes.config import ComponentConfig
 def create_vertical_pod_autoscaler(component_config: ComponentConfig, k8s_provider: k8s.Provider):
     k8s.helm.v4.Chart(
         'vertical-pod-autoscaler',
-        chart='vpa',
+        chart='vertical-pod-autoscaler',
         namespace='kube-system',
         version=component_config.vertical_pod_autoscaler.version,
-        repository_opts={'repo': 'https://charts.fairwinds.com/stable'},
+        repository_opts={'repo': 'https://kubernetes.github.io/autoscaler'},
         values={
             'admissionController': {'enabled': False},
             'recommender': {'enabled': True},
