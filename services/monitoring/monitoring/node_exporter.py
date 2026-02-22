@@ -14,7 +14,7 @@ def create_node_exporter(component_config: ComponentConfig, k8s_provider: k8s.Pr
         opts=p.ResourceOptions(provider=k8s_provider),
     )
 
-    k8s.helm.v3.Release(
+    k8s.helm.v4.Chart(
         'node-exporter',
         chart='prometheus-node-exporter',
         namespace=namespace.metadata.name,
