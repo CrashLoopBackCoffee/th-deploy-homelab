@@ -42,7 +42,7 @@ config:
       # renovate: datasource=github-releases packageName=prometheus/node_exporter versioning=loose
       version: 1.10.2
     kube-state-metrics:
-      # renovate: datasource=helm packageName=kube-state-metrics registryUrl=https://prometheus-community.github.io/helm-charts
+      # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^kube-state-metrics-(?<version>.*)$ versioning=semver
       version: 7.1.0
     prometheus-operator-crds:
       # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^prometheus-operator-crds-(?<version>.*)$ versioning=semver
