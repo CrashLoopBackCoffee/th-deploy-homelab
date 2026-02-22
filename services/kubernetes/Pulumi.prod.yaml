@@ -43,7 +43,7 @@ config:
         - name: microk8s-prod-master-0
           address: 192.168.40.10/24
           cores: 16
-          memory-min: 4096
+          memory-min: 0
           memory-max: 32768
           disks:
             - size: 70
