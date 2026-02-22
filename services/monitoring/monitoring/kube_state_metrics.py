@@ -22,13 +22,5 @@ def create_kube_state_metrics(component_config: ComponentConfig, k8s_provider: k
         version=component_config.kube_state_metrics.version,
         namespace=namespace.metadata.name,
         repository_opts={'repo': 'https://prometheus-community.github.io/helm-charts'},
-        values={
-            'service': {
-                'annotations': {
-                    'prometheus.io/scrape': 'true',
-                },
-                'portName': 'metrics',
-            },
-        },
         opts=p.ResourceOptions(provider=k8s_provider, depends_on=[namespace]),
     )
