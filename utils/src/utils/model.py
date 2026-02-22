@@ -1,6 +1,7 @@
 import pathlib
 
 import pulumi as p
+import pulumi_kubernetes as k8s
 import pydantic
 
 
@@ -66,6 +67,17 @@ class TargetConfig(LocalBaseModel):
     host: str
     user: str
     root_dir: str
+
+
+class ResourcesConfig(LocalBaseModel):
+    cpu: str
+    memory: str
+
+    def to_resource_requirements(self) -> k8s.core.v1.ResourceRequirementsArgsDict:
+        return {
+            'requests': {'cpu': self.cpu, 'memory': self.memory},
+            'limits': {'memory': self.memory},
+        }
 
 
 class PostgresBackupConfig(LocalBaseModel):

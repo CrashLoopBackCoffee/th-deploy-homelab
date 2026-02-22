@@ -135,15 +135,7 @@ def create_immich(
                     'main': {
                         'containers': {
                             'main': {
-                                'resources': {
-                                    'requests': {
-                                        'cpu': component_config.immich.resources.server.cpu,
-                                        'memory': component_config.immich.resources.server.memory,
-                                    },
-                                    'limits': {
-                                        'memory': component_config.immich.resources.server.memory,
-                                    },
-                                },
+                                'resources': component_config.immich.resources.server.to_resource_requirements(),
                                 'env': {
                                     'DB_HOSTNAME': {
                                         'valueFrom': {
@@ -202,15 +194,7 @@ def create_immich(
                     'main': {
                         'containers': {
                             'main': {
-                                'resources': {
-                                    'requests': {
-                                        'cpu': component_config.immich.resources.valkey.cpu,
-                                        'memory': component_config.immich.resources.valkey.memory,
-                                    },
-                                    'limits': {
-                                        'memory': component_config.immich.resources.valkey.memory,
-                                    },
-                                },
+                                'resources': component_config.immich.resources.valkey.to_resource_requirements(),
                             },
                         },
                     },
@@ -229,15 +213,7 @@ def create_immich(
                     'main': {
                         'containers': {
                             'main': {
-                                'resources': {
-                                    'requests': {
-                                        'cpu': component_config.immich.resources.machine_learning.cpu,
-                                        'memory': component_config.immich.resources.machine_learning.memory,
-                                    },
-                                    'limits': {
-                                        'memory': component_config.immich.resources.machine_learning.memory,
-                                    },
-                                },
+                                'resources': component_config.immich.resources.machine_learning.to_resource_requirements(),
                                 'env': {
                                     'MACHINE_LEARNING_PRELOAD__CLIP': component_config.immich.preload_model,
                                 },

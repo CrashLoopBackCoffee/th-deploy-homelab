@@ -11,25 +11,10 @@ class PersistenceShareConfig(utils.model.LocalBaseModel):
     size: str = '100Gi'
 
 
-class ServerResourcesConfig(utils.model.LocalBaseModel):
-    cpu: str = '11m'
-    memory: str = '835Mi'
-
-
-class MachineLearningResourcesConfig(utils.model.LocalBaseModel):
-    cpu: str = '10m'
-    memory: str = '6093Mi'
-
-
-class ValkeyResourcesConfig(utils.model.LocalBaseModel):
-    cpu: str = '10m'
-    memory: str = '100Mi'
-
-
 class ImmichResourcesConfig(utils.model.LocalBaseModel):
-    server: ServerResourcesConfig = ServerResourcesConfig()
-    machine_learning: MachineLearningResourcesConfig = MachineLearningResourcesConfig()
-    valkey: ValkeyResourcesConfig = ValkeyResourcesConfig()
+    server: utils.model.ResourcesConfig
+    machine_learning: utils.model.ResourcesConfig
+    valkey: utils.model.ResourcesConfig
 
 
 class ImmichConfig(utils.model.LocalBaseModel):
@@ -37,7 +22,7 @@ class ImmichConfig(utils.model.LocalBaseModel):
     chart_version: str
     persistence: dict[str, PersistenceShareConfig]
     preload_model: str = ''
-    resources: ImmichResourcesConfig = ImmichResourcesConfig()
+    resources: ImmichResourcesConfig
 
 
 class PostgresConfig(utils.model.LocalBaseModel):

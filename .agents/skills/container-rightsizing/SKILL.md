@@ -45,36 +45,34 @@ Deployment names map to Helm chart component keys:
 
 ## Applying Resources: Config Model Pattern
 
-Add nested `*ResourcesConfig` classes to the service's `config.py`. Each class holds the krr-recommended values as defaults:
+Use the shared `utils.model.ResourcesConfig` class — **never** create per-service duplicates.
+`ResourcesConfig` has required `cpu` and `memory` fields with **no defaults**, which forces the
+values to be explicitly declared in `Pulumi.{stack}.yaml`.
+
+In `config.py`, define a service-level aggregation model and add a required `resources` field:
 
 ```python
-class ServerResourcesConfig(utils.model.LocalBaseModel):
-    cpu: str = '11m'
-    memory: str = '835Mi'
-
-
-class MachineLearningResourcesConfig(utils.model.LocalBaseModel):
-    cpu: str = '10m'
-    memory: str = '6093Mi'
-
-
-class ValkeyResourcesConfig(utils.model.LocalBaseModel):
-    cpu: str = '10m'
-    memory: str = '100Mi'
+import utils.model
 
 
 class ImmichResourcesConfig(utils.model.LocalBaseModel):
-    server: ServerResourcesConfig = ServerResourcesConfig()
-    machine_learning: MachineLearningResourcesConfig = MachineLearningResourcesConfig()
-    valkey: ValkeyResourcesConfig = ValkeyResourcesConfig()
+    server: utils.model.ResourcesConfig
+    machine_learning: utils.model.ResourcesConfig
+    valkey: utils.model.ResourcesConfig
 
 
 class ImmichConfig(utils.model.LocalBaseModel):
     ...
-    resources: ImmichResourcesConfig = ImmichResourcesConfig()
+    resources: ImmichResourcesConfig  # required, no default
 ```
 
-Defaults in the config class mean the values work without any `Pulumi.{stack}.yaml` entries. Override in YAML only when a specific stack needs different tuning:
+**CRITICAL**: Do not set default values on the config model. Resource values belong in
+`Pulumi.{stack}.yaml` so they are explicit, reviewable, and differ per environment if needed.
+
+## Applying Resources: Pulumi Stack Config
+
+Because `ResourcesConfig` has no defaults, all values **must** appear in `Pulumi.{stack}.yaml`.
+Use krr-recommended values directly — no manual adjustment needed for initial sizing:
 
 ```yaml
 config:
@@ -82,7 +80,25 @@ config:
     immich:
       resources:
         server:
-          memory: 1Gi
+          cpu: 11m
+          memory: 835Mi
+        machine-learning:       # note: kebab-case from LocalBaseModel alias_generator
+          cpu: 10m
+          memory: 6093Mi
+        valkey:
+          cpu: 10m
+          memory: 100Mi
+```
+
+For services with a single container, a flat `resources` field is sufficient:
+
+```yaml
+config:
+  n8n:config:
+    n8n:
+      resources:
+        cpu: 50m
+        memory: 512Mi
 ```
 
 ## Applying Resources: Helm Values Pattern
