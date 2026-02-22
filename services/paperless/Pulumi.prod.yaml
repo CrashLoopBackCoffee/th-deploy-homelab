@@ -69,3 +69,19 @@ config:
     gotenberg:
       # renovate: datasource=github-releases packageName=gotenberg/gotenberg versioning=semver
       version: 8.26.0
+    resources:
+      paperless:
+        cpu: 100m
+        memory: 1Gi
+      redis:
+        cpu: 10m
+        memory: 64Mi
+      tika:
+        cpu: 50m
+        memory: 512Mi
+      gotenberg:
+        cpu: 50m
+        memory: 256Mi
+      restic:
+        cpu: 10m
+        memory: 64Mi

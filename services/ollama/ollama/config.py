@@ -1,15 +1,10 @@
 import utils.model
 
 
-class OllamaResourcesConfig(utils.model.LocalBaseModel):
-    memory: str = '8Gi'
-    cpu: str = '4'
-
-
 class OllamaConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str
-    resources: OllamaResourcesConfig = OllamaResourcesConfig()
+    resources: utils.model.ResourcesConfig
 
 
 class ComponentConfig(utils.model.LocalBaseModel):

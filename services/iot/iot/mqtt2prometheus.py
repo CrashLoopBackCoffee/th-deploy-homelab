@@ -125,6 +125,7 @@ class Mqtt2Prometheus(p.ComponentResource):
                                             'mount_path': '/var/lib/mqtt2prometheus',
                                         },
                                     ],
+                                    'resources': component_config.mqtt2prometheus.resources.to_resource_requirements(),
                                 }
                             ],
                             'volumes': [

@@ -23,6 +23,7 @@ class CloudflareIngressConfig(utils.model.LocalBaseModel):
 class CloudflaredConfig(utils.model.LocalBaseModel):
     version: str
     ingress: list[CloudflareIngressConfig] = []
+    resources: utils.model.ResourcesConfig
 
 
 class ComponentConfig(utils.model.LocalBaseModel):

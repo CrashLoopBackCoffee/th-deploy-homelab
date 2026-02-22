@@ -192,12 +192,7 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
                                 {'name': 'http', 'container_port': STRAVA_SENSOR_PORT},
                             ],
                             'env': env_vars,
-                            'resources': {
-                                'requests': {
-                                    'memory': strava_sensor.resources.memory,
-                                    'cpu': strava_sensor.resources.cpu,
-                                },
-                            },
+                            'resources': strava_sensor.resources.to_resource_requirements(),
                             'volume_mounts': [
                                 {
                                     'name': 'state',

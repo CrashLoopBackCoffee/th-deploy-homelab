@@ -185,12 +185,7 @@ def create_svn(component_config: ComponentConfig, k8s_provider: k8s.Provider) ->
                                     'read_only': True,
                                 },
                             ],
-                            'resources': {
-                                'requests': {
-                                    'memory': component_config.svn.resources.memory,
-                                    'cpu': component_config.svn.resources.cpu,
-                                },
-                            },
+                            'resources': component_config.svn.resources.to_resource_requirements(),
                             'readiness_probe': {
                                 'http_get': {
                                     'path': '/',

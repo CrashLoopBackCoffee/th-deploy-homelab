@@ -313,6 +313,7 @@ class Paperless(p.ComponentResource):
                                     },
                                 ],
                                 'ports': [{'container_port': PAPERLESS_PORT}],
+                                'resources': component_config.resources.paperless.to_resource_requirements(),
                                 'volume_mounts': [
                                     {
                                         'name': 'data',
@@ -367,6 +368,7 @@ class Paperless(p.ComponentResource):
                                         'mount_path': '/rclone-config',
                                     },
                                 ],
+                                'resources': component_config.resources.restic.to_resource_requirements(),
                             },
                             # Optional secondary restic sidecar for IDrive E2 (S3-compatible)
                             *(
@@ -432,6 +434,7 @@ class Paperless(p.ComponentResource):
                                                 'read_only': True,
                                             },
                                         ],
+                                        'resources': component_config.resources.restic.to_resource_requirements(),
                                     }
                                 ]
                                 if component_config.backup.idrive_enabled
@@ -572,6 +575,7 @@ def create_redis(component_config: ComponentConfig, opts: p.ResourceOptions) -> 
                             'name': 'redis',
                             'image': f'docker.io/library/redis:{component_config.redis.version}',
                             'ports': [{'container_port': REDIS_PORT}],
+                            'resources': component_config.resources.redis.to_resource_requirements(),
                         },
                     ],
                 },
@@ -606,6 +610,7 @@ def create_tika(component_config: ComponentConfig, opts: p.ResourceOptions) -> k
                             'name': 'tika',
                             'image': f'docker.io/apache/tika:{component_config.tika.version}',
                             'ports': [{'container_port': TIKA_PORT}],
+                            'resources': component_config.resources.tika.to_resource_requirements(),
                         },
                     ],
                 },
@@ -649,6 +654,7 @@ def create_gotenberg(
                                 '--chromium-allow-list=file:///tmp/.*',
                             ],
                             'ports': [{'container_port': GOTENBERG_PORT}],
+                            'resources': component_config.resources.gotenberg.to_resource_requirements(),
                         },
                     ],
                 },

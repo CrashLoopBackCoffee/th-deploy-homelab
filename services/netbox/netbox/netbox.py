@@ -195,7 +195,7 @@ class Netbox(p.ComponentResource):
 
         values = {
             'replicaCount': 1,
-            'resourcesPreset': 'none',
+            'resources': component_config.netbox.resources.netbox.to_resource_requirements(),
             'superuser': {
                 'existingSecret': superuser_secret.metadata.name,
             },
@@ -218,11 +218,11 @@ class Netbox(p.ComponentResource):
             'affinity': affinity,
             'worker': {
                 'replicaCount': 1,
-                'resourcesPreset': 'none',
+                'resources': component_config.netbox.resources.worker.to_resource_requirements(),
                 'affinity': affinity,
             },
             'housekeeping': {
-                'resourcesPreset': 'none',
+                'resources': component_config.netbox.resources.housekeeping.to_resource_requirements(),
                 'affinity': affinity,
             },
             'postgresql': {
@@ -239,9 +239,10 @@ class Netbox(p.ComponentResource):
             'valkey': {
                 'architecture': 'standalone',
                 'primary': {
+                    'resources': component_config.netbox.resources.valkey.to_resource_requirements(),
                     'persistence': {
                         'size': component_config.netbox.storage.valkey_size,
-                    }
+                    },
                 },
                 'replica': {
                     'replicaCount': 0,

@@ -1,16 +1,11 @@
 import utils.model
 
 
-class N8nResourcesConfig(utils.model.LocalBaseModel):
-    memory: str = '1Gi'
-    cpu: str = '500m'
-
-
 class N8nConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str
     webhook_url: str = ''
-    resources: N8nResourcesConfig = N8nResourcesConfig()
+    resources: utils.model.ResourcesConfig
 
 
 class ComponentConfig(utils.model.LocalBaseModel):

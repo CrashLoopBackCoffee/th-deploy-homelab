@@ -34,6 +34,7 @@ class ComponentConfig(utils.model.LocalBaseModel):
     restic_password: utils.model.OnePasswordRef
     s3: S3Config
     volumes: list[VolumeConfig]
+    resources: utils.model.ResourcesConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

@@ -17,6 +17,7 @@ class MosquittoConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str
     passwords: list[str] = []
+    resources: utils.model.ResourcesConfig
 
 
 class MqttPrometheusInstanceConfig(utils.model.LocalBaseModel):
@@ -31,6 +32,7 @@ class MqttPrometheusConfig(utils.model.LocalBaseModel):
     username: utils.model.OnePasswordRef
     password: utils.model.OnePasswordRef
     instances: list[MqttPrometheusInstanceConfig] = []
+    resources: utils.model.ResourcesConfig
 
 
 class ZwaveAdapterConfig(utils.model.LocalBaseModel):

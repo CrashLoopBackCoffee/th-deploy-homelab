@@ -89,6 +89,7 @@ def create_cloudflared(
                                     'value': '0.0.0.0:8080',
                                 },
                             ],
+                            'resources': component_config.cloudflared.resources.to_resource_requirements(),
                             'readiness_probe': {
                                 'http_get': {
                                     'path': '/ready',
