@@ -9,6 +9,7 @@ from monitoring.alloy import Alloy
 from monitoring.alloy_legacy import AlloyLegacy
 from monitoring.cadvisor_legacy import CAdvisorLegacy
 from monitoring.config import ComponentConfig
+from monitoring.goldilocks import Goldilocks
 from monitoring.grafana import Grafana
 from monitoring.mimir import Mimir
 from monitoring.mimir_buckets import MimirBuckets
@@ -47,6 +48,7 @@ def main():
     )
     Alloy('default', component_config, k8s_provider)
     Grafana('default', component_config, k8s_provider)
+    Goldilocks('default', component_config, k8s_provider)
     SpeedtestExporter('default', component_config, k8s_provider)
     AdGuardExporter('default', component_config, k8s_provider)
     create_node_exporter(component_config, k8s_provider)
