@@ -18,6 +18,9 @@ config:
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
       version: v1.13.1
       hostname: alloy.tobiash.net
+      resources:
+        cpu: 77m
+        memory: 508Mi
     cloudflare:
       email: tobias_henkel@gmx.de
       api-key:
@@ -31,25 +34,47 @@ config:
       # renovate: datasource=github-releases packageName=grafana/grafana versioning=semver
       version: 12.3.3
       hostname: grafana.tobiash.net
+      resources:
+        cpu: 10m
+        memory: 498Mi
     goldilocks:
       # renovate: datasource=helm packageName=goldilocks registryUrl=https://charts.fairwinds.com/stable
       version: 10.2.0
       hostname: goldilocks.tobiash.net
+      resources:
+        controller:
+          cpu: 10m
+          memory: 100Mi
+        dashboard:
+          cpu: 10m
+          memory: 100Mi
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
       version: 3.0.3
+      resources:
+        cpu: 33m
+        memory: 679Mi
     node-exporter:
       # renovate: datasource=github-releases packageName=prometheus/node_exporter versioning=loose
       version: 1.10.2
+      resources:
+        cpu: 10m
+        memory: 100Mi
     kube-state-metrics:
       # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^kube-state-metrics-(?<version>.*)$ versioning=semver
       version: 7.1.0
+      resources:
+        cpu: 10m
+        memory: 100Mi
     prometheus-operator-crds:
       # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^prometheus-operator-crds-(?<version>.*)$ versioning=semver
       version: 27.0.0
     speedtest-exporter:
       # renovate: datasource=github-releases packageName=billimek/prometheus-speedtest-exporter versioning=semver
       version: 1.3.1
+      resources:
+        cpu: 10m
+        memory: 100Mi
     adguard-exporter:
       # renovate: datasource=github-releases packageName=henrywhitaker3/adguard-exporter extractVersion=^v(?<version>.*)$ versioning=semver
       version: 1.2.1
@@ -58,3 +83,6 @@ config:
         ref: op://Pulumi/Adguard Home/username
       password:
         ref: op://Pulumi/Adguard Home/password
+      resources:
+        cpu: 10m
+        memory: 100Mi

@@ -88,6 +88,7 @@ class AdGuardExporter(p.ComponentResource):
                                         },
                                     },
                                 ],
+                                'resources': component_config.adguard_exporter.resources.to_resource_requirements(),
                             },
                         ],
                     },
