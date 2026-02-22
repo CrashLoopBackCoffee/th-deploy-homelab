@@ -6,17 +6,22 @@ license: MIT
 
 ## Overview
 
-There are four ingress methods available. Choose based on the service's access requirements:
+Every service must first choose one of the three **LAN ingress methods** to make it
+reachable within the homelab network. Optionally, the
+[Cloudflare Tunnel](#4-cloudflare-tunnel-public-access-addon) can be added on top to
+expose the service on the public internet.
 
 | Method | Use when | TLS | Access |
 |--------|----------|-----|--------|
 | [Traefik IngressRoute](#1-traefik-ingressroute-preferred-for-web-services) | HTTP/HTTPS web UI | Wildcard cert (automatic) | LAN only |
 | [MetalLB with cert-manager](#2-metallb-loadbalancer-with-cert-manager-tls) | Non-HTTP protocols or direct-IP HTTPS | Per-service cert | LAN only |
 | [MetalLB without TLS](#3-metallb-loadbalancer-without-tls) | Internal metrics, plain TCP/UDP | None | LAN only |
-| [Cloudflare Tunnel](#4-cloudflare-tunnel-public-access) | Public internet access | Cloudflare-managed | Public |
+| [Cloudflare Tunnel](#4-cloudflare-tunnel-public-access-addon) *(addon)* | Public internet access | Cloudflare-managed | Public + LAN |
 
 DNS for LAN access is always set up via **OPNsense Unbound host overrides** using
-`utils.opnsense.unbound.host_override.HostOverride`.
+`utils.opnsense.unbound.host_override.HostOverride`. LAN clients always resolve the
+service to its local IP (Traefik or MetalLB), so traffic never traverses Cloudflare
+from inside the network — even for services that also have a Cloudflare Tunnel.
 
 ---
 
@@ -205,13 +210,19 @@ Add an OPNsense host override if a hostname is needed (same pattern as above).
 
 ---
 
-## 4. Cloudflare Tunnel (public access)
+## 4. Cloudflare Tunnel (public access addon)
 
-Use when the service must be reachable from the public internet. The `ingress` Pulumi
-service (`services/ingress/`) manages a cloudflared tunnel that proxies public traffic
-to internal Kubernetes services.
+This is always an **addon** on top of one of the three LAN ingress methods above. The
+service must already be reachable on the LAN via Traefik or MetalLB before adding a
+Cloudflare Tunnel.
 
-**Services using this pattern:** grafana, immich, strava-sensor.
+The `ingress` Pulumi service (`services/ingress/`) manages a cloudflared tunnel that
+proxies traffic from the public internet to the internal Kubernetes service. LAN clients
+continue to resolve the hostname to the local IP via OPNsense Unbound and never traverse
+Cloudflare, even after a tunnel is added.
+
+**Services using this pattern:** grafana (MetalLB + tunnel), immich (Traefik + tunnel),
+strava-sensor (Traefik + tunnel).
 
 ### Adding a new public route
 
@@ -268,14 +279,18 @@ cloudflared tunnel --no-autoupdate run --token <local_cloudflared_tunnel_token>
 ## Decision Guide
 
 ```
-New service needs external (internet) access?
-  └─ YES → Cloudflare Tunnel (add to services/ingress/Pulumi.prod.yaml)
-  └─ NO  → LAN access only:
-       Service is HTTP/HTTPS web UI?
-         └─ YES → Traefik IngressRoute (simplest, wildcard cert auto-applied)
-         └─ NO  → Non-HTTP protocol or needs own certificate?
-              └─ YES, needs TLS → MetalLB LoadBalancer + cert-manager Certificate
-              └─ NO  → MetalLB LoadBalancer (plain, no TLS)
+Pick a LAN ingress method first:
+  Service is HTTP/HTTPS web UI?
+    └─ YES → Traefik IngressRoute (simplest, wildcard cert auto-applied)
+    └─ NO  → Non-HTTP protocol or needs own certificate?
+         └─ YES, needs TLS → MetalLB LoadBalancer + cert-manager Certificate
+         └─ NO  → MetalLB LoadBalancer (plain, no TLS)
+
+Then, optionally add public internet access:
+  Service must be reachable from the internet?
+    └─ YES → Also add a Cloudflare Tunnel entry in services/ingress/Pulumi.prod.yaml
+             (LAN clients still bypass Cloudflare via OPNsense DNS)
+    └─ NO  → Done; LAN-only access via the method chosen above
 ```
 
 ---
