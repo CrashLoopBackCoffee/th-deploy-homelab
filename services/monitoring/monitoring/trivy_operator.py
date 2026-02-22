@@ -36,6 +36,13 @@ def create_trivy_operator(component_config: ComponentConfig, k8s_provider: k8s.P
                 # SBOM generation doubles the number of scan jobs; disable it
                 # (ClusterVulnerabilityReports are not needed in a homelab)
                 'sbomGenerationEnabled': False,
+                # Re-scan every workload daily: when a VulnerabilityReport exceeds this TTL
+                # the operator treats it as stale and re-queues a scan job automatically.
+                # This is trivy-operator's "nightly scan" mechanism (no built-in cron).
+                'scannerReportTTL': '24h',
+                # Expose per-CVE-ID metrics (trivy_vulnerability_id gauge).
+                # Increases metric cardinality but enables CVE-level alerting/dashboards.
+                'metricsVulnIdEnabled': True,
             },
         },
         opts=p.ResourceOptions(provider=k8s_provider, depends_on=[namespace]),
