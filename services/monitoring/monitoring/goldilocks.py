@@ -13,7 +13,12 @@ class Goldilocks(p.ComponentResource):
 
         namespace = k8s.core.v1.Namespace(
             'goldilocks-namespace',
-            metadata={'name': 'goldilocks'},
+            metadata={
+                'name': 'goldilocks',
+                'labels': {
+                    'goldilocks.fairwinds.com/enabled': 'true',
+                },
+            },
             opts=k8s_opts,
         )
 
@@ -24,8 +29,12 @@ class Goldilocks(p.ComponentResource):
             namespace=namespace.metadata.name,
             repository_opts={'repo': 'https://charts.fairwinds.com/stable'},
             values={
-                'dashboard': {'enabled': True},
-                'vpa': {'enabled': False},
+                'dashboard': {
+                    'replicaCount': 1,
+                    'flags': {
+                        'enable-cost': False,
+                    },
+                },
             },
             opts=k8s_opts,
         )
