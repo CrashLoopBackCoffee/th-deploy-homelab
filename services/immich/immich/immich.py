@@ -93,6 +93,18 @@ def create_immich(
         if share_name != 'library'
     }
 
+    # Create a low-priority PriorityClass so machine-learning is evicted first
+    # under node memory pressure (known memory leak).
+    ml_priority_class = k8s.scheduling.v1.PriorityClass(
+        'immich-ml-priority-class',
+        metadata={
+            'name': 'immich-machine-learning-low-priority',
+        },
+        value=-100,
+        description='Evict immich-machine-learning before other workloads under memory pressure',
+        opts=p.ResourceOptions(provider=k8s_provider),
+    )
+
     # Deploy Immich using official Helm chart
     chart = k8s.helm.v4.Chart(
         'immich',
@@ -211,6 +223,9 @@ def create_immich(
             'machine-learning': {
                 'controllers': {
                     'main': {
+                        'pod': {
+                            'priorityClassName': ml_priority_class.metadata.name,
+                        },
                         'containers': {
                             'main': {
                                 'resources': component_config.immich.resources.machine_learning.to_resource_requirements(),
@@ -230,7 +245,10 @@ def create_immich(
                 },
             },
         },
-        opts=p.ResourceOptions(provider=namespaced_provider),
+        opts=p.ResourceOptions(
+            provider=namespaced_provider,
+            depends_on=[ml_priority_class],
+        ),
     )
 
     immich_service = k8s.core.v1.Service.get(
