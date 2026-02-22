@@ -5,7 +5,6 @@ import pulumi_kubernetes as k8s
 import yaml
 
 from monitoring.config import ComponentConfig
-from monitoring.utils import get_assets_path
 
 GRAFANA_PORT = 3000
 
@@ -97,44 +96,6 @@ class Grafana(p.ComponentResource):
             opts=k8s_opts,
         )
 
-        # Dashboard provisioning configuration
-        config_dashboard_provider = k8s.core.v1.ConfigMap(
-            'grafana-dashboard-provider',
-            metadata={
-                'namespace': namespace.metadata.name,
-            },
-            data={
-                'dashboards.yml': yaml.safe_dump(
-                    {
-                        'apiVersion': 1,
-                        'providers': [
-                            {
-                                'name': 'dashboards',
-                                'type': 'file',
-                                'disableDeletion': False,
-                                'options': {
-                                    'path': '/etc/grafana/dashboards',
-                                },
-                            }
-                        ],
-                    }
-                ),
-            },
-            opts=k8s_opts,
-        )
-
-        # Load dashboard JSON files from assets
-        dashboards_path = get_assets_path() / 'grafana' / 'dashboards'
-        dashboard_files = {f.name: f.read_text() for f in dashboards_path.glob('*.json')}
-        config_dashboards = k8s.core.v1.ConfigMap(
-            'grafana-dashboards',
-            metadata={
-                'namespace': namespace.metadata.name,
-            },
-            data=dashboard_files,
-            opts=k8s_opts,
-        )
-
         # Create TLS certs
         certificate = k8s.apiextensions.CustomResource(
             'certificate',
@@ -207,15 +168,6 @@ class Grafana(p.ComponentResource):
                                         'sub_path': 'datasources.yml',
                                     },
                                     {
-                                        'name': 'grafana-dashboard-provider',
-                                        'mount_path': '/etc/grafana/provisioning/dashboards/dashboards.yml',
-                                        'sub_path': 'dashboards.yml',
-                                    },
-                                    {
-                                        'name': 'grafana-dashboards',
-                                        'mount_path': '/etc/grafana/dashboards',
-                                    },
-                                    {
                                         'name': 'grafana-tls',
                                         'mount_path': '/etc/grafana/certs',
                                     },
@@ -252,18 +204,6 @@ class Grafana(p.ComponentResource):
                                 'name': 'grafana-datasources',
                                 'config_map': {
                                     'name': config_datasources.metadata.name,
-                                },
-                            },
-                            {
-                                'name': 'grafana-dashboard-provider',
-                                'config_map': {
-                                    'name': config_dashboard_provider.metadata.name,
-                                },
-                            },
-                            {
-                                'name': 'grafana-dashboards',
-                                'config_map': {
-                                    'name': config_dashboards.metadata.name,
                                 },
                             },
                             {
