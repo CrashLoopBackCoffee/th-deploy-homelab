@@ -9,11 +9,28 @@ config:
       # renovate: datasource=github-releases packageName=cert-manager/cert-manager versioning=semver
       version: v1.19.3
       use-staging: false
+      resources:
+        controller:
+          cpu: 10m
+          memory: 106Mi
+        cainjector:
+          cpu: 10m
+          memory: 100Mi
+        webhook:
+          cpu: 10m
+          memory: 100Mi
     cloudnative-pg:
       # renovate: datasource=github-releases packageName=cloudnative-pg/charts extractVersion=^cloudnative-pg-v(?<version>.*)$ versioning=semver
       version: 0.27.1
       # renovate: datasource=github-releases packageName=cloudnative-pg/charts extractVersion=^plugin-barman-cloud-v(?<version>.*)$ versioning=semver
       barman-plugin-version: 0.5.0
+      resources:
+        operator:
+          cpu: 10m
+          memory: 105Mi
+        barman:
+          cpu: 10m
+          memory: 100Mi
       backup:
         endpoint:
           ref: op://Pulumi/IDrive e2 Postgres/Endpoint
@@ -29,6 +46,9 @@ config:
     csi-nfs-driver:
       # renovate: datasource=github-releases packageName=kubernetes-csi/csi-driver-nfs versioning=semver
       version: v4.13.1
+      resources:
+        cpu: 10m
+        memory: 100Mi
     microk8s:
       # renovate: datasource=github-tags packageName=canonical/microk8s versioning=loose
       version: "1.35"
@@ -39,6 +59,13 @@ config:
         version: 0.15.3
         start: 192.168.40.70
         end: 192.168.40.99
+        resources:
+          controller:
+            cpu: 10m
+            memory: 100Mi
+          speaker:
+            cpu: 10m
+            memory: 100Mi
       master-nodes:
         - name: microk8s-prod-master-0
           address: 192.168.40.10/24
@@ -52,9 +79,18 @@ config:
     traefik:
       # renovate: datasource=github-releases packageName=traefik/traefik-helm-chart extractVersion=^v(?<version>.*)$ versioning=semver
       version: 39.0.2
+      resources:
+        cpu: 10m
+        memory: 100Mi
     metrics-server:
       # renovate: datasource=github-releases packageName=kubernetes-sigs/metrics-server extractVersion=^metrics-server-helm-chart-(?<version>.*)$ versioning=semver
       version: 3.13.0
+      resources:
+        cpu: 10m
+        memory: 100Mi
     vertical-pod-autoscaler:
       # renovate: datasource=github-releases packageName=kubernetes/autoscaler extractVersion=^vertical-pod-autoscaler-chart-(?<version>.*)$ versioning=semver
       version: 0.8.0
+      resources:
+        cpu: 10m
+        memory: 100Mi

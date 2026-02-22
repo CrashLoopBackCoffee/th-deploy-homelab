@@ -31,6 +31,7 @@ def create_metrics_server(component_config: ComponentConfig, k8s_provider: k8s.P
                 # verification
                 '--kubelet-insecure-tls',
             ],
+            'resources': component_config.metrics_server.resources.to_resource_requirements(),
         },
         opts=k8s_opts,
     )

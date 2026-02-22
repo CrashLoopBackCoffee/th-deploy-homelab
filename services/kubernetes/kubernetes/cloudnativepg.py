@@ -34,6 +34,7 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
                 'create': True,
                 'secret': False,
             },
+            'resources': component_config.cloudnative_pg.resources.operator.to_resource_requirements(),
         },
         opts=k8s_opts,
     )
@@ -45,6 +46,9 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
         version=component_config.cloudnative_pg.barman_plugin_version,
         namespace=namespace.metadata.name,
         repository_opts={'repo': 'https://cloudnative-pg.github.io/charts'},
+        values={
+            'resources': component_config.cloudnative_pg.resources.barman.to_resource_requirements(),
+        },
         opts=k8s_opts,
     )
 

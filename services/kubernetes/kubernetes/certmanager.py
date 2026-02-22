@@ -36,6 +36,13 @@ def create_certmanager(
             'crds': {
                 'enabled': True,
             },
+            'resources': component_config.cert_manager.resources.controller.to_resource_requirements(),
+            'cainjector': {
+                'resources': component_config.cert_manager.resources.cainjector.to_resource_requirements(),
+            },
+            'webhook': {
+                'resources': component_config.cert_manager.resources.webhook.to_resource_requirements(),
+            },
         },
         opts=k8s_opts,
     )

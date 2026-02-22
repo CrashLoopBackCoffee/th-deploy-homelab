@@ -18,6 +18,24 @@ def create_csi_nfs(component_config: ComponentConfig, k8s_provider: k8s.Provider
             'feature': {
                 'enableInlineVolume': True,
             },
+            'controller': {
+                'resources': {
+                    k: component_config.csi_nfs_driver.resources.to_resource_requirements()
+                    for k in (
+                        'csiProvisioner',
+                        'csiResizer',
+                        'csiSnapshotter',
+                        'livenessProbe',
+                        'nfs',
+                    )
+                },
+            },
+            'node': {
+                'resources': {
+                    k: component_config.csi_nfs_driver.resources.to_resource_requirements()
+                    for k in ('livenessProbe', 'nodeDriverRegistrar', 'nfs')
+                },
+            },
         },
         opts=p.ResourceOptions(provider=k8s_provider),
     )

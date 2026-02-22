@@ -26,11 +26,15 @@ def create_metallb(component_config: ComponentConfig, k8s_provider: k8s.Provider
         namespace=namespace.metadata.name,
         repository_opts={'repo': 'https://metallb.github.io/metallb'},
         values={
+            'controller': {
+                'resources': component_config.microk8s.metallb.resources.controller.to_resource_requirements(),
+            },
             'speaker': {
                 # AppArmor on Ubuntu/MicroK8s may block packet sockets; unconfine
                 'podAnnotations': {
                     'container.apparmor.security.beta.kubernetes.io/speaker': 'unconfined',
                 },
+                'resources': component_config.microk8s.metallb.resources.speaker.to_resource_requirements(),
             },
             'prometheus': {
                 'rbacPrometheus': False,
