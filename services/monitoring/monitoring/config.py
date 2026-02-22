@@ -49,16 +49,21 @@ class GoldilocksConfig(utils.model.LocalBaseModel):
     hostname: str
 
 
+class NodeExporterConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig
     alloy: AlloyConfig
     alloy_legacy: AlloyLegacyConfig
     cadvisor_legacy: CAdvisorConfig
     cloudflare: utils.model.CloudflareConfig
+    goldilocks: GoldilocksConfig
     grafana: GrafanaConfig
     grafana_cloud: GrafanaCloudConfig
     mimir: MimirConfig
-    goldilocks: GoldilocksConfig
+    node_exporter: NodeExporterConfig
     prometheus_operator_crds: PrometheusOperatorCrdsConfig
     speedtest_exporter: SpeedtestExporterConfig
     adguard_exporter: AdGuardExporterConfig

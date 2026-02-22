@@ -13,6 +13,7 @@ from monitoring.goldilocks import Goldilocks
 from monitoring.grafana import Grafana
 from monitoring.mimir import Mimir
 from monitoring.mimir_buckets import MimirBuckets
+from monitoring.node_exporter import create_node_exporter
 from monitoring.prometheus_operator_crds import create_prometheus_operator_crds
 from monitoring.speedtest import SpeedtestExporter
 
@@ -50,4 +51,5 @@ def main():
     Goldilocks('default', component_config, k8s_provider)
     SpeedtestExporter('default', component_config, k8s_provider)
     AdGuardExporter('default', component_config, k8s_provider)
+    create_node_exporter(component_config, k8s_provider)
     create_prometheus_operator_crds(component_config, k8s_provider)

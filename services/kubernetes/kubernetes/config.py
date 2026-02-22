@@ -75,6 +75,14 @@ class CloudNativePgConfig(utils.model.LocalBaseModel):
     backup: BackupObjectStoreConfig | None = None
 
 
+class MetricsServerConfig(utils.model.LocalBaseModel):
+    version: str
+
+
+class VerticalPodAutoscalerConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     cert_manager: CertManagerConfig
     cloudflare: utils.model.CloudflareConfig
@@ -82,7 +90,9 @@ class ComponentConfig(utils.model.LocalBaseModel):
     proxmox: ProxmoxConfig
     microk8s: MicroK8sConfig
     csi_nfs_driver: NfsCsiDriverConfig
+    metrics_server: MetricsServerConfig
     traefik: TraeficConfig
+    vertical_pod_autoscaler: VerticalPodAutoscalerConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

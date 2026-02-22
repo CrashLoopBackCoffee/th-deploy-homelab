@@ -38,6 +38,9 @@ config:
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
       version: 3.0.3
+    node-exporter:
+      # renovate: datasource=github-releases packageName=prometheus/node_exporter versioning=loose
+      version: 1.10.2
     prometheus-operator-crds:
       # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^prometheus-operator-crds-(?<version>.*)$ versioning=semver
       version: 27.0.0
