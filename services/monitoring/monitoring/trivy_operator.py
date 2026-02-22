@@ -40,9 +40,6 @@ def create_trivy_operator(component_config: ComponentConfig, k8s_provider: k8s.P
                 # the operator treats it as stale and re-queues a scan job automatically.
                 # This is trivy-operator's "nightly scan" mechanism (no built-in cron).
                 'scannerReportTTL': '24h',
-                # Expose per-CVE-ID metrics (trivy_vulnerability_id gauge).
-                # Increases metric cardinality but enables CVE-level alerting/dashboards.
-                'metricsVulnIdEnabled': True,
                 # Use the built-in Trivy server (ClientServer mode). The server keeps the
                 # vuln DB in a PVC so scan jobs don't re-download it (~400 MB) every run.
                 'builtInTrivyServer': True,
