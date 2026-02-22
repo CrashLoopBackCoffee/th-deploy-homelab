@@ -17,6 +17,19 @@ prometheus.scrape "default" {
 	forward_to      = [otelcol.receiver.prometheus.default.receiver]
 }
 
+prometheus.scrape "cadvisor" {
+	targets = discovery.relabel.nodes_cadvisor.output
+
+	scrape_interval = "15s"
+	forward_to      = [otelcol.receiver.prometheus.default.receiver]
+
+	bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+	tls_config {
+		ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+	}
+}
+
 prometheus.scrape "speedtest" {
 	targets = [
 		{__address__ = "192.168.40.80:9469", job = "speedtest", instance = "speedtest-exporter:9469"},

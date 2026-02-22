@@ -1,10 +1,13 @@
-//===========================================================
-// Collect cAdvisor metrics from Kubernetes nodes
-//===========================================================
+//-----------------------------------------------------------
+// Kubernetes Node Discovery
+//-----------------------------------------------------------
 discovery.kubernetes "nodes" {
 	role = "node"
 }
 
+//-----------------------------------------------------------
+// Kubernetes Node Relabeling - cAdvisor
+//-----------------------------------------------------------
 discovery.relabel "nodes_cadvisor" {
 	targets = discovery.kubernetes.nodes.targets
 
@@ -32,18 +35,5 @@ discovery.relabel "nodes_cadvisor" {
 	rule {
 		target_label = "job"
 		replacement  = "kubernetes-cadvisor"
-	}
-}
-
-prometheus.scrape "cadvisor" {
-	targets = discovery.relabel.nodes_cadvisor.output
-
-	scrape_interval = "15s"
-	forward_to      = [otelcol.receiver.prometheus.default.receiver]
-
-	bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-
-	tls_config {
-		ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
 	}
 }
