@@ -11,13 +11,51 @@ license: MIT
 - **ALWAYS** store resource values in the service's `config.py` as a `*ResourcesConfig(LocalBaseModel)` with the krr-recommended values as defaults.
 - **NEVER** leave resources unset in production — always apply krr recommendations.
 
-## Running krr
+## Step 1: Discover Namespaces Before Running krr
+
+**CRITICAL**: The Pulumi service directory name (e.g., `monitoring`) is **NOT** the Kubernetes
+namespace. Always inspect the service code first to find the real namespace(s).
+
+### How to find namespaces
+
+Read the service's Python source files (typically `__main__.py` and files under the service
+package directory). Look for:
+
+- `kubernetes.core.v1.Namespace(...)` resource definitions — the `metadata.name` is the namespace.
+- Helm chart `Release` or `Chart` objects — their `namespace=` argument or values override.
+- Hardcoded namespace strings passed to resource constructors.
+
+Example: in `services/monitoring/__main__.py` you might find:
+
+```python
+namespace = kubernetes.core.v1.Namespace("monitoring", metadata={"name": "monitoring"})
+# but also:
+kubernetes.core.v1.Namespace("kube-state-metrics", metadata={"name": "kube-state-metrics"})
+```
+
+This reveals **two** namespaces (`monitoring` and `kube-state-metrics`) that need separate krr runs.
+
+### Build an explicit namespace list
+
+Before calling krr, produce a mapping of sub-service → namespace, e.g.:
+
+| Sub-service / workload | Namespace |
+|---|---|
+| Prometheus, Grafana, Alloy | `monitoring` |
+| kube-state-metrics | `kube-state-metrics` |
+
+Only then proceed to Step 2.
+
+## Step 2: Running krr
+
+Run krr **per namespace** — never assume a single namespace covers all workloads in a service.
+Independent namespaces can be queried in parallel (e.g., using sub-agents).
 
 ```bash
 # Single namespace
 krr simple -p https://mimir.tobiash.net/prometheus -n <namespace> -q
 
-# Whole cluster
+# Whole cluster (only use when you need a full overview)
 krr simple -p https://mimir.tobiash.net/prometheus -q
 ```
 
@@ -25,7 +63,10 @@ The `-q` flag suppresses verbose output. krr uses 336 hours of history by defaul
 - **CPU Requests**: 95th percentile of CPU usage
 - **Memory Requests / Limits**: max observed usage + 15% buffer
 
-## Interpreting krr Output
+If krr returns `?` or "No data" for every workload in a namespace, the namespace is almost
+certainly **wrong**. Go back to Step 1 and re-inspect the service code.
+
+## Step 3: Interpreting krr Output
 
 The output table has columns:
 
@@ -43,7 +84,7 @@ Deployment names map to Helm chart component keys:
 - `immich-machine-learning` → `machine-learning`
 - `immich-valkey` → `valkey`
 
-## Applying Resources: Config Model Pattern
+## Step 4: Applying Resources: Config Model Pattern
 
 Use the shared `utils.model.ResourcesConfig` class — **never** create per-service duplicates.
 `ResourcesConfig` has required `cpu` and `memory` fields with **no defaults**, which forces the
@@ -69,7 +110,7 @@ class ImmichConfig(utils.model.LocalBaseModel):
 **CRITICAL**: Do not set default values on the config model. Resource values belong in
 `Pulumi.{stack}.yaml` so they are explicit, reviewable, and differ per environment if needed.
 
-## Applying Resources: Pulumi Stack Config
+## Step 5: Applying Resources: Pulumi Stack Config
 
 Because `ResourcesConfig` has no defaults, all values **must** appear in `Pulumi.{stack}.yaml`.
 Use krr-recommended values directly — no manual adjustment needed for initial sizing:
@@ -101,7 +142,7 @@ config:
         memory: 512Mi
 ```
 
-## Applying Resources: Helm Values Pattern
+## Step 6: Applying Resources: Helm Values Pattern
 
 In the deployment Python file, inject resources under the controller's container:
 
@@ -129,7 +170,7 @@ In the deployment Python file, inject resources under the controller's container
 For charts that use the `helm-controller-manager` library (like the immich chart), all
 components — including bundled ones like `valkey` — follow this same `controllers.main.containers.main.resources` path.
 
-## After Applying Changes
+## Step 7: After Applying Changes
 
 1. Regenerate the config schema:
    ```bash
