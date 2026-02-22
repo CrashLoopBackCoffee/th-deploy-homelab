@@ -28,6 +28,15 @@ def create_trivy_operator(component_config: ComponentConfig, k8s_provider: k8s.P
                 'prometheus.io/scrape': 'true',
                 'prometheus.io/port': '8080',
             },
+            'operator': {
+                # Single-node homelab: run scans one at a time to avoid overloading the node
+                'scanJobsConcurrentLimit': 1,
+                # Auto-clean completed scan jobs after 60 s so they don't pile up
+                'scanJobTTL': '60s',
+                # SBOM generation doubles the number of scan jobs; disable it
+                # (ClusterVulnerabilityReports are not needed in a homelab)
+                'sbomGenerationEnabled': False,
+            },
         },
         opts=p.ResourceOptions(provider=k8s_provider, depends_on=[namespace]),
     )
