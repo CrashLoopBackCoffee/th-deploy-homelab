@@ -10,6 +10,13 @@ class NetboxStorageConfig(utils.model.LocalBaseModel):
     valkey_size: str = '8Gi'
 
 
+class NetboxResourcesConfig(utils.model.LocalBaseModel):
+    netbox: utils.model.ResourcesConfig
+    worker: utils.model.ResourcesConfig
+    housekeeping: utils.model.ResourcesConfig
+    valkey: utils.model.ResourcesConfig
+
+
 class PostgresConfig(utils.model.LocalBaseModel):
     version: int
 
@@ -18,6 +25,7 @@ class NetboxConfig(utils.model.LocalBaseModel):
     chart_version: str
     superuser: NetboxSuperuserConfig = NetboxSuperuserConfig()
     storage: NetboxStorageConfig = NetboxStorageConfig()
+    resources: NetboxResourcesConfig
 
 
 class ComponentConfig(utils.model.LocalBaseModel):

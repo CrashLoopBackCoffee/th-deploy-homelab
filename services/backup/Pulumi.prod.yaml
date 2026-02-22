@@ -37,3 +37,7 @@ config:
         nfs-server: synology.tobiash.net
         nfs-path: /volume2/schule
         bucket: restic-schule
+
+    resources:
+      cpu: 10m
+      memory: 512Mi

@@ -289,6 +289,7 @@ def create_tandoor(component_config: ComponentConfig, k8s_provider: k8s.Provider
                                     'mount_path': '/opt/recipes/mediafiles',
                                 },
                             ],
+                            'resources': component_config.tandoor.resources.to_resource_requirements(),
                         },
                     ],
                     'volumes': [

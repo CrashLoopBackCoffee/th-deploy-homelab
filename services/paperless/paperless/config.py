@@ -73,6 +73,14 @@ class BackupConfig(utils.model.LocalBaseModel):
     idrive_secret_access_key: utils.model.OnePasswordRef | None = None
 
 
+class PaperlessResourcesConfig(utils.model.LocalBaseModel):
+    paperless: utils.model.ResourcesConfig
+    redis: utils.model.ResourcesConfig
+    tika: utils.model.ResourcesConfig
+    gotenberg: utils.model.ResourcesConfig
+    restic: utils.model.ResourcesConfig
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     cloudflare: utils.model.CloudflareConfig
     paperless: PaperlessConfig
@@ -84,6 +92,7 @@ class ComponentConfig(utils.model.LocalBaseModel):
     postgres: PostgresConfig
     tika: TikaConfig
     gotenberg: GotenbergConfig
+    resources: PaperlessResourcesConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):

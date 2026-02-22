@@ -172,14 +172,7 @@ def create_backup_cronjob(
                                     'args': ['/scripts/backup.sh'],
                                     'env': env_vars,
                                     'volume_mounts': volume_mounts,
-                                    'resources': {
-                                        'requests': {
-                                            'memory': '512Mi',
-                                        },
-                                        'limits': {
-                                            'memory': '2Gi',
-                                        },
-                                    },
+                                    'resources': component_config.resources.to_resource_requirements(),
                                 }
                             ],
                             'volumes': volumes,

@@ -4,6 +4,7 @@ import utils.model
 class TandoorConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str
+    resources: utils.model.ResourcesConfig
 
 
 class PostgresConfig(utils.model.LocalBaseModel):

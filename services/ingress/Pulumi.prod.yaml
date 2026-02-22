@@ -12,6 +12,9 @@ config:
     cloudflared:
       # renovate: datasource=github-releases packageName=cloudflare/cloudflared versioning=semver
       version: 2026.2.0
+      resources:
+        cpu: 10m
+        memory: 100Mi
       ingress:
         # Grafana
         - service: https://grafana.grafana

@@ -116,12 +116,7 @@ def create_n8n(component_config: ComponentConfig, k8s_provider: k8s.Provider) ->
                                     'mount_path': '/home/node/.n8n',
                                 },
                             ],
-                            'resources': {
-                                'requests': {
-                                    'memory': component_config.n8n.resources.memory,
-                                    'cpu': component_config.n8n.resources.cpu,
-                                },
-                            },
+                            'resources': component_config.n8n.resources.to_resource_requirements(),
                             'readiness_probe': {
                                 'http_get': {
                                     'path': '/healthz',

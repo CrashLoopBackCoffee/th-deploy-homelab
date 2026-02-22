@@ -51,12 +51,7 @@ def create_ollama(component_config: ComponentConfig, k8s_provider: k8s.Provider)
                                     'mount_path': '/root/.ollama',
                                 },
                             ],
-                            'resources': {
-                                'requests': {
-                                    'memory': component_config.ollama.resources.memory,
-                                    'cpu': component_config.ollama.resources.cpu,
-                                },
-                            },
+                            'resources': component_config.ollama.resources.to_resource_requirements(),
                             'readiness_probe': {
                                 'http_get': {
                                     'path': '/',

@@ -17,6 +17,19 @@ config:
         email: admin@example.com
       storage:
         valkey-size: 8Gi
+      resources:
+        netbox:
+          cpu: 50m
+          memory: 512Mi
+        worker:
+          cpu: 50m
+          memory: 256Mi
+        housekeeping:
+          cpu: 10m
+          memory: 128Mi
+        valkey:
+          cpu: 10m
+          memory: 64Mi
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql extractVersion=^(?<version>\d+) versioning=loose
       version: 18

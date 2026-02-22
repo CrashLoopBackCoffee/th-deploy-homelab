@@ -1,11 +1,6 @@
 import utils.model
 
 
-class SvnResourcesConfig(utils.model.LocalBaseModel):
-    memory: str = '512Mi'
-    cpu: str = '300m'
-
-
 class SvnUser(utils.model.LocalBaseModel):
     username: str
     # Store a pre-generated htpasswd hash in 1Password
@@ -19,7 +14,7 @@ class SvnAuth(utils.model.LocalBaseModel):
 class SvnConfig(utils.model.LocalBaseModel):
     # Full image tag including variant (e.g. "httpd-1.14.2")
     version: str
-    resources: SvnResourcesConfig = SvnResourcesConfig()
+    resources: utils.model.ResourcesConfig
     auth: SvnAuth
 
 

@@ -116,6 +116,7 @@ class Mosquitto(p.ComponentResource):
                                         'read_only': True,
                                     },
                                 ],
+                                'resources': component_config.mosquitto.resources.to_resource_requirements(),
                             }
                         ],
                         'security_context': {

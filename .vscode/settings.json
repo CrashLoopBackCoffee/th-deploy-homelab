@@ -1,0 +1,21 @@
+{
+    "yaml.schemas": {
+        "services/backup/.config-schema.json": "services/backup/Pulumi.*.yaml",
+        "services/immich/.config-schema.json": "services/immich/Pulumi.*.yaml",
+        "services/ingress/.config-schema.json": "services/ingress/Pulumi.*.yaml",
+        "services/iot/.config-schema.json": "services/iot/Pulumi.*.yaml",
+        "services/kubernetes/.config-schema.json": "services/kubernetes/Pulumi.*.yaml",
+        "services/monitoring/.config-schema.json": "services/monitoring/Pulumi.*.yaml",
+        "services/n8n/.config-schema.json": "services/n8n/Pulumi.*.yaml",
+        "services/ollama/.config-schema.json": "services/ollama/Pulumi.*.yaml",
+        "services/paperless/.config-schema.json": "services/paperless/Pulumi.*.yaml",
+        "services/proxmox/.config-schema.json": "services/proxmox/Pulumi.*.yaml",
+        "services/s3/.config-schema.json": "services/s3/Pulumi.*.yaml",
+        "services/unifi/.config-schema.json": "services/unifi/Pulumi.*.yaml",
+        "services/svn/.config-schema.json": "services/svn/Pulumi.*.yaml",
+        "services/tandoor/.config-schema.json": "services/tandoor/Pulumi.*.yaml",
+        "services/netboot/.config-schema.json": "services/netboot/Pulumi.*.yaml",
+        "services/netbox/.config-schema.json": "services/netbox/Pulumi.*.yaml",
+        "services/strava-sensor/.config-schema.json": "services/strava-sensor/Pulumi.*.yaml"
+    }
+}
