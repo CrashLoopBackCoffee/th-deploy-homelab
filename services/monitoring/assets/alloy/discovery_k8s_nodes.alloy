@@ -36,4 +36,9 @@ discovery.relabel "nodes_cadvisor" {
 		target_label = "job"
 		replacement  = "kubernetes-cadvisor"
 	}
+
+	rule {
+		target_label = "cluster"
+		replacement  = "prod"
+	}
 }

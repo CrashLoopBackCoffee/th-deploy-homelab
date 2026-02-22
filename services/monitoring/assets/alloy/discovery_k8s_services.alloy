@@ -59,6 +59,11 @@ discovery.relabel "svc_metrics" {
 		target_label = "job"
 		replacement  = "kubernetes-services"
 	}
+
+	rule {
+		target_label = "cluster"
+		replacement  = "prod"
+	}
 }
 
 //-----------------------------------------------------------
@@ -90,5 +95,10 @@ discovery.relabel "kube_state_metrics" {
 	rule {
 		target_label = "job"
 		replacement  = "kube-state-metrics"
+	}
+
+	rule {
+		target_label = "cluster"
+		replacement  = "prod"
 	}
 }
