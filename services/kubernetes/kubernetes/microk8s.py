@@ -18,6 +18,7 @@ from kubernetes.metallb import create_metallb
 from kubernetes.metrics_server import create_metrics_server
 from kubernetes.snap import get_snap_version
 from kubernetes.traefik import create_traefik
+from kubernetes.vertical_pod_autoscaler import create_vertical_pod_autoscaler
 
 
 def _get_cloud_config(
@@ -285,6 +286,9 @@ def create_microk8s(
 
     # Install metrics-server
     create_metrics_server(component_config, k8s_provider)
+
+    # Install Vertical Pod Autoscaler (recommendation mode)
+    create_vertical_pod_autoscaler(component_config, k8s_provider)
 
     # export to kube config with
     # p stack output --show-secrets k8s-master-0-dev-kube-config > ~/.kube/config
