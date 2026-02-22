@@ -15,6 +15,8 @@ def create_vertical_pod_autoscaler(component_config: ComponentConfig, k8s_provid
             'admissionController': {'enabled': False},
             'recommender': {
                 'enabled': True,
+                'replicas': 1,
+                'affinity': None,
                 'extraArgs': ['--pod-recommendation-min-memory-mb=25'],
             },
             'updater': {'enabled': False},
