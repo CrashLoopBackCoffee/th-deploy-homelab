@@ -12,7 +12,7 @@ config:
     immich:
       # renovate: datasource=github-releases packageName=immich-app/immich versioning=semver
       version: 2.5.6
-      # renovate: datasource=helm registryUrl=oci://ghcr.io/immich-app packageName=immich-charts
+      # renovate: datasource=helm packageName=immich-charts registryUrl=oci://ghcr.io/immich-app
       chart-version: "0.10.0"
       persistence:
         library:
