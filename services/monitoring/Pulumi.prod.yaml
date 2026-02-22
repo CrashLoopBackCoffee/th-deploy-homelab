@@ -86,3 +86,6 @@ config:
       resources:
         cpu: 10m
         memory: 100Mi
+    trivy-operator:
+      # renovate: datasource=github-releases packageName=aquasecurity/helm-charts extractVersion=^trivy-operator-(?<version>.*)$ versioning=semver
+      version: 0.32.0

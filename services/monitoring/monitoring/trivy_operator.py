@@ -1,0 +1,33 @@
+import pulumi as p
+import pulumi_kubernetes as k8s
+
+from monitoring.config import ComponentConfig
+
+
+def create_trivy_operator(component_config: ComponentConfig, k8s_provider: k8s.Provider):
+    """
+    Deploy Trivy Operator to scan for security vulnerabilities in the cluster.
+    """
+    k8s_opts = p.ResourceOptions(provider=k8s_provider)
+
+    namespace = k8s.core.v1.Namespace(
+        'trivy-system',
+        metadata={'name': 'trivy-system'},
+        opts=k8s_opts,
+    )
+
+    k8s.helm.v4.Chart(
+        'trivy-operator',
+        chart='trivy-operator',
+        version=component_config.trivy_operator.version,
+        namespace=namespace.metadata.name,
+        repository_opts={'repo': 'https://aquasecurity.github.io/helm-charts/'},
+        values={
+            'podAnnotations': {
+                # Enable Prometheus scraping on the default metrics port (8080)
+                'prometheus.io/scrape': 'true',
+                'prometheus.io/port': '8080',
+            },
+        },
+        opts=p.ResourceOptions(provider=k8s_provider, depends_on=[namespace]),
+    )

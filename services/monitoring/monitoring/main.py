@@ -17,6 +17,7 @@ from monitoring.mimir_buckets import MimirBuckets
 from monitoring.node_exporter import create_node_exporter
 from monitoring.prometheus_operator_crds import create_prometheus_operator_crds
 from monitoring.speedtest import SpeedtestExporter
+from monitoring.trivy_operator import create_trivy_operator
 
 
 def main():
@@ -55,3 +56,4 @@ def main():
     create_node_exporter(component_config, k8s_provider)
     create_kube_state_metrics(component_config, k8s_provider)
     create_prometheus_operator_crds(component_config, k8s_provider)
+    create_trivy_operator(component_config, k8s_provider)

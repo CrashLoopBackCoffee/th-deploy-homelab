@@ -69,6 +69,10 @@ class KubeStateMetricsConfig(utils.model.LocalBaseModel):
     resources: utils.model.ResourcesConfig
 
 
+class TrivyOperatorConfig(utils.model.LocalBaseModel):
+    version: str
+
+
 class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig
     alloy: AlloyConfig
@@ -84,6 +88,7 @@ class ComponentConfig(utils.model.LocalBaseModel):
     prometheus_operator_crds: PrometheusOperatorCrdsConfig
     speedtest_exporter: SpeedtestExporterConfig
     adguard_exporter: AdGuardExporterConfig
+    trivy_operator: TrivyOperatorConfig
 
 
 class StackConfig(utils.model.LocalBaseModel):
