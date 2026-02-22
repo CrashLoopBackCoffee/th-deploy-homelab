@@ -15,7 +15,7 @@ config:
       hostname: tandoor.tobiash.net
       resources:
         cpu: 10m
-        memory: 256Mi
+        memory: 804Mi
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql extractVersion=^(?<version>\d+) versioning=loose
       version: 18

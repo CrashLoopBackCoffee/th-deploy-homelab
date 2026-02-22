@@ -11,6 +11,24 @@ license: MIT
 - **ALWAYS** store resource values in the service's `config.py` as a `*ResourcesConfig(LocalBaseModel)` with the krr-recommended values as defaults.
 - **NEVER** leave resources unset in production — always apply krr recommendations.
 
+## Prerequisites: Verify Local Access Before Starting
+
+**CRITICAL**: Rightsizing MUST be performed with direct access to the cluster and real krr data.
+**REFUSE to perform rightsizing** if either of the following checks fails:
+
+```bash
+# 1. Verify krr is installed
+which krr || echo "ERROR: krr is not installed — cannot rightsize"
+
+# 2. Verify k8s cluster is reachable
+kubectl get nodes || echo "ERROR: k8s cluster not reachable — cannot rightsize"
+```
+
+If `krr` is not found in PATH, or if `kubectl get nodes` fails or returns no nodes, **stop
+immediately** and tell the user that rightsizing cannot be performed without local cluster access.
+Do not proceed with guessed or fabricated resource values — incorrect resource values can cause
+OOMKills or resource starvation in production.
+
 ## Step 1: Discover Namespaces Before Running krr
 
 **CRITICAL**: The Pulumi service directory name (e.g., `monitoring`) is **NOT** the Kubernetes

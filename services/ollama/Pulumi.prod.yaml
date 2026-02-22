@@ -13,5 +13,5 @@ config:
       version: 0.16.3
       hostname: ollama.tobiash.net
       resources:
+        cpu: 10m
         memory: 8Gi
-        cpu: "4"
