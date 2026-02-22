@@ -25,7 +25,7 @@ class Goldilocks(p.ComponentResource):
             repository_opts={'repo': 'https://charts.fairwinds.com/stable'},
             values={
                 'dashboard': {'enabled': True},
-                'vpa': {'enabled': True},
+                'vpa': {'enabled': False},
             },
             opts=k8s_opts,
         )
