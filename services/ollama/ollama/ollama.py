@@ -22,6 +22,18 @@ def create_ollama(component_config: ComponentConfig, k8s_provider: k8s.Provider)
         opts=k8s_opts,
     )
 
+    # Create a low-priority PriorityClass so ollama is evicted first under node
+    # memory pressure — it is a best-effort AI workload and not critical.
+    priority_class = k8s.scheduling.v1.PriorityClass(
+        'ollama-priority-class',
+        metadata={
+            'name': 'ollama-low-priority',
+        },
+        value=-100,
+        description='Evict ollama before other workloads under memory pressure',
+        opts=k8s_opts,
+    )
+
     # Ollama doesn't support PRELOAD_MODELS env var, models need to be pulled manually
     env_vars = []
 
@@ -39,6 +51,7 @@ def create_ollama(component_config: ComponentConfig, k8s_provider: k8s.Provider)
             'template': {
                 'metadata': {'labels': app_labels},
                 'spec': {
+                    'priority_class_name': priority_class.metadata.name,
                     'containers': [
                         {
                             'name': 'ollama',
@@ -73,7 +86,10 @@ def create_ollama(component_config: ComponentConfig, k8s_provider: k8s.Provider)
                 },
             ],
         },
-        opts=k8s_opts,
+        opts=p.ResourceOptions(
+            provider=k8s_provider,
+            depends_on=[priority_class],
+        ),
     )
 
     service = k8s.core.v1.Service(
