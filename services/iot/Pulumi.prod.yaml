@@ -30,7 +30,7 @@ config:
       hostname: mqtt.tobiash.net
       resources:
         cpu: 10m
-        memory: 64Mi
+        memory: 100Mi
       passwords:
         # Generated via mosquitto_passwd using op://Pulumi/Mosquitto/password
         - iot:$7$101$Nd2Krv0tCk+QN75e$rCpqdQXzS6R3k714tuP7TD80t6vI3TNL4BeHFvBi3XdGYMbuib8W5gRKFaCF8HJWhhqU5z3rY/fFpQcq4FPxuQ==
@@ -40,7 +40,7 @@ config:
       version: v0.1.8-RC2
       resources:
         cpu: 10m
-        memory: 64Mi
+        memory: 100Mi
       username:
         ref: op://Pulumi/Mosquitto/username
       password:

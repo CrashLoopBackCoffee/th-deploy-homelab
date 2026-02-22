@@ -19,17 +19,17 @@ config:
         valkey-size: 8Gi
       resources:
         netbox:
-          cpu: 50m
-          memory: 512Mi
+          cpu: 16m
+          memory: 539Mi
         worker:
-          cpu: 50m
-          memory: 256Mi
+          cpu: 10m
+          memory: 261Mi
         housekeeping:
           cpu: 10m
           memory: 128Mi
         valkey:
-          cpu: 10m
-          memory: 64Mi
+          cpu: 12m
+          memory: 100Mi
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql extractVersion=^(?<version>\d+) versioning=loose
       version: 18

@@ -14,5 +14,5 @@ config:
       hostname: n8n.tobiash.net
       webhook-url: https://n8n.tobiash.net
       resources:
-        memory: 1Gi
-        cpu: 500m
+        cpu: 10m
+        memory: 396Mi

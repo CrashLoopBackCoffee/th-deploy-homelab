@@ -12,8 +12,8 @@ config:
       # renovate: datasource=docker packageName=obslib/subversion versioning=semver
       version: httpd_svn-1.14-1
       resources:
-        memory: 512Mi
-        cpu: 300m
+        cpu: 10m
+        memory: 100Mi
       auth:
         users:
           - username: tobias

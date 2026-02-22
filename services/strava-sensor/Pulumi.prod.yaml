@@ -9,8 +9,8 @@ config:
       webhook-url: https://strava-sensor.tobiash.net/strava/webhook
       webhook-registration-delay: 15
       resources:
-        memory: 256Mi
-        cpu: 100m
+        cpu: 10m
+        memory: 176Mi
       storage:
         state-size: 256Mi
       garmin:
