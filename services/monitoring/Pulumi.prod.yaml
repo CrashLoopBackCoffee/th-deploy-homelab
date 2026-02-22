@@ -33,7 +33,7 @@ config:
       hostname: grafana.tobiash.net
     goldilocks:
       # renovate: datasource=helm packageName=goldilocks registryUrl=https://charts.fairwinds.com/stable
-      version: 10.1.0
+      version: 10.2.0
       hostname: goldilocks.tobiash.net
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
