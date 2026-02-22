@@ -15,18 +15,26 @@ class DiskConfig(utils.model.LocalBaseModel):
     size: int
 
 
+class MetallbResourcesConfig(utils.model.LocalBaseModel):
+    controller: utils.model.ResourcesConfig
+    speaker: utils.model.ResourcesConfig
+
+
 class MetallbConfig(utils.model.LocalBaseModel):
     version: str
     start: ipaddress.IPv4Address
     end: ipaddress.IPv4Address
+    resources: MetallbResourcesConfig
 
 
 class NfsCsiDriverConfig(utils.model.LocalBaseModel):
     version: str
+    resources: utils.model.ResourcesConfig
 
 
 class TraeficConfig(utils.model.LocalBaseModel):
     version: str
+    resources: utils.model.ResourcesConfig
 
 
 class MicroK8sInstanceConfig(utils.model.LocalBaseModel):
@@ -49,9 +57,16 @@ class MicroK8sConfig(utils.model.LocalBaseModel):
     version: str
 
 
+class CertManagerResourcesConfig(utils.model.LocalBaseModel):
+    controller: utils.model.ResourcesConfig
+    cainjector: utils.model.ResourcesConfig
+    webhook: utils.model.ResourcesConfig
+
+
 class CertManagerConfig(utils.model.LocalBaseModel):
     version: str
     use_staging: bool = False
+    resources: CertManagerResourcesConfig
 
     @property
     def issuer_server(self):
@@ -69,18 +84,26 @@ class BackupObjectStoreConfig(utils.model.LocalBaseModel):
     cron_schedule: str = '0 0 0 * * *'
 
 
+class CloudNativePgResourcesConfig(utils.model.LocalBaseModel):
+    operator: utils.model.ResourcesConfig
+    barman: utils.model.ResourcesConfig
+
+
 class CloudNativePgConfig(utils.model.LocalBaseModel):
     version: str
     barman_plugin_version: str | None = None
     backup: BackupObjectStoreConfig | None = None
+    resources: CloudNativePgResourcesConfig
 
 
 class MetricsServerConfig(utils.model.LocalBaseModel):
     version: str
+    resources: utils.model.ResourcesConfig
 
 
 class VerticalPodAutoscalerConfig(utils.model.LocalBaseModel):
     version: str
+    resources: utils.model.ResourcesConfig
 
 
 class ComponentConfig(utils.model.LocalBaseModel):

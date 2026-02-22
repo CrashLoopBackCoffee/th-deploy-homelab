@@ -38,7 +38,8 @@ def create_traefik(
                 # expose the API directly from the pod to allow getting access to dashboard at
                 # http://localhost:8080/ after kubectl port-forwarding:
                 '--api.insecure=true',
-            ]
+            ],
+            'resources': component_config.traefik.resources.to_resource_requirements(),
         },
         opts=k8s_opts,
     )
