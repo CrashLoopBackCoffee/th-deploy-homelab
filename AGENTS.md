@@ -116,6 +116,62 @@ services/
   - Use `metadata={'name': 'foo'}` instead of `metadata=k8s.meta.v1.ObjectMetaArgs(name='foo')`.
   - This style is more concise and aligns with the project's Python idioms.
 
+### 9. OpenTelemetry (Alloy) Configuration
+
+Alloy configuration files follow a strict naming convention based on their role in the pipeline:
+
+- `collect_*.alloy` — **Ingestion phase**: receives telemetry from external sources and forwards to the processing pipeline entry point (`otelcol.processor.resourcedetection.default.input`).
+- `discovery_*.alloy` — **Discovery phase**: discovers and relabels scrape targets for Prometheus metrics; not part of the OTel pipeline itself.
+- `process_otel.alloy` — **Processing phase**: the central OTel pipeline shared by all signals (metrics, logs, traces).
+- `export_*.alloy` — **Export phase**: sends processed telemetry to a backend.
+- `http_tls.alloy`, `logging.alloy`, `live_debugging.alloy` — Support/infrastructure configuration.
+
+**Pipeline flow:**
+
+```
+collect_*.alloy  ─►  process_otel.alloy  ─►  export_*.alloy
+```
+
+Every `collect_*.alloy` component must forward its output to `otelcol.processor.resourcedetection.default.input`.
+
+**Standard processor chain in `process_otel.alloy`:**
+
+1. `otelcol.processor.resourcedetection "default"` — auto-detects `env` and `system` resource attributes.
+2. `otelcol.processor.transform "..."` — normalize / set `service.name` and similar attributes.
+3. `otelcol.processor.transform "drop_unneeded_resource_attributes"` — removes noisy process/OS attributes.
+4. `otelcol.processor.transform "add_resource_attributes_as_metric_attributes"` *(metrics only)* — promotes resource attributes (e.g. `deployment.environment`, `service.version`) to metric datapoint labels.
+5. `otelcol.processor.batch "default"` — batches all signals before export.
+
+**OTTL syntax rule — resource context:**
+
+When `context = "resource"` inside an `otelcol.processor.transform` block, use `attributes[...]` to access resource attributes directly. Do **not** use `resource.attributes[...]` in that context:
+
+```alloy
+// CORRECT
+otelcol.processor.transform "drop_unneeded_resource_attributes" {
+    trace_statements {
+        context    = "resource"
+        statements = ["delete_key(attributes, \"os.type\")"]
+    }
+}
+
+// INCORRECT — redundant path when context is already "resource"
+otelcol.processor.transform "drop_unneeded_resource_attributes" {
+    trace_statements {
+        context    = "resource"
+        statements = ["delete_key(resource.attributes, \"os.type\")"]
+    }
+}
+```
+
+**Service deployments:**
+
+| Directory | Environment | Description |
+|---|---|---|
+| `services/monitoring/assets/alloy/` | prod (Kubernetes) | Full pipeline: Mimir (metrics) + Grafana Cloud (traces, logs) |
+| `services/monitoring/assets/alloy_legacy/` | dev (Docker/Synology) | Legacy collector; forwards to main Alloy via OTLP |
+| `services/iot/assets/alloy/` | prod (IoT host) | Collects Docker + journal logs; forwards to main Alloy via OTLP |
+
 ## Common Commands
 
 ```bash
