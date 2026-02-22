@@ -33,10 +33,11 @@ class Goldilocks(p.ComponentResource):
         traefik_service = k8s.core.v1.Service.get(
             'traefik-service', 'traefik/traefik', opts=k8s_opts
         )
+        hostname_parts = component_config.goldilocks.hostname.split('.')
         record = utils.opnsense.unbound.host_override.HostOverride(
             'goldilocks',
-            host=component_config.goldilocks.hostname.split('.')[0],
-            domain='.'.join(component_config.goldilocks.hostname.split('.')[1:]),
+            host=hostname_parts[0],
+            domain='.'.join(hostname_parts[1:]),
             record_type='A',
             ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
             opts=p.ResourceOptions(parent=self),
