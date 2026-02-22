@@ -91,4 +91,9 @@ discovery.relabel "kube_state_metrics" {
 		target_label = "job"
 		replacement  = "kube-state-metrics"
 	}
+
+	rule {
+		target_label = "cluster"
+		replacement  = "prod"
+	}
 }

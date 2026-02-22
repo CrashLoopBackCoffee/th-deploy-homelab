@@ -121,6 +121,11 @@ discovery.relabel "pods_metrics_common" {
 		replacement  = "kubernetes-pods"
 	}
 
+	rule {
+		target_label = "cluster"
+		replacement  = "prod"
+	}
+
 	// Node exporter should use integrations/unix and node hostname as instance
 	rule {
 		source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
