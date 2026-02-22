@@ -57,4 +57,4 @@ config:
       version: 3.12.2
     vertical-pod-autoscaler:
       # renovate: datasource=github-releases packageName=kubernetes/autoscaler extractVersion=^vertical-pod-autoscaler-chart-(?<version>.*)$ versioning=semver
-      version: 0.8.0
+      version: 0.7.0
