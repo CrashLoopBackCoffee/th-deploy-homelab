@@ -1,0 +1,39 @@
+//-----------------------------------------------------------
+// Kubernetes Node Discovery
+//-----------------------------------------------------------
+discovery.kubernetes "nodes" {
+	role = "node"
+}
+
+//-----------------------------------------------------------
+// Kubernetes Node Relabeling - cAdvisor
+//-----------------------------------------------------------
+discovery.relabel "nodes_cadvisor" {
+	targets = discovery.kubernetes.nodes.targets
+
+	rule {
+		source_labels = ["__meta_kubernetes_node_name"]
+		target_label  = "__metrics_path__"
+		replacement   = "/api/v1/nodes/$1/proxy/metrics/cadvisor"
+	}
+
+	rule {
+		target_label = "__address__"
+		replacement  = "kubernetes.default.svc:443"
+	}
+
+	rule {
+		target_label = "__scheme__"
+		replacement  = "https"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_node_name"]
+		target_label  = "node"
+	}
+
+	rule {
+		target_label = "job"
+		replacement  = "kubernetes-cadvisor"
+	}
+}
