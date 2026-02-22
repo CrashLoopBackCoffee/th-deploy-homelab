@@ -23,6 +23,9 @@ def create_node_exporter(component_config: ComponentConfig, k8s_provider: k8s.Pr
             'image': {
                 'tag': f'v{component_config.node_exporter.version}',
             },
+            'service': {
+                'annotations': {},
+            },
             'podAnnotations': {
                 'prometheus.io/scrape': 'true',
                 'prometheus.io/port': '9100',
