@@ -10,13 +10,13 @@ config:
       root-dir: /volume2/docker
     alloy-legacy:
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
-      version: v1.13.1
+      version: v1.13.2
     cadvisor-legacy:
       # renovate: datasource=github-releases packageName=google/cadvisor versioning=semver
       version: 0.56.2
     alloy:
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
-      version: v1.13.1
+      version: v1.13.2
       hostname: alloy.tobiash.net
       resources:
         cpu: 77m
