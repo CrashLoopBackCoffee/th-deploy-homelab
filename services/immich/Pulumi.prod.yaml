@@ -34,7 +34,7 @@ config:
       resources:
         server:
           cpu: 11m
-          memory: 851Mi
+          memory: 2000Mi
         machine-learning:
           cpu: 10m
           memory: 6093Mi
