@@ -1,5 +1,4 @@
 import pulumi as p
-import pulumi_docker as docker
 import utils.cloudflare
 import utils.docker
 import utils.k8s
@@ -7,7 +6,6 @@ import utils.k8s
 from monitoring.adguard_exporter import AdGuardExporter
 from monitoring.alloy import Alloy
 from monitoring.alloy_legacy import AlloyLegacy
-from monitoring.cadvisor_legacy import CAdvisorLegacy
 from monitoring.config import ComponentConfig
 from monitoring.goldilocks import Goldilocks
 from monitoring.grafana import Grafana
@@ -30,12 +28,8 @@ def main():
 
     # Services on synology
     docker_provider = utils.docker.get_provider(component_config.target)
-    docker_opts = p.ResourceOptions(provider=docker_provider)
-
-    network = docker.Network('monitoring', opts=docker_opts)
 
     # Create node-exporter container
-    CAdvisorLegacy('default', component_config, network, docker_provider)
     AlloyLegacy('default', component_config, cloudflare_provider, docker_provider)
 
     # Kubernetes based services

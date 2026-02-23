@@ -16,10 +16,6 @@ class GrafanaCloudConfig(utils.model.LocalBaseModel):
     token: utils.model.PulumiSecret | str
 
 
-class CAdvisorConfig(utils.model.LocalBaseModel):
-    version: str
-
-
 class GrafanaConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str
@@ -73,7 +69,6 @@ class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig
     alloy: AlloyConfig
     alloy_legacy: AlloyLegacyConfig
-    cadvisor_legacy: CAdvisorConfig
     cloudflare: utils.model.CloudflareConfig
     goldilocks: GoldilocksConfig
     grafana: GrafanaConfig

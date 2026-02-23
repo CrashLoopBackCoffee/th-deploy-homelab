@@ -11,9 +11,6 @@ config:
     alloy-legacy:
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
       version: v1.13.1
-    cadvisor-legacy:
-      # renovate: datasource=github-releases packageName=google/cadvisor versioning=semver
-      version: 0.56.2
     alloy:
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
       version: v1.13.1
