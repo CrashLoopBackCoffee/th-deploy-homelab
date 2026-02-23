@@ -52,8 +52,8 @@ config:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
       version: 3.0.3
       resources:
-        cpu: 33m
-        memory: 679Mi
+        cpu: 31m
+        memory: 778Mi
     node-exporter:
       # renovate: datasource=github-releases packageName=prometheus/node_exporter versioning=loose
       version: 1.10.2
