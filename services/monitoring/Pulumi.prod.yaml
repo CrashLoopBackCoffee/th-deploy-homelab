@@ -39,7 +39,7 @@ config:
         memory: 498Mi
     goldilocks:
       # renovate: datasource=helm packageName=goldilocks registryUrl=https://charts.fairwinds.com/stable
-      version: 10.2.0
+      version: 10.3.0
       hostname: goldilocks.tobiash.net
       resources:
         controller:
