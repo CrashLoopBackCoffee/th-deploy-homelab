@@ -62,7 +62,7 @@ config:
         memory: 100Mi
     kube-state-metrics:
       # renovate: datasource=github-releases packageName=prometheus-community/helm-charts extractVersion=^kube-state-metrics-(?<version>.*)$ versioning=semver
-      version: 7.1.0
+      version: 7.2.0
       resources:
         cpu: 10m
         memory: 100Mi
