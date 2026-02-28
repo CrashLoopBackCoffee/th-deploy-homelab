@@ -18,6 +18,13 @@ discovery.relabel "svc_metrics" {
 		action        = "keep"
 	}
 
+	// Exclude adguard-exporter (scraped separately to drop high-cardinality client_name label)
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		regex         = "adguard-exporter"
+		action        = "drop"
+	}
+
 	// Keep only ports prefixed or postfixed with "metrics"
 	rule {
 		action        = "keep"
@@ -95,6 +102,47 @@ discovery.relabel "kube_state_metrics" {
 	rule {
 		target_label = "job"
 		replacement  = "kube-state-metrics"
+	}
+
+	rule {
+		target_label = "cluster"
+		replacement  = "prod"
+	}
+}
+
+//-----------------------------------------------------------
+// adguard-exporter dedicated discovery
+// Scraped separately so we can drop the high-cardinality
+// client_name label (unique IPv6 hostnames per DNS client).
+//-----------------------------------------------------------
+discovery.relabel "adguard_svc" {
+	targets = discovery.kubernetes.services.targets
+
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		regex         = "adguard-exporter"
+		action        = "keep"
+	}
+
+	rule {
+		action        = "keep"
+		source_labels = ["__meta_kubernetes_service_port_name"]
+		regex         = "(.*-)?metrics(-.*)?$"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_namespace"]
+		target_label  = "namespace"
+	}
+
+	rule {
+		source_labels = ["__meta_kubernetes_service_name"]
+		target_label  = "service_name"
+	}
+
+	rule {
+		target_label = "job"
+		replacement  = "kubernetes-services"
 	}
 
 	rule {

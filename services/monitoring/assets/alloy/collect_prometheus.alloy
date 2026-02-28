@@ -52,6 +52,21 @@ prometheus.scrape "speedtest" {
 	forward_to      = [otelcol.receiver.prometheus.default.receiver]
 }
 
+// adguard-exporter is scraped separately to drop the high-cardinality
+// client_name label, which contains unique IPv6 reverse-DNS hostnames
+// per DNS client and causes unbounded WAL growth in Alloy.
+prometheus.scrape "adguard" {
+	targets = discovery.relabel.adguard_svc.output
+
+	scrape_interval = "15s"
+	forward_to      = [otelcol.receiver.prometheus.default.receiver]
+
+	metric_relabels {
+		action = "labeldrop"
+		regex  = "client_name"
+	}
+}
+
 //===========================================================
 // Convert to Otel
 //===========================================================
