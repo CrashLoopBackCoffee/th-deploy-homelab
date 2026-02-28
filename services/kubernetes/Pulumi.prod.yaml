@@ -90,7 +90,7 @@ config:
         memory: 100Mi
     vertical-pod-autoscaler:
       # renovate: datasource=github-releases packageName=kubernetes/autoscaler extractVersion=^vertical-pod-autoscaler-chart-(?<version>.*)$ versioning=semver
-      version: 0.8.0
+      version: 0.8.1
       resources:
         cpu: 10m
         memory: 100Mi
