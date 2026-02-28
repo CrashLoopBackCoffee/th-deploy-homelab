@@ -6,19 +6,19 @@ metadata:
     images.cnpg.io/family: postgresql
     images.cnpg.io/type: standard
     images.cnpg.io/os: bullseye
-    images.cnpg.io/date: '20260220'
+    images.cnpg.io/date: '20260226'
     images.cnpg.io/publisher: cnpg.io
 spec:
   images:
   - major: 13
     image: ghcr.io/cloudnative-pg/postgresql:13.22-202511100817-standard-bullseye@sha256:bdf11cbefce25a4cdad91dbd30caf00d7efc2fd54319e7ab6195814b41ba8f66
   - major: 14
-    image: ghcr.io/cloudnative-pg/postgresql:14.21-202602201511-standard-bullseye@sha256:5c022534b6763070af1a13ece893d07626f9fb93faf66f075352a6ce0ca5fd63
+    image: ghcr.io/cloudnative-pg/postgresql:14.22-202602261636-standard-bullseye@sha256:4b3afc9d7bde7028189d7ca8f87e4c28ad3e20194795cb61484b16f500a13c23
   - major: 15
-    image: ghcr.io/cloudnative-pg/postgresql:15.16-202602201511-standard-bullseye@sha256:1ac72b8e8edd003186530f8bd8688241b1df1311d075b77e433abc950097ea0a
+    image: ghcr.io/cloudnative-pg/postgresql:15.17-202602261636-standard-bullseye@sha256:3d5a15a65e497b945670ead0d1ceda71cea705df42f832b5b6f09cfa244d9430
   - major: 16
-    image: ghcr.io/cloudnative-pg/postgresql:16.12-202602201511-standard-bullseye@sha256:38f559f896545362746bf2bd657caafb7133df9762b80d160e9bdcea053c0e35
+    image: ghcr.io/cloudnative-pg/postgresql:16.13-202602261637-standard-bullseye@sha256:9ba95fa4f55d3de4ce320c1b1bb1fa70c816db853cce0c4d04753c2ec8963a41
   - major: 17
-    image: ghcr.io/cloudnative-pg/postgresql:17.8-202602201511-standard-bullseye@sha256:9cfef02689c86678488f068099951a91364012fa61763109c6e60ce0247d6ff3
+    image: ghcr.io/cloudnative-pg/postgresql:17.9-202602261636-standard-bullseye@sha256:411d611a57d1e252dc981de593a9cba0dfe7aaee1245c6c08c9e43bdd2ce105f
   - major: 18
-    image: ghcr.io/cloudnative-pg/postgresql:18.2-202602201511-standard-bullseye@sha256:76ec67a4d655085207b2796f6bec70364137427dd91d67d45a4cd33ef4e06f44
+    image: ghcr.io/cloudnative-pg/postgresql:18.3-202602261638-standard-bullseye@sha256:366a82863dacc8948088dcb6bc90902d689df4cd2c6ca7adf5e81622ae8d2a94
