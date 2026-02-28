@@ -10,7 +10,7 @@ config:
       zone: tobiash.net
     ollama:
       # renovate: datasource=github-releases packageName=ollama/ollama versioning=semver
-      version: 0.16.3
+      version: 0.17.4
       hostname: ollama.tobiash.net
       resources:
         cpu: 10m
