@@ -1,0 +1,7 @@
+collections:
+  - name: grafana.grafana
+    # renovate: datasource=github-releases packageName=grafana/grafana-ansible-collection versioning=semver
+    version: 5.7.0
+  - name: community.general
+    # renovate: datasource=github-releases packageName=ansible-collections/community.general versioning=semver
+    version: 10.4.0

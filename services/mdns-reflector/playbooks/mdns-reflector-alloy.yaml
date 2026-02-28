@@ -1,0 +1,39 @@
+- name: Install and configure Alloy for log collection
+  hosts: mdns_reflector
+  gather_facts: true
+  vars:
+    # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
+    alloy_version: "1.13.2"
+    alloy_user_groups:
+      - systemd-journal
+    alloy_env_file_vars:
+      CONFIG_FILE: /etc/alloy/
+      CUSTOM_ARGS: "--storage.path=/var/lib/alloy/data --disable-reporting --stability.level=experimental"
+  roles:
+    - grafana.grafana.alloy
+  handlers:
+    - name: Restart alloy
+      ansible.builtin.systemd:
+        name: alloy
+        state: restarted
+        daemon_reload: true
+
+  tasks:
+    - name: Ensure /etc/alloy directory exists
+      ansible.builtin.file:
+        path: /etc/alloy
+        state: directory
+        owner: alloy
+        group: alloy
+        mode: "0755"
+
+    - name: Copy alloy configuration files
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /etc/alloy/
+        owner: alloy
+        group: alloy
+        mode: "0644"
+      with_fileglob:
+        - "{{ playbook_dir }}/../assets/alloy/*.alloy"
+      notify: Restart alloy

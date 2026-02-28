@@ -1,0 +1,4 @@
+mdns_reflector:
+  hosts:
+    192.168.2.5:
+      ansible_user: root

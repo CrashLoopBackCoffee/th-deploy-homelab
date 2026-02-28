@@ -75,6 +75,7 @@ package = false
 
 [tool.uv.workspace]
 members = ["services/*", "utils"]
+exclude = ["services/mdns-reflector"]
 
 [build-system]
 requires = ["hatchling"]

@@ -1,0 +1,8 @@
+[server]
+use-ipv4=yes
+use-ipv6=no
+allow-interfaces={{ ansible_facts['interfaces'] | reject('equalto', 'lo') | sort | join(',') }}
+deny-interfaces=lo
+
+[reflector]
+enable-reflector=yes
