@@ -18,7 +18,7 @@ config:
       # renovate: datasource=github-releases packageName=zwave-js/zwave-js-ui versioning=semver
       version: 11.12.0
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
-      alloy-version: v1.13.1
+      alloy-version: v1.13.2
       zwave-adapter:
         usb-id: 1a86:55d4
         serial-id: usb-Zooz_800_Z-Wave_Stick_533D004242-if00
