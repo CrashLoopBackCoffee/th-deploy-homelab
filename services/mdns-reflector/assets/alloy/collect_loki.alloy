@@ -1,0 +1,38 @@
+//===========================================================
+// Systemd journal log collection
+//===========================================================
+
+loki.relabel "journal" {
+	// Rules are applied inside loki.source.journal before __journal_* labels are dropped
+	forward_to = []
+
+	rule {
+		source_labels = ["__journal__systemd_unit"]
+		target_label  = "systemd_unit"
+	}
+
+	rule {
+		source_labels = ["__journal__hostname"]
+		target_label  = "host"
+	}
+
+	rule {
+		source_labels = ["__journal__transport"]
+		target_label  = "transport"
+	}
+}
+
+loki.source.journal "default" {
+	path          = "/var/log/journal"
+	relabel_rules = loki.relabel.journal.rules
+	forward_to    = [otelcol.receiver.loki.default.receiver]
+}
+
+//===========================================================
+// Convert to OTel
+//===========================================================
+otelcol.receiver.loki "default" {
+	output {
+		logs = [otelcol.processor.resourcedetection.default.input]
+	}
+}

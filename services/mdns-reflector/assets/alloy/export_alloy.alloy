@@ -1,0 +1,12 @@
+//===========================================================
+// Export to Alloy service
+//===========================================================
+otelcol.exporter.otlp "alloy" {
+	client {
+		endpoint = "alloy.tobiash.net:4317"
+
+		tls {
+			insecure = true
+		}
+	}
+}

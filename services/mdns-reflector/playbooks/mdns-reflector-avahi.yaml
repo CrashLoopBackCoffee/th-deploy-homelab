@@ -1,0 +1,34 @@
+- name: Install and configure avahi-daemon mDNS reflector
+  hosts: mdns_reflector
+  gather_facts: true
+  handlers:
+    - name: Restart avahi-daemon
+      ansible.builtin.systemd:
+        name: avahi-daemon
+        state: restarted
+        enabled: true
+        daemon_reload: true
+
+  tasks:
+    - name: Install avahi packages
+      ansible.builtin.apt:
+        name:
+          - avahi-daemon
+          - avahi-utils
+        state: present
+        update_cache: true
+
+    - name: Deploy avahi-daemon configuration
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/avahi-daemon.conf.j2"
+        dest: /etc/avahi/avahi-daemon.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart avahi-daemon
+
+    - name: Ensure avahi-daemon is started and enabled
+      ansible.builtin.systemd:
+        name: avahi-daemon
+        state: started
+        enabled: true
