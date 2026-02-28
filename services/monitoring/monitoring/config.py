@@ -48,17 +48,6 @@ class PrometheusOperatorCrdsConfig(utils.model.LocalBaseModel):
     version: str
 
 
-class GoldilocksResourcesConfig(utils.model.LocalBaseModel):
-    controller: utils.model.ResourcesConfig
-    dashboard: utils.model.ResourcesConfig
-
-
-class GoldilocksConfig(utils.model.LocalBaseModel):
-    version: str
-    hostname: str
-    resources: GoldilocksResourcesConfig
-
-
 class NodeExporterConfig(utils.model.LocalBaseModel):
     version: str
     resources: utils.model.ResourcesConfig
@@ -75,7 +64,6 @@ class ComponentConfig(utils.model.LocalBaseModel):
     alloy_legacy: AlloyLegacyConfig
     cadvisor_legacy: CAdvisorConfig
     cloudflare: utils.model.CloudflareConfig
-    goldilocks: GoldilocksConfig
     grafana: GrafanaConfig
     grafana_cloud: GrafanaCloudConfig
     mimir: MimirConfig

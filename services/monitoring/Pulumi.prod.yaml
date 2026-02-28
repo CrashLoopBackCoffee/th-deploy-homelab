@@ -37,17 +37,6 @@ config:
       resources:
         cpu: 10m
         memory: 498Mi
-    goldilocks:
-      # renovate: datasource=helm packageName=goldilocks registryUrl=https://charts.fairwinds.com/stable
-      version: 10.2.0
-      hostname: goldilocks.tobiash.net
-      resources:
-        controller:
-          cpu: 10m
-          memory: 100Mi
-        dashboard:
-          cpu: 10m
-          memory: 100Mi
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
       version: 3.0.3
