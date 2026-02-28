@@ -59,12 +59,16 @@ prometheus.scrape "adguard" {
 	targets = discovery.relabel.adguard_svc.output
 
 	scrape_interval = "15s"
-	forward_to      = [otelcol.receiver.prometheus.default.receiver]
+	forward_to      = [prometheus.relabel.adguard.receiver]
+}
 
-	metric_relabels {
+prometheus.relabel "adguard" {
+	rule {
 		action = "labeldrop"
 		regex  = "client_name"
 	}
+
+	forward_to = [otelcol.receiver.prometheus.default.receiver]
 }
 
 //===========================================================
