@@ -14,7 +14,20 @@ prometheus.scrape "default" {
 	)
 
 	scrape_interval = "15s"
-	forward_to      = [otelcol.receiver.prometheus.default.receiver]
+	forward_to      = [prometheus.relabel.default.receiver]
+}
+
+prometheus.relabel "default" {
+	// Drop Immich internal repository method duration histograms — auto-generated
+	// per-method instrumentation with no dashboard usage. Saves ~2,000+ series.
+	// Keeps immich_jobs_*, immich_queues_* which are used in dashboards.
+	rule {
+		action        = "drop"
+		source_labels = ["__name__"]
+		regex         = "immich_.+_repository_.+_duration_.+"
+	}
+
+	forward_to = [otelcol.receiver.prometheus.default.receiver]
 }
 
 // kube-state-metrics needs honor_labels = true so that the real pod/resource
