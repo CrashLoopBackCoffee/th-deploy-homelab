@@ -25,20 +25,44 @@ prometheus.scrape "kube_state_metrics" {
 
 	scrape_interval = "15s"
 	honor_labels    = true
-	forward_to      = [otelcol.receiver.prometheus.default.receiver]
+	forward_to      = [prometheus.relabel.kube_state_metrics.receiver]
+}
+
+prometheus.relabel "kube_state_metrics" {
+	// Drop all ReplicaSet metrics — they accumulate stale series from rolling
+	// updates and are not needed when kube_deployment_* metrics are available.
+	rule {
+		action        = "drop"
+		source_labels = ["__name__"]
+		regex         = "kube_replicaset_.+"
+	}
+
+	forward_to = [otelcol.receiver.prometheus.default.receiver]
 }
 
 prometheus.scrape "cadvisor" {
 	targets = discovery.relabel.nodes_cadvisor.output
 
 	scrape_interval = "15s"
-	forward_to      = [otelcol.receiver.prometheus.default.receiver]
+	forward_to      = [prometheus.relabel.cadvisor.receiver]
 
 	bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 
 	tls_config {
 		ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
 	}
+}
+
+prometheus.relabel "cadvisor" {
+	// Drop container_tasks_state — high cardinality (5 states × all containers),
+	// not used in any dashboards.
+	rule {
+		action        = "drop"
+		source_labels = ["__name__"]
+		regex         = "container_tasks_state"
+	}
+
+	forward_to = [otelcol.receiver.prometheus.default.receiver]
 }
 
 prometheus.scrape "speedtest" {
@@ -66,6 +90,14 @@ prometheus.relabel "adguard" {
 	rule {
 		action = "labeldrop"
 		regex  = "client_name"
+	}
+
+	// Drop the milliseconds histogram — duplicate of the seconds variant exposed
+	// by the same exporter. Saves ~852 series.
+	rule {
+		action        = "drop"
+		source_labels = ["__name__"]
+		regex         = "adguard_processing_time_milliseconds_.+"
 	}
 
 	forward_to = [otelcol.receiver.prometheus.default.receiver]
