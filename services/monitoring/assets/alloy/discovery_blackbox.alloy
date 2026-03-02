@@ -123,7 +123,7 @@ prometheus.exporter.blackbox "default" {
 
 	target {
 		name    = "home-assistant.tobiash.net"
-		address = "https://home-assistant.tobiash.net:8123"
+		address = "https://home-assistant.tobiash.net"
 		module  = "https_2xx"
 	}
 
