@@ -554,7 +554,7 @@ requires-dist = [
     { name = "ollama", editable = "services/ollama" },
     { name = "paperless", editable = "services/paperless" },
     { name = "proxmox", editable = "services/proxmox" },
-    { name = "pulumi", specifier = "==3.226.0" },
+    { name = "pulumi", specifier = "==3.227.0" },
     { name = "pulumi-cloudflare", specifier = "==6.13.0" },
     { name = "pulumi-command", specifier = "==1.2.1" },
     { name = "pulumi-docker", specifier = "==4.11.1" },
@@ -1045,7 +1045,7 @@ requires-dist = [
 
 [[package]]
 name = "pulumi"
-version = "3.226.0"
+version = "3.227.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "debugpy" },
@@ -1061,7 +1061,7 @@ dependencies = [
     { name = "semver" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/48/ae/6c93c0b47ae998a1ca2e6c8ae5aec5c6b5068d8005a68aa76a4d795bdf6a/pulumi-3.226.0-py3-none-any.whl", hash = "sha256:ad35faa3c67d8cc53908b9442fe32bdb7aa98dedfca4ae1b4791c0a44e32adb6", size = 393472, upload-time = "2026-03-12T15:53:59.271Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/48/18568aabf2434e576053e6d6dfcbd40d48567136734c561b3bf7aee09f90/pulumi-3.227.0-py3-none-any.whl", hash = "sha256:0705cd6d69c98f2d4ec561464df186c5c03070a3e1514f083d5718b03d8e4c6f", size = 392976, upload-time = "2026-03-19T13:17:22.925Z" },
 ]
 
 [[package]]
