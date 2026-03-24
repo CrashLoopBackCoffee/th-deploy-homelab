@@ -4,4 +4,4 @@ collections:
     version: 6.0.6
   - name: community.general
     # renovate: datasource=github-releases packageName=ansible-collections/community.general versioning=semver
-    version: 12.4.0
+    version: 12.5.0
