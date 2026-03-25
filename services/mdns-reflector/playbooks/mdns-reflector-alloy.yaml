@@ -3,7 +3,7 @@
   gather_facts: true
   vars:
     # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
-    alloy_version: "1.14.1"
+    alloy_version: "1.14.2"
     alloy_user_groups:
       - systemd-journal
     alloy_env_file_vars:
