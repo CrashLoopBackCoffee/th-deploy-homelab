@@ -13,7 +13,7 @@ config:
       # renovate: datasource=github-releases packageName=immich-app/immich versioning=semver
       version: 2.6.2
       # renovate: datasource=github-releases packageName=immich-app/immich-charts extractVersion=^immich-(?<version>.*)$ versioning=semver
-      chart-version: "0.10.3"
+      chart-version: "0.11.0"
       persistence:
         library:
           nfs-server: synology.tobiash.net
