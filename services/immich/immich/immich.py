@@ -223,6 +223,7 @@ def create_immich(
             'machine-learning': {
                 'controllers': {
                     'main': {
+                        'strategy': 'Recreate',
                         'pod': {
                             'priorityClassName': ml_priority_class.metadata.name,
                         },
