@@ -1,10 +1,5 @@
 config:
   unifi:config:
-    proxmox:
-      api-token:
-        ref: op://Pulumi/cejfwasemie3kbbfphb5zta2ci/password
-      api-endpoint: https://pve.tobiash.net:8006
-      node-name: pve
     cloudflare:
       api-key:
         ref: op://Pulumi/Cloudflare Global API Key/password
@@ -13,8 +8,7 @@ config:
 
     unifi:
       # renovate: datasource=github-releases packageName=jacobalberty/unifi-docker versioning=semver
-      version: 10.0.162
-      address: 192.168.10.5/24
-      vlan: 10
+      address: 192.168.1.5
       hostname: unifi.tobiash.net
+      ssh-user: tobias
       ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ

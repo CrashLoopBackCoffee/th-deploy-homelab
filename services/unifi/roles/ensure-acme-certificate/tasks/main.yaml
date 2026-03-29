@@ -1,0 +1,32 @@
+- name: Issue initial certificate via Cloudflare DNS-01
+  become: true
+  ansible.builtin.command:
+    cmd: >
+      /root/.acme.sh/acme.sh --issue --dns dns_cf
+      --server letsencrypt --keylength 2048
+      -d {{ ensure_acme_certificate_hostname }}
+    creates: /root/.acme.sh/{{ ensure_acme_certificate_hostname }}/{{ ensure_acme_certificate_hostname }}.cer
+  environment:
+    CF_Token: "{{ ensure_acme_certificate_cloudflare_token }}"
+
+- name: Install vendored unifi-osserver-ssl-import script
+  become: true
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../vendor/unifi-ssl-import/unifi-osserver-ssl-import"
+    dest: /usr/local/sbin/unifi-osserver-ssl-import
+    mode: "0755"
+
+- name: Install configured wrapper script
+  become: true
+  ansible.builtin.template:
+    src: unifi-osserver-ssl-import-wrapper.sh.j2
+    dest: /usr/local/sbin/unifi-osserver-ssl-import-wrapper
+    mode: "0755"
+
+- name: Set up cron job for UniFi SSL certificate import
+  become: true
+  ansible.builtin.cron:
+    name: unifi-osserver-ssl-import
+    special_time: daily
+    job: /usr/local/sbin/unifi-osserver-ssl-import-wrapper
+    user: root
