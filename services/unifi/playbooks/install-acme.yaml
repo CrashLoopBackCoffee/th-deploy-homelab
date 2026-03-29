@@ -1,0 +1,9 @@
+- name: Install acme.sh and issue TLS certificate via Cloudflare DNS-01
+  hosts: unifi
+  gather_facts: false
+  roles:
+    - role: ensure-acme
+    - role: ensure-acme-certificate
+      vars:
+        ensure_acme_certificate_hostname: "{{ unifi_hostname }}"
+        ensure_acme_certificate_cloudflare_token: "{{ cloudflare_token }}"

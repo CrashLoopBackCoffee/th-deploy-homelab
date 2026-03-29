@@ -1,0 +1,3 @@
+# Required variables (no defaults — must be passed by the playbook):
+# ensure_acme_certificate_hostname: the FQDN for the certificate
+# ensure_acme_certificate_cloudflare_token: Cloudflare API token with DNS Write permission

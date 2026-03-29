@@ -1,12 +1,9 @@
+import json
+
 import pulumi as p
-import pulumi_command
-import pulumi_docker as docker
-import pulumi_proxmoxve as proxmoxve
-import pulumiverse_acme as acme
+import pulumi_cloudflare as cloudflare
 import utils.opnsense.unbound.host_override
 import yaml
-
-from utils.utils import stack_is_prod
 
 from unifi.config import ComponentConfig
 
@@ -58,10 +55,8 @@ def _get_cloud_config(hostname: str, username: str, ssh_public_key: str) -> str:
 
 def create_unifi(
     component_config: ComponentConfig,
-    certificate: acme.Certificate,
-    proxmox_provider: proxmoxve.Provider,
-):
-    proxmox_opts = p.ResourceOptions(provider=proxmox_provider)
+    cloudflare_provider: cloudflare.Provider,
+) -> None:
 
     # Create local DNS record
     utils.opnsense.unbound.host_override.HostOverride(
@@ -69,194 +64,29 @@ def create_unifi(
         host=component_config.unifi.hostname.split('.', 1)[0],
         domain=component_config.unifi.hostname.split('.', 1)[1],
         record_type='A',
-        ipaddress=str(component_config.unifi.address.ip),
+        ipaddress=str(component_config.unifi.address),
     )
 
-    cloud_image = proxmoxve.download.File(
-        'cloud-image',
-        content_type='iso',
-        datastore_id='local',
-        node_name=component_config.proxmox.node_name,
-        overwrite=False,
-        overwrite_unmanaged=True,
-        url=component_config.unifi.cloud_image,
-        opts=p.ResourceOptions.merge(proxmox_opts, p.ResourceOptions(retain_on_delete=True)),
-    )
-
-    cloud_config = proxmoxve.storage.File(
-        'cloud-config',
-        node_name=component_config.proxmox.node_name,
-        datastore_id='local',
-        content_type='snippets',
-        source_raw={
-            'data': _get_cloud_config(
-                f'unifi-{p.get_stack()}', 'ubuntu', component_config.unifi.ssh_public_key
-            ),
-            'file_name': f'unifi-{p.get_stack()}.yaml',
-        },
-        opts=p.ResourceOptions.merge(proxmox_opts, p.ResourceOptions(delete_before_replace=True)),
-    )
-
-    tags = [f'unifi-{p.get_stack()}']
-    vlan_config: proxmoxve.vm.VirtualMachineNetworkDeviceArgsDict = (
-        {'vlan_id': component_config.unifi.vlan} if component_config.unifi.vlan else {}
-    )
-    gateway_address = str(component_config.unifi.address.network.network_address + 1)
-
-    vm = proxmoxve.vm.VirtualMachine(
-        f'unifi-{p.get_stack()}',
-        name=f'unifi-{p.get_stack()}',
-        tags=tags,
-        node_name=component_config.proxmox.node_name,
-        description='Unifi Controller',
-        operating_system={
-            'type': 'l26',
-        },
-        cpu={'cores': component_config.unifi.cores, 'type': 'host'},
-        memory={
-            'floating': component_config.unifi.memory_min,
-            'dedicated': component_config.unifi.memory_max,
-        },
-        cdrom={'enabled': False},
-        disks=[
-            # Root disk
+    # Create scoped Cloudflare API token for acme.sh DNS-01 challenge
+    acme_token = cloudflare.ApiToken(
+        'cloudflare-acme-token',
+        name=f'unifi-{p.get_stack()}-acme',
+        policies=[
             {
-                'interface': 'virtio0',
-                'size': component_config.unifi.disk_size,
-                'file_id': cloud_image.id,
-                'iothread': True,
-                'discard': 'on',
-                'file_format': 'raw',
-                # Hack to avoid diff in subsequent runs
-                'speed': {
-                    'read': 10000,
-                },
+                'effect': 'allow',
+                'permission_groups': [
+                    # Zone Read
+                    {'id': 'c8fed203ed3043cba015a93ad1616f1f'},
+                    # DNS Write
+                    {'id': '4755a26eedb94da69e1066d98aa820be'},
+                ],
+                'resources': json.dumps({'com.cloudflare.api.account.zone.*': '*'}),
             },
         ],
-        network_devices=[{'bridge': 'vmbr0', 'model': 'virtio', **vlan_config}],
-        agent={'enabled': True},
-        initialization={
-            'ip_configs': [
-                {
-                    'ipv4': {
-                        'address': str(component_config.unifi.address),
-                        'gateway': gateway_address,
-                    },
-                },
-            ],
-            'dns': {
-                'domain': 'local',
-                'servers': [gateway_address],
-            },
-            'user_data_file_id': cloud_config.id,
-        },
-        stop_on_destroy=True,
-        on_boot=stack_is_prod(),
-        protection=stack_is_prod(),
-        machine='q35',
-        opts=p.ResourceOptions.merge(proxmox_opts, p.ResourceOptions(ignore_changes=['cdrom'])),
+        opts=p.ResourceOptions(provider=cloudflare_provider),
     )
 
-    unifi_host = vm.ipv4_addresses[1][0]
-    docker_provider = docker.Provider(
-        'docker',
-        host=p.Output.format(
-            'ssh://ubuntu@{}',
-            unifi_host,
-        ),
-        ssh_opts=[
-            '-o StrictHostKeyChecking=no',
-            '-o UserKnownHostsFile=/dev/null',
-        ],
-    )
-
-    # Create unifi folders
-    connection = pulumi_command.remote.ConnectionArgs(host=unifi_host, user='ubuntu')
-    unifi_cert_path = '/unifi/cert'
-    unifi_cert_dir_resource = pulumi_command.remote.Command(
-        'create-unifi-cert',
-        connection=connection,
-        create=f'sudo mkdir -p {unifi_cert_path}',
-    )
-    unifi_data_path = '/unifi/data'
-    unifi_data_dir_resource = pulumi_command.remote.Command(
-        'create-unifi-data',
-        connection=connection,
-        create=f'sudo mkdir -p {unifi_data_path}',
-    )
-    unifi_log_path = '/unifi/log'
-    unifi_log_dir_resource = pulumi_command.remote.Command(
-        'create-unifi-log',
-        connection=connection,
-        create=f'sudo mkdir -p {unifi_log_path}',
-    )
-
-    # Create unifi cert
-    private_key_resource = pulumi_command.remote.Command(
-        'create-unifi-tls-key',
-        connection=connection,
-        stdin=certificate.private_key_pem,
-        create=f'sudo sed -n "w {unifi_cert_path}/privkey.pem"',
-        triggers=[certificate],
-        opts=p.ResourceOptions(depends_on=[unifi_cert_dir_resource]),
-    )
-    certificate_resource = pulumi_command.remote.Command(
-        'create-unifi-tls-cert',
-        connection=connection,
-        stdin=certificate.certificate_pem,
-        create=f'sudo sed -n "w {unifi_cert_path}/cert.pem"',
-        triggers=[certificate],
-        opts=p.ResourceOptions(depends_on=[unifi_cert_dir_resource]),
-    )
-    chain_resource = pulumi_command.remote.Command(
-        'create-unifi-tls-chain',
-        connection=connection,
-        stdin=certificate.issuer_pem,
-        create=f'sudo sed -n "w {unifi_cert_path}/chain.pem"',
-        triggers=[certificate],
-        opts=p.ResourceOptions(depends_on=[unifi_cert_dir_resource]),
-    )
-
-    # Create unifi container
-    docker_opts = p.ResourceOptions(provider=docker_provider, deleted_with=vm)
-    image = docker.RemoteImage(
-        'cadvisor',
-        name=f'jacobalberty/unifi:v{component_config.unifi.version}',
-        keep_locally=True,
-        opts=docker_opts,
-    )
-
-    docker.Container(
-        'unifi',
-        image=image.image_id,
-        name='unifi',
-        envs=[
-            'UNIFI_STDOUT=true',
-            'TZ=Europe/Berlin',
-            'UNIFI_HTTPS_PORT=8443',
-        ],
-        init=True,
-        volumes=[
-            {
-                'host_path': '/unifi',
-                'container_path': '/unifi',
-            },
-        ],
-        network_mode='host',
-        user='unifi',
-        restart='always',
-        start=True,
-        opts=p.ResourceOptions.merge(
-            docker_opts,
-            p.ResourceOptions(
-                depends_on=[
-                    unifi_cert_dir_resource,
-                    unifi_data_dir_resource,
-                    unifi_log_dir_resource,
-                    private_key_resource,
-                    certificate_resource,
-                    chain_resource,
-                ]
-            ),
-        ),
-    )
+    p.export('unifi_address', str(component_config.unifi.address))
+    p.export('unifi_hostname', component_config.unifi.hostname)
+    p.export('unifi_ssh_user', component_config.unifi.ssh_user)
+    p.export('cloudflare_acme_token', p.Output.secret(acme_token.value))

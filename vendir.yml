@@ -1,0 +1,9 @@
+apiVersion: vendir.k14s.io/v1alpha1
+kind: Config
+directories:
+  - path: services/unifi/vendor/unifi-ssl-import
+    contents:
+      - path: .
+        git:
+          url: https://github.com/MiranoVerhoef/UniFi-OS-Server-SSL-Import
+          ref: main

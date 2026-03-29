@@ -1,0 +1,2 @@
+- name: Configure Unifi host
+  ansible.builtin.import_playbook: install-acme.yaml

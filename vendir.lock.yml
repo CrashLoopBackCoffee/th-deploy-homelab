@@ -1,0 +1,9 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - git:
+      commitTitle: Modify README for Letsencrypt server usage...
+      sha: f571920b3b30af171308c52942b996147b794195
+    path: .
+  path: services/unifi/vendor/unifi-ssl-import
+kind: LockConfig

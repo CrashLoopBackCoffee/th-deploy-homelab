@@ -4,6 +4,7 @@ ignore: |
   .venv
   services/kubernetes/assets/image-catalogs/*.yaml
   services/monitoring/assets/snmp/snmp.yml
+  vendir.lock.yml
 
 rules:
   document-start:
