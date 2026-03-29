@@ -127,7 +127,7 @@ class Grafana(p.ComponentResource):
         )
 
         app_labels = {'app': 'grafana'}
-        deployment = k8s.apps.v1.Deployment(  # type: ignore
+        deployment = k8s.apps.v1.Deployment(
             'grafana',
             metadata={
                 'namespace': namespace.metadata.name,
@@ -172,19 +172,19 @@ class Grafana(p.ComponentResource):
                                         'mount_path': '/etc/grafana/certs',
                                     },
                                 ],
+                                'readiness_probe': {
+                                    'failure_threshold': 3,
+                                    'http_get': {
+                                        'path': '/robots.txt',
+                                        'port': GRAFANA_PORT,
+                                        'scheme': 'HTTPS',
+                                    },
+                                },
                                 'resources': component_config.grafana.resources.to_resource_requirements(),
                             },
                         ],
-                        'readiness_probe': {
-                            'failure_threshold': 3,
-                            'http_get': {
-                                'path': '/robots.txt',
-                                'port': GRAFANA_PORT,
-                                'scheme': 'HTTPS',
-                            },
-                        },
                         'security_context': {
-                            'fsGroup': 472,
+                            'fs_group': 472,
                             'supplemental_groups': [0],
                         },
                         'volumes': [
