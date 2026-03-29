@@ -207,7 +207,7 @@ prometheus.exporter.blackbox "default" {
 
 	target {
 		name    = "unifi.tobiash.net"
-		address = "https://unifi.tobiash.net:8443"
+		address = "https://unifi.tobiash.net:11443"
 		module  = "https_2xx"
 	}
 
