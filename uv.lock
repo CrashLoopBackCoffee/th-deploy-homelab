@@ -577,7 +577,7 @@ dev = [
     { name = "filelock", specifier = ">=3.16.1" },
     { name = "platformdirs", specifier = ">=4.3.6" },
     { name = "pre-commit", specifier = ">=4.0.1" },
-    { name = "pyrefly", specifier = ">=0.41.3" },
+    { name = "pyrefly", specifier = "==0.57.1" },
     { name = "pyright", specifier = ">=1.1.390" },
     { name = "ruff", specifier = ">=0.8.2" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20250915" },
