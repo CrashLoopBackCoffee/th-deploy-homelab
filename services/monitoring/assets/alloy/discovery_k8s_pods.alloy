@@ -62,13 +62,25 @@ discovery.relabel "pods_common" {
 discovery.relabel "pods_logs" {
 	targets = discovery.relabel.pods_common.output
 
+	// Only running pods
+	rule {
+		source_labels = ["__meta_kubernetes_pod_phase"]
+		regex         = "Pending|Succeeded|Failed|Unknown"
+		action        = "drop"
+	}
+
 	// Path to container logs
 	rule {
-		source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
-		target_label  = "__path__"
-		separator     = "/"
-		regex         = "(.*)/(.*)"
-		replacement   = "/var/log/pods/*$1*/$2/*.log"
+		source_labels = [
+			"__meta_kubernetes_namespace",
+			"__meta_kubernetes_pod_name",
+			"__meta_kubernetes_pod_uid",
+			"__meta_kubernetes_pod_container_name",
+		]
+		target_label = "__path__"
+		separator    = ";"
+		regex        = "(.*);(.*);(.*);(.*)"
+		replacement  = "/var/log/pods/${1}_${2}_${3}/${4}/0.log"
 	}
 
 	// Set service_name for loki
