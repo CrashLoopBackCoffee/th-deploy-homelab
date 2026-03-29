@@ -5,7 +5,7 @@
 //-----------------------------------------------------------
 // Pod Log Collection via Kubernetes API
 //-----------------------------------------------------------
-loki.source.kubernetes "pods" {
+loki.source.file "pods" {
 	targets    = discovery.relabel.pods_logs.output
 	forward_to = [loki.process.drop_old_logs.receiver]
 }
