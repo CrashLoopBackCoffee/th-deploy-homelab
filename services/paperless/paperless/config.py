@@ -2,6 +2,12 @@ import pydantic
 import utils.model
 
 
+class PaperlessGptConfig(utils.model.LocalBaseModel):
+    version: str
+    llm_model: str = pydantic.Field(alias='llm-model', default='gemma4')
+    api_token: utils.model.OnePasswordRef = pydantic.Field(alias='api-token')
+
+
 class EntraIdConfig(utils.model.LocalBaseModel):
     tenant_id: str = 'ac1df362-04cf-4e6e-839b-031c16ada473'
     client_id: str
@@ -79,6 +85,7 @@ class PaperlessResourcesConfig(utils.model.LocalBaseModel):
     tika: utils.model.ResourcesConfig
     gotenberg: utils.model.ResourcesConfig
     restic: utils.model.ResourcesConfig
+    paperless_gpt: utils.model.ResourcesConfig = pydantic.Field(alias='paperless-gpt')
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
@@ -93,6 +100,7 @@ class ComponentConfig(utils.model.LocalBaseModel):
     tika: TikaConfig
     gotenberg: GotenbergConfig
     resources: PaperlessResourcesConfig
+    paperless_gpt: PaperlessGptConfig = pydantic.Field(alias='paperless-gpt')
 
 
 class StackConfig(utils.model.LocalBaseModel):

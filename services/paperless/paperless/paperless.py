@@ -15,6 +15,8 @@ REDIS_PORT = 6379
 PAPERLESS_PORT = 8000
 TIKA_PORT = 9998
 GOTENBERG_PORT = 3000
+PAPERLESS_GPT_PORT = 8080
+OLLAMA_PORT = 11434
 
 
 class Paperless(p.ComponentResource):
@@ -510,12 +512,13 @@ class Paperless(p.ComponentResource):
         traefic_service = k8s.core.v1.Service.get(
             'traefik-service', 'traefik/traefik', opts=k8s_opts
         )
+        traefik_ip = traefic_service.status.load_balancer.ingress[0].ip
         record = utils.opnsense.unbound.host_override.HostOverride(
             'paperless',
             host='paperless',
             domain=component_config.cloudflare.zone,
             record_type='A',
-            ipaddress=traefic_service.status.load_balancer.ingress[0].ip,
+            ipaddress=traefik_ip,
         )
 
         fqdn = f'paperless.{component_config.cloudflare.zone}'
@@ -554,6 +557,8 @@ class Paperless(p.ComponentResource):
 
         # Create backup CronJob
         create_backup_cronjob(component_config, k8s_opts)
+
+        create_paperless_gpt(component_config, traefik_ip, k8s_opts)
 
         self.register_outputs({})
 
@@ -670,4 +675,109 @@ def create_gotenberg(
             'selector': gotenberg_sts.spec.selector.match_labels,
         },
         opts=opts,
+    )
+
+
+def create_paperless_gpt(
+    component_config: ComponentConfig,
+    traefik_ip: p.Output[str],
+    opts: p.ResourceOptions,
+) -> None:
+    app_labels = {'app': 'paperless-gpt'}
+    deployment = k8s.apps.v1.Deployment(
+        'paperless-gpt',
+        metadata={'name': 'paperless-gpt'},
+        spec={
+            'replicas': 1,
+            'selector': {'match_labels': app_labels},
+            'template': {
+                'metadata': {'labels': app_labels},
+                'spec': {
+                    'containers': [
+                        {
+                            'name': 'paperless-gpt',
+                            'image': f'icereed/paperless-gpt:{component_config.paperless_gpt.version}',
+                            'ports': [{'container_port': PAPERLESS_GPT_PORT}],
+                            'env': [
+                                {
+                                    'name': 'PAPERLESS_BASE_URL',
+                                    'value': f'http://paperless:{PAPERLESS_PORT}',
+                                },
+                                {
+                                    'name': 'PAPERLESS_PUBLIC_URL',
+                                    'value': f'https://paperless.{component_config.cloudflare.zone}',
+                                },
+                                {
+                                    'name': 'PAPERLESS_TOKEN',
+                                    'value': component_config.paperless_gpt.api_token.value,
+                                },
+                                {
+                                    'name': 'LLM_PROVIDER',
+                                    'value': 'ollama',
+                                },
+                                {
+                                    'name': 'OLLAMA_HOST',
+                                    'value': f'http://ollama.ollama.svc.cluster.local:{OLLAMA_PORT}',
+                                },
+                                {
+                                    'name': 'LLM_MODEL',
+                                    'value': component_config.paperless_gpt.llm_model,
+                                },
+                            ],
+                            'resources': component_config.resources.paperless_gpt.to_resource_requirements(),
+                        },
+                    ],
+                },
+            },
+        },
+        opts=opts,
+    )
+
+    service = k8s.core.v1.Service(
+        'paperless-gpt',
+        metadata={'name': 'paperless-gpt'},
+        spec={
+            'ports': [{'port': PAPERLESS_GPT_PORT}],
+            'selector': deployment.spec.selector.match_labels,
+        },
+        opts=opts,
+    )
+
+    record = utils.opnsense.unbound.host_override.HostOverride(
+        'paperless-gpt',
+        host='paperless-gpt',
+        domain=component_config.cloudflare.zone,
+        record_type='A',
+        ipaddress=traefik_ip,
+    )
+
+    fqdn = f'paperless-gpt.{component_config.cloudflare.zone}'
+    k8s.apiextensions.CustomResource(
+        'ingress-paperless-gpt',
+        api_version='traefik.io/v1alpha1',
+        kind='IngressRoute',
+        metadata={'name': 'ingress-paperless-gpt'},
+        spec={
+            'entryPoints': ['websecure'],
+            'routes': [
+                {
+                    'kind': 'Rule',
+                    'match': p.Output.concat('Host(`', fqdn, '`)'),
+                    'services': [
+                        {
+                            'name': service.metadata.name,
+                            'namespace': service.metadata.namespace,
+                            'port': PAPERLESS_GPT_PORT,
+                        },
+                    ],
+                }
+            ],
+            'tls': {},
+        },
+        opts=opts,
+    )
+
+    p.export(
+        'paperless_gpt_url',
+        p.Output.format('https://{}.{}', record.host, record.domain),
     )
