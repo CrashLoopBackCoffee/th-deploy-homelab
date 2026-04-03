@@ -69,6 +69,12 @@ config:
     gotenberg:
       # renovate: datasource=github-releases packageName=gotenberg/gotenberg versioning=semver
       version: 8.29.0
+    paperless-gpt:
+      # renovate: datasource=github-releases packageName=icereed/paperless-gpt versioning=semver
+      version: 0.7.1
+      llm-model: gemma4
+      api-token:
+        ref: "op://Pulumi/Paperless GPT/api-token"
     resources:
       paperless:
         cpu: 10m
@@ -85,3 +91,6 @@ config:
       restic:
         cpu: 10m
         memory: 100Mi
+      paperless-gpt:
+        cpu: 10m
+        memory: 256Mi
