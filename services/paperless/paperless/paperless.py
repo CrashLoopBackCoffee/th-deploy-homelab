@@ -57,8 +57,8 @@ class Paperless(p.ComponentResource):
                 REDIS_PORT,
             ),
             'PAPERLESS_CONSUMER_POLLING': '30',
-            'PAPERLESS_TASK_WORKERS': '4',
-            'PAPERLESS_THREADS_PER_WORKER': '4',
+            'PAPERLESS_TASK_WORKERS': '2',
+            'PAPERLESS_THREADS_PER_WORKER': '1',
             # Extend the polling delay to account for HP bitch iteratively updating its PDFs after
             # scanning each page.
             'PAPERLESS_CONSUMER_POLLING_DELAY': '30',
@@ -105,7 +105,7 @@ class Paperless(p.ComponentResource):
                 'http://{}:{}', gotenberg_service.metadata.name, GOTENBERG_PORT
             ),
             'PAPERLESS_GMAIL_OAUTH_CLIENT_ID': component_config.mail.client_id,
-            'PAPERLESS_WEBSERVER_WORKERS': '4',
+            'PAPERLESS_WEBSERVER_WORKERS': '2',
         }
 
         config_secret = k8s.core.v1.Secret(
