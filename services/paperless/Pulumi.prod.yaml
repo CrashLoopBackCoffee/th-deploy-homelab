@@ -72,16 +72,16 @@ config:
     resources:
       paperless:
         cpu: 10m
-        memory: 1516Mi
+        memory: 2048Mi
       redis:
         cpu: 10m
         memory: 100Mi
       tika:
-        cpu: 34m
-        memory: 317Mi
+        cpu: 10m
+        memory: 233Mi
       gotenberg:
         cpu: 10m
-        memory: 247Mi
+        memory: 233Mi
       restic:
         cpu: 10m
         memory: 100Mi
