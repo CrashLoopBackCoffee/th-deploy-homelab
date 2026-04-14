@@ -45,7 +45,7 @@ config:
         memory: 778Mi
     node-exporter:
       # renovate: datasource=github-releases packageName=prometheus/node_exporter versioning=loose
-      version: 1.10.2
+      version: 1.11.1
       resources:
         cpu: 10m
         memory: 100Mi
