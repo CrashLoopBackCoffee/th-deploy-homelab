@@ -65,7 +65,7 @@ get_cert_dir() {
         "acme")
             # acme.sh with RSA certificates (UniFi OS Server only supports RSA)
             local rsa_dir="${ACME_HOME}/${UNIFI_HOSTNAME}"
-            
+
             if [[ -d "$rsa_dir" ]]; then
                 echo "$rsa_dir"
             else
@@ -94,7 +94,7 @@ get_cert_files() {
         "acme")
             CERT_FILE="${cert_dir}/fullchain.cer"
             CHAIN_FILE="${cert_dir}/ca.cer"
-            
+
             # Check for different key file naming patterns in acme.sh
             if [[ -f "${cert_dir}/${UNIFI_HOSTNAME}.key" ]]; then
                 KEY_FILE="${cert_dir}/${UNIFI_HOSTNAME}.key"
