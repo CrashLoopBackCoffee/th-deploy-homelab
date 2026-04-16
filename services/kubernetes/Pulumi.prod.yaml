@@ -45,7 +45,7 @@ config:
       zone: tobiash.net
     csi-nfs-driver:
       # renovate: datasource=github-releases packageName=kubernetes-csi/csi-driver-nfs versioning=semver
-      version: v4.13.1
+      version: v4.13.2
       resources:
         cpu: 10m
         memory: 100Mi
