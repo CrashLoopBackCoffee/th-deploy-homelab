@@ -43,7 +43,7 @@ config:
             - size: 20
     traefik:
       # renovate: datasource=github-releases packageName=traefik/traefik-helm-chart extractVersion=^v(?<version>.*)$ versioning=semver
-      version: 39.0.7
+      version: 39.0.8
     metrics-server:
       # renovate: datasource=github-releases packageName=kubernetes-sigs/metrics-server extractVersion=^metrics-server-helm-chart-(?<version>.*)$ versioning=semver
       version: 3.13.0
