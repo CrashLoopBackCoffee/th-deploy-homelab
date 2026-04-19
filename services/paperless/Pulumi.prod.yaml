@@ -68,7 +68,7 @@ config:
       version: 3.3.0.0
     gotenberg:
       # renovate: datasource=github-releases packageName=gotenberg/gotenberg versioning=semver
-      version: 8.30.1
+      version: 8.31.0
     resources:
       paperless:
         cpu: 10m
