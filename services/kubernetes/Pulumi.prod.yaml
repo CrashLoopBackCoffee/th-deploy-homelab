@@ -78,7 +78,7 @@ config:
             - size: 100
     traefik:
       # renovate: datasource=github-releases packageName=traefik/traefik-helm-chart extractVersion=^v(?<version>.*)$ versioning=semver
-      version: 39.0.7
+      version: 39.0.8
       resources:
         cpu: 10m
         memory: 100Mi
