@@ -39,7 +39,7 @@ config:
         memory: 498Mi
     mimir:
       # renovate: datasource=github-releases packageName=grafana/mimir extractVersion=^mimir-(?<version>.*)$ versioning=semver
-      version: 3.0.5
+      version: 3.0.6
       resources:
         cpu: 31m
         memory: 778Mi
