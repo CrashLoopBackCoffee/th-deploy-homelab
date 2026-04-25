@@ -9,6 +9,7 @@ class AlloyConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str | None = None
     resources: utils.model.ResourcesConfig
+    kubectl_version: str
 
 
 class GrafanaCloudConfig(utils.model.LocalBaseModel):

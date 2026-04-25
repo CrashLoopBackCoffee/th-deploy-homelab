@@ -386,6 +386,79 @@ class Alloy(p.ComponentResource):
             lambda ip: create_dns_record([ip]) if ip else None
         )
 
+        # ServiceAccount for daily restart CronJob
+        restart_service_account = k8s.core.v1.ServiceAccount(
+            'alloy-restart',
+            metadata={'name': 'alloy-restart'},
+            opts=k8s_opts,
+        )
+
+        restart_role = k8s.rbac.v1.Role(
+            'alloy-restart',
+            metadata={'name': 'alloy-restart'},
+            rules=[
+                {
+                    'api_groups': ['apps'],
+                    'resources': ['deployments'],
+                    'verbs': ['get', 'patch'],
+                },
+            ],
+            opts=k8s_opts,
+        )
+
+        k8s.rbac.v1.RoleBinding(
+            'alloy-restart',
+            metadata={'name': 'alloy-restart'},
+            role_ref={
+                'api_group': 'rbac.authorization.k8s.io',
+                'kind': 'Role',
+                'name': restart_role.metadata.name,
+            },
+            subjects=[
+                {
+                    'kind': 'ServiceAccount',
+                    'name': restart_service_account.metadata.name,
+                    'namespace': namespace.metadata.name,
+                }
+            ],
+            opts=k8s_opts,
+        )
+
+        k8s.batch.v1.CronJob(
+            'alloy-restart',
+            metadata={'name': 'alloy-restart'},
+            spec={
+                'schedule': '0 6 * * *',
+                'successful_jobs_history_limit': 3,
+                'failed_jobs_history_limit': 3,
+                'job_template': {
+                    'spec': {
+                        'template': {
+                            'spec': {
+                                'service_account_name': restart_service_account.metadata.name,
+                                'restart_policy': 'OnFailure',
+                                'containers': [
+                                    {
+                                        'name': 'alloy-restart',
+                                        'image': f'registry.k8s.io/conformance:v{component_config.alloy.kubectl_version}',
+                                        'command': [
+                                            'kubectl',
+                                            'rollout',
+                                            'restart',
+                                            'deployment/alloy',
+                                            '-n',
+                                            'alloy',
+                                        ],
+                                    }
+                                ],
+                            },
+                        },
+                    },
+                },
+            },
+            opts=k8s_opts,
+        )
+
         # Export outputs
         self.url = p.Output.from_input(f'https://{component_config.alloy.hostname}')
         self.lb_ip = service.status.load_balancer.ingress[0].ip

@@ -21,6 +21,8 @@ config:
       resources:
         cpu: 77m
         memory: 508Mi
+      # renovate: datasource=github-releases packageName=kubernetes/kubernetes versioning=semver
+      kubectl-version: 1.35.4
     cloudflare:
       email: tobias_henkel@gmx.de
       api-key:
