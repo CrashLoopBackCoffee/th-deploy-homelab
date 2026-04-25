@@ -65,7 +65,7 @@ config:
       version: 8.6.2
     tika:
       # renovate: datasource=docker packageName=registry-1.docker.io/apache/tika versioning=loose
-      version: 3.3.0.0
+      version: 4.0.0-SNAPSHOT-full
     gotenberg:
       # renovate: datasource=github-releases packageName=gotenberg/gotenberg versioning=semver
       version: 8.31.0
