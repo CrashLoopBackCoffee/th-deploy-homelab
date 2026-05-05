@@ -16,7 +16,7 @@ config:
       ssh-public-key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLGX6Nw50R8EGcDgR69SkvAgX/NR71vLHlYuB7lkyoJ
       vlan: 20
       # renovate: datasource=github-releases packageName=zwave-js/zwave-js-ui versioning=semver
-      version: 11.16.2
+      version: 11.17.0
       # renovate: datasource=github-releases packageName=grafana/alloy versioning=semver
       alloy-version: v1.16.0
       zwave-adapter:
