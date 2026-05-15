@@ -13,8 +13,8 @@ dependencies = [
     "pulumi-minio==0.16.9",
     "pulumi-proxmoxve==7.13.0",
     "pulumi-pulumiservice>=0.32.0",
-    "pulumi-random==4.19.2",
-    "pulumi==3.234.0",
+    "pulumi-random==4.20.0",
+    "pulumi==3.239.0",
     # Workspaces
     "backup",
     "immich",
