@@ -1,14 +1,10 @@
 environment:
+  - global/global-prod
   - kubernetes/kubeconfig-prod
   - s3/s3-prod
 
 config:
   netbox:config:
-    cloudflare:
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      email: tobias_henkel@gmx.de
-      zone: tobiash.net
     netbox:
       # renovate: datasource=github-releases packageName=netbox-community/netbox-chart versioning=semver
       chart-version: 7.3.5

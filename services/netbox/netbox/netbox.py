@@ -6,6 +6,8 @@ import utils.opnsense.unbound.host_override
 import utils.postgres
 import yaml
 
+from utils.cloudflare import get_cloudflare_zone
+
 from netbox.config import ComponentConfig
 
 CNPG_APP_DB_NAME = 'app'
@@ -287,13 +289,13 @@ class Netbox(p.ComponentResource):
         record = utils.opnsense.unbound.host_override.HostOverride(
             'netbox',
             host='netbox',
-            domain=component_config.cloudflare.zone,
+            domain=get_cloudflare_zone(),
             record_type='A',
             ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
             opts=p.ResourceOptions(parent=self),
         )
 
-        fqdn = p.Output.concat('netbox.', component_config.cloudflare.zone)
+        fqdn = p.Output.concat('netbox.', get_cloudflare_zone())
         k8s.apiextensions.CustomResource(
             'netbox-ingress',
             api_version='traefik.io/v1alpha1',

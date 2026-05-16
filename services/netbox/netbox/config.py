@@ -29,7 +29,6 @@ class NetboxConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    cloudflare: utils.model.CloudflareConfig
     netbox: NetboxConfig
     postgres: PostgresConfig
 
