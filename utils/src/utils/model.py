@@ -1,6 +1,5 @@
 import pathlib
 
-import pulumi as p
 import pulumi_kubernetes as k8s
 import pydantic
 
@@ -34,24 +33,6 @@ class PulumiSecret(LocalBaseModel):
 
     def __str__(self):
         return str(self.secure)
-
-
-class OnePasswordRef(LocalBaseModel):
-    ref: str
-
-    @property
-    def value(self) -> p.Output[str]:
-        # Lazy import to avoid importing pulumi_onepassword in the model
-        from utils.onepassword import resolve_secret_ref  # noqa: PLC0415
-
-        return resolve_secret_ref(self.ref)
-
-
-class ProxmoxConfig(LocalBaseModel):
-    api_token: OnePasswordRef = pydantic.Field(alias='api-token')
-    api_endpoint: str = pydantic.Field(alias='api-endpoint')
-    node_name: str = pydantic.Field(alias='node-name')
-    insecure: bool = False
 
 
 class TargetConfig(LocalBaseModel):
