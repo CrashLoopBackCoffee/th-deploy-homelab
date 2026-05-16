@@ -1,21 +1,13 @@
 environment:
+  - global/global-prod
   - kubernetes/kubeconfig-prod
+  - svn/svn-prod
 
 config:
   svn:config:
-    cloudflare:
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      email: tobias_henkel@gmx.de
-      zone: tobiash.net
     svn:
       # renovate: datasource=docker packageName=obslib/subversion versioning=semver
       version: httpd_svn-1.14-1
       resources:
         cpu: 10m
         memory: 100Mi
-      auth:
-        users:
-          - username: tobias
-            password-hash:
-              ref: "op://Pulumi/Subversion/htpasswd"

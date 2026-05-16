@@ -5,6 +5,8 @@ import pulumi as p
 import pulumi_kubernetes as k8s
 import utils.opnsense.unbound.host_override
 
+from utils.cloudflare import get_cloudflare_zone
+
 from svn.config import ComponentConfig
 
 HTTP_PORT = 80  # Service port
@@ -78,9 +80,10 @@ def create_svn(component_config: ComponentConfig, k8s_provider: k8s.Provider) ->
     )
 
     # Build htpasswd content from configured users (expects pre-hashed passwords)
-    users = component_config.svn.auth.users if component_config.svn.auth else []
-    usernames = [u.username for u in users]
-    hashes = p.Output.all(*[u.password_hash.value for u in users])
+    svn_auth_config = p.Config().require_object('svn-auth')
+    users = svn_auth_config.get('users', [])
+    usernames = [u['username'] for u in users]
+    hashes = p.Output.all(*[u['password-hash'] for u in users])
     htpasswd_content = hashes.apply(
         lambda h: '\n'.join(f'{usernames[i]}:{h[i]}' for i in range(len(h))) + '\n'
     )
@@ -247,13 +250,13 @@ def create_svn(component_config: ComponentConfig, k8s_provider: k8s.Provider) ->
     record = utils.opnsense.unbound.host_override.HostOverride(
         'svn',
         host='svn',
-        domain=component_config.cloudflare.zone,
+        domain=get_cloudflare_zone(),
         record_type='A',
         ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
     )
 
     # IngressRoute for TLS via Traefik
-    fqdn = f'svn.{component_config.cloudflare.zone}'
+    fqdn = f'svn.{get_cloudflare_zone()}'
     k8s.apiextensions.CustomResource(
         'ingress',
         api_version='traefik.io/v1alpha1',

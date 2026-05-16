@@ -1,25 +1,13 @@
 import utils.model
 
 
-class SvnUser(utils.model.LocalBaseModel):
-    username: str
-    # Store a pre-generated htpasswd hash in 1Password
-    password_hash: utils.model.OnePasswordRef
-
-
-class SvnAuth(utils.model.LocalBaseModel):
-    users: list[SvnUser] = []
-
-
 class SvnConfig(utils.model.LocalBaseModel):
     # Full image tag including variant (e.g. "httpd-1.14.2")
     version: str
     resources: utils.model.ResourcesConfig
-    auth: SvnAuth
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    cloudflare: utils.model.CloudflareConfig
     svn: SvnConfig
 
 
@@ -33,4 +21,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str]
     config: StackConfig
