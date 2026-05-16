@@ -26,14 +26,15 @@ class AdGuardExporter(p.ComponentResource):
         )
 
         # Create secret for credentials
+        adguard_credentials = p.Config().require_object('adguard-exporter')
         credentials_secret = k8s.core.v1.Secret(
             'adguard-credentials',
             metadata={
                 'namespace': namespace.metadata.name,
             },
             string_data={
-                'username': component_config.adguard_exporter.username.value,
-                'password': component_config.adguard_exporter.password.value,
+                'username': adguard_credentials['username'],
+                'password': adguard_credentials['password'],
             },
             opts=k8s_opts,
         )
@@ -67,7 +68,7 @@ class AdGuardExporter(p.ComponentResource):
                                 'env': [
                                     {
                                         'name': 'ADGUARD_SERVERS',
-                                        'value': component_config.adguard_exporter.server,
+                                        'value': adguard_credentials['server'],
                                     },
                                     {
                                         'name': 'ADGUARD_USERNAMES',

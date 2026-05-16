@@ -1,7 +1,14 @@
+import functools
+
 import pulumi as p
 import pulumi_cloudflare as cloudflare
 
 from utils.model import CloudflareConfig
+
+
+@functools.cache
+def get_cloudflare_zone():
+    return p.Config().require_object('cloudflare')['zone']
 
 
 def get_cloudflare_provider(config: CloudflareConfig | None = None) -> cloudflare.Provider:
