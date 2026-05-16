@@ -77,8 +77,7 @@ members = ["services/*", "utils"]
 exclude = ["services/mdns-reflector"]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+build-backend = "uv_build"
 
 [tool.ruff]
 line-length = 100

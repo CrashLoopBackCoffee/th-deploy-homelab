@@ -3,13 +3,15 @@ name = "backup"
 version = "0.1.0"
 description = "Backup service for NFS volumes using restic"
 requires-python = ">=3.14"
-dependencies = [
-    "jinja2>=3.1.6",
-]
+dependencies = ["jinja2>=3.1.6"]
 
 [tool.uv.sources]
 utils = { workspace = true }
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.11.0,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "backup"
+module-root = ""
