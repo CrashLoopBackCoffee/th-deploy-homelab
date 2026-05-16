@@ -22,7 +22,7 @@ def main():
     config = p.Config()
     component_config = ComponentConfig.model_validate(config.get_object('config'))
 
-    cloudflare_provider = utils.cloudflare.get_provider(component_config.cloudflare)
+    cloudflare_provider = utils.cloudflare.get_cloudflare_provider(component_config.cloudflare)
 
     # Buckets for mimir
     mimir_buckets = MimirBuckets('default')

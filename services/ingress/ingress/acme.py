@@ -59,6 +59,7 @@ class AcmeSynology(p.ComponentResource):
         )
 
         # Create Secret with Synology credentials
+        synology_cert_manager_config = p.Config().require_object('synology-cert-manager')
         credentials_secret = k8s.core.v1.Secret(
             'synology-credentials',
             metadata={
@@ -69,8 +70,8 @@ class AcmeSynology(p.ComponentResource):
                 'SYNO_HOSTNAME': synology_config.host,
                 'SYNO_PORT': str(synology_config.port),
                 'SYNO_SCHEME': synology_config.scheme,
-                'SYNO_USERNAME': synology_config.username.value,
-                'SYNO_PASSWORD': synology_config.password.value,
+                'SYNO_USERNAME': synology_cert_manager_config['username'],
+                'SYNO_PASSWORD': synology_cert_manager_config['password'],
             },
             opts=p.ResourceOptions(parent=namespace, provider=k8s_provider),
         )

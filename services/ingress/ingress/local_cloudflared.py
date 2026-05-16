@@ -61,7 +61,8 @@ def create_local_cloudflared(
         opts=cloudflare_opts,
     )
 
-    zone = utils.cloudflare.get_zone(component_config.cloudflare.zone, cloudflare_provider)
+    zone_name = p.Config().require_object('cloudflare')['zone']
+    zone = utils.cloudflare.get_zone(zone_name, cloudflare_provider)
     for ingress in component_config.local_cloudflared:
         hostname_prefix = ingress.hostname.split('.')[0]
         cloudflare.DnsRecord(
