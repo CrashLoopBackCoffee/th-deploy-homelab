@@ -1,14 +1,12 @@
+environment:
+  - global/global-prod
+
 config:
   netboot:config:
     target:
       host: synology.tobiash.net
       user: tobias
       root-dir: /volume2/docker
-    cloudflare:
-      email: tobias_henkel@gmx.de
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      zone: tobiash.net
     netboot:
       # renovate: datasource=docker packageName=ghcr.io/netbootxyz/netbootxyz versioning=loose
       version: 0.7.6-nbxyz18

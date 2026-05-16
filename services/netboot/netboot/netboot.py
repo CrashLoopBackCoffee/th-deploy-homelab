@@ -22,7 +22,7 @@ def create_netboot(
 
     # Create s3 DNS record
     utils.cloudflare.create_cloudflare_cname(
-        'netboot', component_config.cloudflare.zone, cloudflare_provider
+        'netboot', utils.cloudflare.get_cloudflare_zone(), cloudflare_provider
     )
 
     # Create config and assets directories
@@ -76,7 +76,7 @@ def create_netboot(
 
     p.export(
         'netboot-url',
-        p.Output.format('https://netboot.{}', component_config.cloudflare.zone),
+        p.Output.format('https://netboot.{}', utils.cloudflare.get_cloudflare_zone()),
     )
     p.export('netboot-web-port', component_config.netboot.web_port)
     p.export('netboot-tftp-port', component_config.netboot.tftp_port)
