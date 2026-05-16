@@ -1,5 +1,7 @@
 environment:
+  - global/global-prod
   - kubernetes/kubeconfig-prod
+  - strava-sensor/strava-sensor-prod
 
 config:
   strava-sensor:config:
@@ -13,21 +15,3 @@ config:
         memory: 176Mi
       storage:
         state-size: 256Mi
-      garmin:
-        username:
-          ref: op://Pulumi/sso.garmin.com/username
-        password:
-          ref: op://Pulumi/sso.garmin.com/password
-      strava:
-        refresh-token:
-          ref: op://Pulumi/Strava Sensor/Refresh Token
-        client-id:
-          ref: op://Pulumi/Strava Sensor/Client ID
-        client-secret:
-          ref: op://Pulumi/Strava Sensor/Client Secret
-      mqtt:
-        broker-url: mqtts://mqtt.tobiash.net:8883
-        username:
-          ref: op://Pulumi/Mosquitto/username
-        password:
-          ref: op://Pulumi/Mosquitto/password

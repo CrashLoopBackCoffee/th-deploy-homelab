@@ -25,17 +25,20 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
         opts=k8s_opts,
     )
 
+    strava_config = p.Config().require_object('strava')
+    mqtt_config = p.Config().require_object('mosquitto')
+    garmin_config = p.Config().get_object('garmin')
     secret_data: dict[str, p.Input[str]] = {
-        'strava-refresh-token': strava_sensor.strava.refresh_token.value,
-        'strava-client-id': strava_sensor.strava.client_id.value,
-        'strava-client-secret': strava_sensor.strava.client_secret.value,
-        'mqtt-username': strava_sensor.mqtt.username.value,
-        'mqtt-password': strava_sensor.mqtt.password.value,
+        'strava-refresh-token': strava_config['refresh-token'],
+        'strava-client-id': strava_config['client-id'],
+        'strava-client-secret': strava_config['client-secret'],
+        'mqtt-username': mqtt_config['username'],
+        'mqtt-password': mqtt_config['password'],
     }
 
-    if strava_sensor.garmin:
-        secret_data['garmin-username'] = strava_sensor.garmin.username.value
-        secret_data['garmin-password'] = strava_sensor.garmin.password.value
+    if garmin_config:
+        secret_data['garmin-username'] = garmin_config['username']
+        secret_data['garmin-password'] = garmin_config['password']
 
     secret = k8s.core.v1.Secret(
         'strava-sensor',
@@ -96,7 +99,7 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
         },
         {
             'name': 'MQTT_BROKER_URL',
-            'value': strava_sensor.mqtt.broker_url,
+            'value': mqtt_config['broker-url'],
         },
         {
             'name': 'MQTT_USERNAME',
@@ -142,7 +145,7 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
             }
         )
 
-    if strava_sensor.garmin:
+    if garmin_config:
         env_vars.extend(
             [
                 {
@@ -169,7 +172,6 @@ def create_strava_sensor(component_config: ComponentConfig, k8s_provider: k8s.Pr
                 },
             ]
         )
-
     app_labels = {'app': 'strava-sensor'}
     statefulset = k8s.apps.v1.StatefulSet(
         'strava-sensor',
