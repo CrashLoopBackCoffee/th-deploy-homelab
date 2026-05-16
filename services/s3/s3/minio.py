@@ -2,14 +2,12 @@ import pulumi as p
 import pulumi_cloudflare as cloudflare
 import pulumi_command
 import pulumi_docker as docker
-import pulumi_minio
 import pulumi_pulumiservice as pulumiservice
 import pulumi_random
 import utils.cloudflare
 import yaml
 
 from s3.config import ComponentConfig
-from s3.pulumi import create_pulumi_bucket
 
 
 def create_minio(
@@ -82,16 +80,6 @@ def create_minio(
         start=True,
         opts=p.ResourceOptions.merge(opts, p.ResourceOptions(depends_on=[minio_data_dir_resource])),
     )
-
-    minio_provider = pulumi_minio.Provider(
-        'minio',
-        minio_server=f's3.{component_config.cloudflare.zone}:443',
-        minio_user='admin',
-        minio_password=minio_password.result,
-        minio_ssl=True,
-    )
-
-    create_pulumi_bucket(minio_provider)
 
     # Export connection details to an ESC environment
     esc_config = p.Output.from_input(
