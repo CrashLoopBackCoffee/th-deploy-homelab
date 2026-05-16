@@ -9,7 +9,6 @@ class N8nConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    cloudflare: utils.model.CloudflareConfig
     n8n: N8nConfig
 
 

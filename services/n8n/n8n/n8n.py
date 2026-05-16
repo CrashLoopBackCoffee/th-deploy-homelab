@@ -3,6 +3,8 @@ import pulumi_kubernetes as k8s
 import pulumi_random as random
 import utils.opnsense.unbound.host_override
 
+from utils.cloudflare import get_cloudflare_zone
+
 from n8n.config import ComponentConfig
 
 N8N_PORT = 5678
@@ -159,13 +161,13 @@ def create_n8n(component_config: ComponentConfig, k8s_provider: k8s.Provider) ->
     record = utils.opnsense.unbound.host_override.HostOverride(
         'n8n',
         host='n8n',
-        domain=component_config.cloudflare.zone,
+        domain=get_cloudflare_zone(),
         record_type='A',
         ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
     )
 
     # Create IngressRoute for internal access
-    fqdn = f'n8n.{component_config.cloudflare.zone}'
+    fqdn = f'n8n.{get_cloudflare_zone()}'
     k8s.apiextensions.CustomResource(
         'ingress',
         api_version='traefik.io/v1alpha1',
