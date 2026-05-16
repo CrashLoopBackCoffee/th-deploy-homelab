@@ -14,12 +14,6 @@ class VolumeConfig(utils.model.LocalBaseModel):
         return f'/mnt/{self.name}'
 
 
-class S3Config(utils.model.LocalBaseModel):
-    endpoint: utils.model.OnePasswordRef
-    access_key_id: utils.model.OnePasswordRef
-    secret_access_key: utils.model.OnePasswordRef
-
-
 class ResticConfig(utils.model.LocalBaseModel):
     version: str
 
@@ -31,8 +25,6 @@ class ComponentConfig(utils.model.LocalBaseModel):
     retention_weekly: int = pydantic.Field(default=8)
     retention_monthly: int = pydantic.Field(default=12)
     retention_yearly: int = pydantic.Field(default=5)
-    restic_password: utils.model.OnePasswordRef
-    s3: S3Config
     volumes: list[VolumeConfig]
     resources: utils.model.ResourcesConfig
 

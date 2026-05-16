@@ -10,6 +10,11 @@ from backup.config import ComponentConfig
 def create_backup_cronjob(
     component_config: ComponentConfig, k8s_opts: p.ResourceOptions
 ) -> k8s.batch.v1.CronJob:
+    # Load pulumi secret config
+    config = p.Config()
+    restic_password = config.require_secret('restic-password')
+    s3_config = config.require_object('s3')
+
     # Load and render backup script template
     template_path = pathlib.Path(__file__).parent.parent / 'assets' / 'backup.sh.j2'
     template_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path.parent))
@@ -36,7 +41,7 @@ def create_backup_cronjob(
         'restic-password',
         metadata={'name': 'restic-password'},
         string_data={
-            'restic-password': component_config.restic_password.value,
+            'restic-password': restic_password,
         },
         opts=k8s_opts,
     )
@@ -46,9 +51,9 @@ def create_backup_cronjob(
         's3-credentials',
         metadata={'name': 's3-credentials'},
         string_data={
-            'AWS_S3_ENDPOINT': component_config.s3.endpoint.value,
-            'AWS_ACCESS_KEY_ID': component_config.s3.access_key_id.value,
-            'AWS_SECRET_ACCESS_KEY': component_config.s3.secret_access_key.value,
+            'AWS_S3_ENDPOINT': s3_config['endpoint'],
+            'AWS_ACCESS_KEY_ID': s3_config['access-key-id'],
+            'AWS_SECRET_ACCESS_KEY': s3_config['secret-access-key'],
         },
         opts=k8s_opts,
     )
