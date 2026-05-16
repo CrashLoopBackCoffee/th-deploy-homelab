@@ -1,4 +1,3 @@
-import typing as t
 import urllib.error
 import urllib.request
 
@@ -67,7 +66,6 @@ class ZwaveeController(p.ComponentResource):
         name: str,
         component_config: ComponentConfig,
         proxmox_provider: proxmoxve.Provider,
-        proxmox_config: dict[str, t.Any],
     ):
         super().__init__(f'lab:zwave-controller:{name}', name)
 
@@ -86,7 +84,7 @@ class ZwaveeController(p.ComponentResource):
             'cloud-image',
             content_type='iso',
             datastore_id='local',
-            node_name=proxmox_config['node-name'],
+            node_name=component_config.proxmox.node_name,
             overwrite=False,
             overwrite_unmanaged=True,
             url=component_config.zwave_controller.cloud_image,
@@ -95,7 +93,7 @@ class ZwaveeController(p.ComponentResource):
 
         cloud_init_config = proxmoxve.storage.File(
             'cloud-init-config',
-            node_name=proxmox_config['node-name'],
+            node_name=component_config.proxmox.node_name,
             datastore_id='local',
             content_type='snippets',
             source_raw={
@@ -126,7 +124,7 @@ class ZwaveeController(p.ComponentResource):
             f'zwave-controller-{p.get_stack()}',
             name=f'zwave-controller-{p.get_stack()}',
             tags=tags,
-            node_name=proxmox_config['node-name'],
+            node_name=component_config.proxmox.node_name,
             description='Zwave Controller',
             operating_system={
                 'type': 'l26',

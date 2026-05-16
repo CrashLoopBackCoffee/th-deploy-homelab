@@ -1,10 +1,12 @@
 environment:
   - global/global-prod
-  - iot/iot-prod
   - kubernetes/kubeconfig-prod
 
 config:
   iot:config:
+    proxmox:
+      node-name: pve
+
     zwave-controller:
       address: 192.168.20.21/24
       hostname: zwave-controller.tobiash.net

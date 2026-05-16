@@ -1,7 +1,7 @@
 import pulumi as p
-import pulumi_proxmoxve as proxmoxve
 
 from utils.k8s import get_k8s_provider
+from utils.proxmox import get_proxmox_provider
 
 from iot.config import ComponentConfig
 from iot.mosquitto import Mosquitto
@@ -14,18 +14,7 @@ def main():
     component_config = ComponentConfig.model_validate(config.get_object('config'))
 
     k8s_provider = get_k8s_provider()
-    proxmox_config = p.Config().require_object('proxmox')
-    proxmox_provider = proxmoxve.Provider(
-        'proxmox',
-        endpoint=proxmox_config['api-endpoint'],
-        username=proxmox_config['username'],
-        password=proxmox_config['password'],
-        insecure=False,
-        ssh={
-            'username': 'root',
-            'agent': True,
-        },
-    )
+    proxmox_provider = get_proxmox_provider()
 
     Mosquitto('mosquitto', component_config, k8s_provider)
 
@@ -35,5 +24,4 @@ def main():
         'zwave-controller',
         component_config,
         proxmox_provider,
-        proxmox_config,
     )

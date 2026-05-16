@@ -5,6 +5,10 @@ import pydantic
 import utils.model
 
 
+class ProxmoxConfig(utils.model.LocalBaseModel):
+    node_name: str
+
+
 class MosquittoConfig(utils.model.LocalBaseModel):
     version: str
     hostname: str
@@ -48,6 +52,7 @@ class ZwaveControllerConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
+    proxmox: ProxmoxConfig
     mosquitto: MosquittoConfig
     mqtt2prometheus: MqttPrometheusConfig
     zwave_controller: ZwaveControllerConfig
