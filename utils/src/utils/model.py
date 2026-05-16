@@ -47,12 +47,6 @@ class OnePasswordRef(LocalBaseModel):
         return resolve_secret_ref(self.ref)
 
 
-class CloudflareConfig(LocalBaseModel):
-    api_key: OnePasswordRef
-    email: str
-    zone: str
-
-
 class ProxmoxConfig(LocalBaseModel):
     api_token: OnePasswordRef = pydantic.Field(alias='api-token')
     api_endpoint: str = pydantic.Field(alias='api-endpoint')
