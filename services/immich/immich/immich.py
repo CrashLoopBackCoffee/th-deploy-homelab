@@ -262,17 +262,18 @@ def create_immich(
     )
 
     # Create local DNS record pointing to Traefik service
+    zone = p.Config().require_object('cloudflare')['zone']
     traefik_service = k8s.core.v1.Service.get('traefik-service', 'traefik/traefik', opts=k8s_opts)
     record = utils.opnsense.unbound.host_override.HostOverride(
         'immich',
         host='immich',
-        domain=component_config.cloudflare.zone,
+        domain=zone,
         record_type='A',
         ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
     )
 
     # Create IngressRoute for internal access
-    fqdn = p.Output.concat('immich.', component_config.cloudflare.zone)
+    fqdn = p.Output.concat('immich.', zone)
     k8s.apiextensions.CustomResource(
         'ingress',
         api_version='traefik.io/v1alpha1',
