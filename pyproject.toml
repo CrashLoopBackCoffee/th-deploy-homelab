@@ -2,7 +2,7 @@
 name = "homelab"
 version = "0.1.0"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 
 dependencies = [
     # Fixed pulumi deps for global pinning
@@ -83,7 +83,7 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py314"
 extend-exclude = ["docs/examples"]
 extend-include = ["scripts/generate-config-schema"]
 

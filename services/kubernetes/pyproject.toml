@@ -5,7 +5,7 @@ build-backend = "uv_build"
 [project]
 name = "kubernetes"
 version = "0.1.0"
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 
 dependencies = ["pulumiverse_acme==0.16.1", "requests>=2.31.0", "utils"]
 
