@@ -6,7 +6,7 @@ build-backend = "uv_build"
 name = "immich"
 version = "0.1.0"
 description = "Immich photo management service"
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 
 dependencies = [
     "pulumi>=3.0.0,<4.0.0",

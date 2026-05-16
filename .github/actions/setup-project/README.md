@@ -4,7 +4,7 @@ This is a reusable GitHub Action that sets up the complete environment needed fo
 
 ## What it does
 
-1. **Sets up Python** - Installs the specified Python version (defaults to 3.11)
+1. **Sets up Python** - Installs the specified Python version (defaults to 3.14)
 2. **Installs UV** - Installs the UV package manager using `astral-sh/setup-uv@v6`
 3. **Syncs dependencies** - Runs `uv sync` to install all project dependencies
 4. **Installs Grafana Alloy** - Downloads and installs the Grafana Alloy tool for configuration formatting
@@ -13,7 +13,7 @@ This is a reusable GitHub Action that sets up the complete environment needed fo
 
 | Input | Description | Required | Default |
 |-------|-------------|----------|---------|
-| `python-version` | Python version to install | No | `3.11` |
+| `python-version` | Python version to install | No | `3.14` |
 | `alloy-version` | Grafana Alloy version to install | No | `v1.10.0` |
 
 ## Usage
@@ -33,7 +33,7 @@ steps:
   - uses: actions/checkout@v4
   - uses: ./.github/actions/setup-project
     with:
-      python-version: '3.12'
+      python-version: '3.14'
       alloy-version: 'v1.11.0'
 ```
 
