@@ -1,13 +1,9 @@
 environment:
+  - global/global-prod
   - kubernetes/kubeconfig-prod
 
 config:
   ollama:config:
-    cloudflare:
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      email: tobias_henkel@gmx.de
-      zone: tobiash.net
     ollama:
       # renovate: datasource=github-releases packageName=ollama/ollama versioning=semver
       version: 0.24.0

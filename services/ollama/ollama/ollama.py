@@ -2,6 +2,8 @@ import pulumi as p
 import pulumi_kubernetes as k8s
 import utils.opnsense.unbound.host_override
 
+from utils.cloudflare import get_cloudflare_zone
+
 from ollama.config import ComponentConfig
 
 OLLAMA_PORT = 11434
@@ -110,13 +112,13 @@ def create_ollama(component_config: ComponentConfig, k8s_provider: k8s.Provider)
     record = utils.opnsense.unbound.host_override.HostOverride(
         'ollama',
         host='ollama',
-        domain=component_config.cloudflare.zone,
+        domain=get_cloudflare_zone(),
         record_type='A',
         ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
     )
 
     # Create IngressRoute for internal access
-    fqdn = f'ollama.{component_config.cloudflare.zone}'
+    fqdn = f'ollama.{get_cloudflare_zone()}'
     k8s.apiextensions.CustomResource(
         'ingress',
         api_version='traefik.io/v1alpha1',

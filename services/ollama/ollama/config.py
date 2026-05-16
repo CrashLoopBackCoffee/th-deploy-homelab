@@ -8,7 +8,6 @@ class OllamaConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    cloudflare: utils.model.CloudflareConfig
     ollama: OllamaConfig
 
 
