@@ -6,6 +6,7 @@ import pulumi_kubernetes as k8s
 import pulumi_random as random
 import utils.opnsense.unbound.host_override
 
+from utils.cloudflare import get_cloudflare_zone
 from utils.postgres import PostgresDatabase
 
 from paperless.backup import create_backup_cronjob
@@ -64,7 +65,7 @@ class Paperless(p.ComponentResource):
             'PAPERLESS_CONSUMER_POLLING_DELAY': '30',
             # Wait up to 10min for the scan to finish
             'PAPERLESS_CONSUMER_POLLING_RETRY_COUNT': '20',
-            'PAPERLESS_URL': f'https://paperless.{component_config.cloudflare.zone}',
+            'PAPERLESS_URL': f'https://paperless.{get_cloudflare_zone()}',
             # https://docs.paperless-ngx.com/troubleshooting/#gunicorn-fails-to-start-with-is-not-a-valid-port-number
             'PAPERLESS_PORT': str(PAPERLESS_PORT),
             'PAPERLESS_ADMIN_USER': admin_username,
@@ -186,6 +187,8 @@ class Paperless(p.ComponentResource):
         )
 
         # Generate rclone config dynamically
+        secret_backup_config = p.Config().require_object('backup')
+        google_drive_config = secret_backup_config['google-drive']
         rclone_config = p.Output.format(
             textwrap.dedent("""\
                 [gdrive]
@@ -196,24 +199,27 @@ class Paperless(p.ComponentResource):
                 token = {{"access_token":"{2}","token_type":"Bearer","refresh_token":"{3}","expiry":"{4}"}}
                 root_folder_id = {5}
                 """),
-            component_config.backup.google_drive.client_id.value,
-            component_config.backup.google_drive.client_secret.value,
-            component_config.backup.google_drive.access_token.value,
-            component_config.backup.google_drive.refresh_token.value,
-            component_config.backup.google_drive.token_expiry,
-            component_config.backup.google_drive.root_folder_id,
+            google_drive_config['client-id'],
+            google_drive_config['client-secret'],
+            google_drive_config['access-token'],
+            google_drive_config['refresh-token'],
+            google_drive_config['token-expiry'],
+            google_drive_config['root-folder-id'],
         )
 
         backup_secret = k8s.core.v1.Secret(
             'paperless-backup-secrets',
             string_data={
-                'restic-password': component_config.backup.restic_password.value,
+                'restic-password': secret_backup_config['restic-password'],
                 'rclone.conf': rclone_config,
             },
             opts=k8s_opts,
         )
 
         app_labels = {'app': 'paperless'}
+        secret_idrive_config = (
+            secret_backup_config['idrive'] if component_config.backup.idrive_enabled else {}
+        )
         sts = k8s.apps.v1.StatefulSet(
             'paperless',
             metadata={'name': 'paperless'},
@@ -384,7 +390,7 @@ class Paperless(p.ComponentResource):
                                                     {
                                                         'name': 'RESTIC_REPOSITORY',
                                                         'value': p.Output.from_input(
-                                                            component_config.backup.idrive_endpoint.value
+                                                            secret_idrive_config['endpoint']
                                                         ).apply(
                                                             lambda ep: (
                                                                 f's3:{ep if ep.startswith("http") else "https://" + ep}/'
@@ -394,7 +400,7 @@ class Paperless(p.ComponentResource):
                                                         ),
                                                     }
                                                 ]
-                                                if component_config.backup.idrive_endpoint
+                                                if component_config.backup.idrive_enabled
                                                 and component_config.backup.idrive_bucket
                                                 else []
                                             ),
@@ -411,15 +417,18 @@ class Paperless(p.ComponentResource):
                                                 [
                                                     {
                                                         'name': 'AWS_ACCESS_KEY_ID',
-                                                        'value': component_config.backup.idrive_access_key_id.value,
+                                                        'value': secret_idrive_config[
+                                                            'access-key-id'
+                                                        ],
                                                     },
                                                     {
                                                         'name': 'AWS_SECRET_ACCESS_KEY',
-                                                        'value': component_config.backup.idrive_secret_access_key.value,
+                                                        'value': secret_idrive_config[
+                                                            'secret-access-key'
+                                                        ],
                                                     },
                                                 ]
-                                                if component_config.backup.idrive_access_key_id
-                                                and component_config.backup.idrive_secret_access_key
+                                                if component_config.backup.idrive_enabled
                                                 else []
                                             ),
                                             {
@@ -513,12 +522,12 @@ class Paperless(p.ComponentResource):
         record = utils.opnsense.unbound.host_override.HostOverride(
             'paperless',
             host='paperless',
-            domain=component_config.cloudflare.zone,
+            domain=get_cloudflare_zone(),
             record_type='A',
             ipaddress=traefic_service.status.load_balancer.ingress[0].ip,
         )
 
-        fqdn = f'paperless.{component_config.cloudflare.zone}'
+        fqdn = f'paperless.{get_cloudflare_zone()}'
         k8s.apiextensions.CustomResource(
             'ingress',
             api_version='traefik.io/v1alpha1',

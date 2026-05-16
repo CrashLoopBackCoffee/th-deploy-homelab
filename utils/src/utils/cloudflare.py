@@ -1,14 +1,26 @@
+import functools
+
 import pulumi as p
 import pulumi_cloudflare as cloudflare
 
-from utils.model import CloudflareConfig
+
+@functools.cache
+def get_cloudflare_zone():
+    return p.Config().require_object('cloudflare')['zone']
 
 
-def get_provider(config: CloudflareConfig) -> cloudflare.Provider:
+def get_cloudflare_provider() -> cloudflare.Provider:
+    pulumi_config = p.Config()
+
+    # Load cloudflare config from ESC
+    cloudflare_pulumi_config = pulumi_config.require_object('cloudflare')
+    api_key = cloudflare_pulumi_config['api-key']
+    email = cloudflare_pulumi_config['email']
+
     return cloudflare.Provider(
         'cloudflare',
-        api_key=config.api_key.value,
-        email=config.email,
+        api_key=api_key,
+        email=email,
     )
 
 

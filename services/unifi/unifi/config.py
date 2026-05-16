@@ -11,7 +11,6 @@ class UnifiConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    cloudflare: utils.model.CloudflareConfig
     unifi: UnifiConfig
 
 
@@ -25,4 +24,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str]
     config: StackConfig

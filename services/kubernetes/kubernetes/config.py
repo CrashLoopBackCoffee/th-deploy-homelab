@@ -5,10 +5,7 @@ import utils.model
 
 
 class ProxmoxConfig(utils.model.LocalBaseModel):
-    api_token: utils.model.OnePasswordRef
-    api_endpoint: str
     node_name: str
-    insecure: bool = False
 
 
 class DiskConfig(utils.model.LocalBaseModel):
@@ -77,10 +74,7 @@ class CertManagerConfig(utils.model.LocalBaseModel):
         )
 
 
-class BackupObjectStoreConfig(utils.model.LocalBaseModel):
-    endpoint: utils.model.OnePasswordRef
-    access_key_id: utils.model.OnePasswordRef
-    secret_access_key: utils.model.OnePasswordRef
+class CloudNativePcBackupConfig(utils.model.LocalBaseModel):
     cron_schedule: str = '0 0 0 * * *'
 
 
@@ -92,7 +86,7 @@ class CloudNativePgResourcesConfig(utils.model.LocalBaseModel):
 class CloudNativePgConfig(utils.model.LocalBaseModel):
     version: str
     barman_plugin_version: str | None = None
-    backup: BackupObjectStoreConfig | None = None
+    backup: CloudNativePcBackupConfig | None = None
     resources: CloudNativePgResourcesConfig
 
 
@@ -108,7 +102,6 @@ class VerticalPodAutoscalerConfig(utils.model.LocalBaseModel):
 
 class ComponentConfig(utils.model.LocalBaseModel):
     cert_manager: CertManagerConfig
-    cloudflare: utils.model.CloudflareConfig
     cloudnative_pg: CloudNativePgConfig
     proxmox: ProxmoxConfig
     microk8s: MicroK8sConfig
@@ -128,4 +121,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str] | None
     config: StackConfig

@@ -1,13 +1,9 @@
 environment:
+  - global/global-prod
   - kubernetes/kubeconfig-prod
 
 config:
   n8n:config:
-    cloudflare:
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      email: tobias_henkel@gmx.de
-      zone: tobiash.net
     n8n:
       # renovate: datasource=github-releases packageName=n8n-io/n8n versioning=semver
       version: 1.108.1

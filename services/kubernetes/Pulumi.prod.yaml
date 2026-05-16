@@ -1,9 +1,10 @@
+environment:
+  - global/global-prod
+  - kubernetes/kubernetes-prod
+
 config:
   kubernetes:config:
     proxmox:
-      api-token:
-        ref: op://Pulumi/cejfwasemie3kbbfphb5zta2ci/password
-      api-endpoint: https://pve.tobiash.net:8006
       node-name: pve
     cert-manager:
       # renovate: datasource=github-releases packageName=cert-manager/cert-manager versioning=semver
@@ -32,17 +33,7 @@ config:
           cpu: 10m
           memory: 100Mi
       backup:
-        endpoint:
-          ref: op://Pulumi/IDrive e2 Postgres/Endpoint
-        access-key-id:
-          ref: op://Pulumi/IDrive e2 Postgres/Access Key ID
-        secret-access-key:
-          ref: op://Pulumi/IDrive e2 Postgres/Secret Access Key
-    cloudflare:
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      email: tobias_henkel@gmx.de
-      zone: tobiash.net
+        cron-schedule: 0 0 0 * * *
     csi-nfs-driver:
       # renovate: datasource=github-releases packageName=kubernetes-csi/csi-driver-nfs versioning=semver
       version: v4.13.2

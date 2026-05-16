@@ -13,7 +13,7 @@ component_config = ComponentConfig.model_validate(p.Config().get_object('config'
 docker_provider = utils.docker.get_provider(component_config.target)
 docker_opts = p.ResourceOptions(provider=docker_provider)
 
-cloudflare_provider = utils.cloudflare.get_provider(component_config.cloudflare)
+cloudflare_provider = utils.cloudflare.get_cloudflare_provider()
 
 # Create networks so we don't have to expose all ports on the host
 network = docker.Network('netboot', opts=docker_opts)

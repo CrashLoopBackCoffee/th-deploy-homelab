@@ -1,7 +1,0 @@
-config:
-  proxmox:config:
-    cloudflare:
-      email: tobias_henkel@gmx.de
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      zone: tobiash.net

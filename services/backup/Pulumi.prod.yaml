@@ -1,4 +1,5 @@
 environment:
+  - backup/backup-prod
   - kubernetes/kubeconfig-prod
 
 config:
@@ -13,19 +14,6 @@ config:
     retention-weekly: 8
     retention-monthly: 12
     retention-yearly: 5
-
-    # Restic repository password (shared across all volumes)
-    restic-password:
-      ref: "op://Pulumi/Restic Backup/password"
-
-    # IDrive E2 S3 credentials
-    s3:
-      endpoint:
-        ref: "op://Pulumi/IDrive E2 Backup/Endpoint"
-      access-key-id:
-        ref: "op://Pulumi/IDrive E2 Backup/Access Key ID"
-      secret-access-key:
-        ref: "op://Pulumi/IDrive E2 Backup/Secret Access Key"
 
     # List of volumes to backup
     volumes:

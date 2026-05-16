@@ -45,10 +45,6 @@ class PaperlessConfig(utils.model.LocalBaseModel):
 
 
 class RcloneGoogleDriveConfig(utils.model.LocalBaseModel):
-    client_id: utils.model.OnePasswordRef
-    client_secret: utils.model.OnePasswordRef
-    access_token: utils.model.OnePasswordRef
-    refresh_token: utils.model.OnePasswordRef
     token_expiry: str = pydantic.Field(alias='token-expiry')
     root_folder_id: str = pydantic.Field(alias='root-folder-id')
 
@@ -56,21 +52,16 @@ class RcloneGoogleDriveConfig(utils.model.LocalBaseModel):
 class BackupConfig(utils.model.LocalBaseModel):
     restic_rclone_version: str = pydantic.Field(alias='restic-rclone-version')
     kubectl_version: str = pydantic.Field(alias='kubectl-version')
-    restic_password: utils.model.OnePasswordRef = pydantic.Field(alias='restic-password')
     repository_path: str = pydantic.Field(alias='repository-path', default='paperless')
     schedule: str = pydantic.Field(default='0 2 * * *')
     retention_daily: int = pydantic.Field(alias='retention-daily', default=7)
     retention_weekly: int = pydantic.Field(alias='retention-weekly', default=4)
     retention_monthly: int = pydantic.Field(alias='retention-monthly', default=6)
-    google_drive: RcloneGoogleDriveConfig = pydantic.Field(alias='google-drive')
     # Optional secondary S3-compatible repository (IDrive E2) for redundancy.
     # When enabled, a second restic repository will be configured pointing at the
     # provided bucket. Backups will be pushed to both remote locations.
     idrive_enabled: bool = False
-    idrive_endpoint: utils.model.OnePasswordRef | None = None
     idrive_bucket: str | None = None
-    idrive_access_key_id: utils.model.OnePasswordRef | None = None
-    idrive_secret_access_key: utils.model.OnePasswordRef | None = None
 
 
 class PaperlessResourcesConfig(utils.model.LocalBaseModel):
@@ -82,7 +73,6 @@ class PaperlessResourcesConfig(utils.model.LocalBaseModel):
 
 
 class ComponentConfig(utils.model.LocalBaseModel):
-    cloudflare: utils.model.CloudflareConfig
     paperless: PaperlessConfig
     backup: BackupConfig
     redis: RedisConfig

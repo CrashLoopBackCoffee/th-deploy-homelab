@@ -1,5 +1,7 @@
 environment:
+  - global/global-prod
   - kubernetes/kubeconfig-prod
+  - monitoring/monitoring-prod
   - s3/s3-prod
 
 config:
@@ -21,11 +23,6 @@ config:
       resources:
         cpu: 77m
         memory: 508Mi
-    cloudflare:
-      email: tobias_henkel@gmx.de
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      zone: tobiash.net
     grafana-cloud:
       username: "1115202"
       token:
@@ -67,11 +64,6 @@ config:
     adguard-exporter:
       # renovate: datasource=github-releases packageName=henrywhitaker3/adguard-exporter extractVersion=^v(?<version>.*)$ versioning=semver
       version: 1.2.1
-      server: https://adguard.tobiash.net:8443
-      username:
-        ref: op://Pulumi/Adguard Home/username
-      password:
-        ref: op://Pulumi/Adguard Home/password
       resources:
         cpu: 10m
         memory: 100Mi

@@ -38,9 +38,6 @@ class SpeedtestExporterConfig(utils.model.LocalBaseModel):
 
 class AdGuardExporterConfig(utils.model.LocalBaseModel):
     version: str
-    server: str
-    username: utils.model.OnePasswordRef
-    password: utils.model.OnePasswordRef
     resources: utils.model.ResourcesConfig
 
 
@@ -63,7 +60,6 @@ class ComponentConfig(utils.model.LocalBaseModel):
     alloy: AlloyConfig
     alloy_legacy: AlloyLegacyConfig
     cadvisor_legacy: CAdvisorConfig
-    cloudflare: utils.model.CloudflareConfig
     grafana: GrafanaConfig
     grafana_cloud: GrafanaCloudConfig
     mimir: MimirConfig

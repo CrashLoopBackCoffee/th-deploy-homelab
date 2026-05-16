@@ -1,7 +1,0 @@
-name: proxmox
-runtime:
-  name: python
-  options:
-    toolchain: uv
-    virtualenv: ../../.venv
-description: Proxmox Stack

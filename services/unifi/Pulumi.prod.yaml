@@ -1,11 +1,8 @@
+environment:
+  - global/global-prod
+
 config:
   unifi:config:
-    cloudflare:
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      email: tobias_henkel@gmx.de
-      zone: tobiash.net
-
     unifi:
       # renovate: datasource=github-releases packageName=jacobalberty/unifi-docker versioning=semver
       address: 192.168.1.5

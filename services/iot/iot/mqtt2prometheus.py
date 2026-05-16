@@ -43,11 +43,12 @@ class Mqtt2Prometheus(p.ComponentResource):
             'json_parsing': {'separator': '.'},
         }
 
+        mqtt_config = p.Config().require_object('mosquitto')
         mqtt_credentials = k8s.core.v1.Secret(
             'mqtt-credentials',
             string_data={
-                'username': component_config.mqtt2prometheus.username.value,
-                'password': component_config.mqtt2prometheus.password.value,
+                'username': mqtt_config['username'],
+                'password': mqtt_config['password'],
             },
             opts=k8s_opts,
         )

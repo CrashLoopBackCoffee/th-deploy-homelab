@@ -4,6 +4,8 @@ import pulumi_random as random
 import utils.opnsense.unbound.host_override
 import utils.postgres
 
+from utils.cloudflare import get_cloudflare_zone
+
 from tandoor.config import ComponentConfig
 
 TANDOOR_PORT = 80  # Tandoor 2 uses nginx on port 80
@@ -329,13 +331,13 @@ def create_tandoor(component_config: ComponentConfig, k8s_provider: k8s.Provider
     record = utils.opnsense.unbound.host_override.HostOverride(
         'tandoor',
         host='tandoor',
-        domain=component_config.cloudflare.zone,
+        domain=get_cloudflare_zone(),
         record_type='A',
         ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
     )
 
     # Create IngressRoute for internal access
-    fqdn = f'tandoor.{component_config.cloudflare.zone}'
+    fqdn = f'tandoor.{get_cloudflare_zone()}'
     k8s.apiextensions.CustomResource(
         'ingress',
         api_version='traefik.io/v1alpha1',

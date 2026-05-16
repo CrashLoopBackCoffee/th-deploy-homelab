@@ -7,7 +7,6 @@ class MinioConfig(utils.model.LocalBaseModel):
 
 class ComponentConfig(utils.model.LocalBaseModel):
     target: utils.model.TargetConfig
-    cloudflare: utils.model.CloudflareConfig
     minio: MinioConfig
 
 
@@ -21,4 +20,5 @@ class StackConfig(utils.model.LocalBaseModel):
 
 
 class PulumiConfigRoot(utils.model.LocalBaseModel):
+    environment: list[str]
     config: StackConfig

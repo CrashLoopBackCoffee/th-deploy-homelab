@@ -6,11 +6,7 @@ import utils.model
 
 
 class ProxmoxConfig(utils.model.LocalBaseModel):
-    username: str
-    password: utils.model.OnePasswordRef
-    api_endpoint: str
     node_name: str
-    insecure: bool = False
 
 
 class MosquittoConfig(utils.model.LocalBaseModel):
@@ -29,8 +25,6 @@ class MqttPrometheusInstanceConfig(utils.model.LocalBaseModel):
 
 class MqttPrometheusConfig(utils.model.LocalBaseModel):
     version: str
-    username: utils.model.OnePasswordRef
-    password: utils.model.OnePasswordRef
     instances: list[MqttPrometheusInstanceConfig] = []
     resources: utils.model.ResourcesConfig
 
@@ -59,8 +53,6 @@ class ZwaveControllerConfig(utils.model.LocalBaseModel):
 
 class ComponentConfig(utils.model.LocalBaseModel):
     proxmox: ProxmoxConfig
-
-    cloudflare: utils.model.CloudflareConfig | None = None
     mosquitto: MosquittoConfig
     mqtt2prometheus: MqttPrometheusConfig
     zwave_controller: ZwaveControllerConfig

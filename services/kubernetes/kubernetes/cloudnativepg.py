@@ -53,9 +53,13 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
     )
 
     # Create backup ObjectStore if backup is configured
+    backup_config = p.Config().require_object('postgres-backup')
+    backup_endpoint: str = backup_config['endpoint']
+    backup_access_key_id: str = backup_config['access-key-id']
+    backup_secret_access_key: str = backup_config['secret-access-key']
     if component_config.cloudnative_pg.backup:
         # Export backup credentials to Pulumi ESC
-        pulumiservice.Environment(  # type: ignore
+        pulumiservice.Environment(
             'postgres-backup',
             organization=p.get_organization(),
             project=p.get_project(),
@@ -67,14 +71,11 @@ def create_cloudnative_pg(component_config: ComponentConfig, k8s_provider: k8s.P
                             's3://postgres',
                         ),
                         'endpoint-url': p.Output.concat(
-                            'https://', component_config.cloudnative_pg.backup.endpoint.value
+                            'https://',
+                            backup_endpoint,
                         ),
-                        'access-key-id': {
-                            'fn::secret': component_config.cloudnative_pg.backup.access_key_id.value
-                        },
-                        'secret-access-key': {
-                            'fn::secret': component_config.cloudnative_pg.backup.secret_access_key.value
-                        },
+                        'access-key-id': backup_access_key_id,
+                        'secret-access-key': {'fn::secret': backup_secret_access_key},
                         'pulumiConfig': {
                             'postgres-backup': {
                                 'destination-path': '${destination-path}',

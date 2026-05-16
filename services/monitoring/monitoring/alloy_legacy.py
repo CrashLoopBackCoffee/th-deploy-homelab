@@ -8,6 +8,8 @@ import pulumi_docker as docker
 import utils.cloudflare
 import utils.utils
 
+from utils.cloudflare import get_cloudflare_zone
+
 from monitoring.config import ComponentConfig
 from monitoring.utils import get_assets_path
 
@@ -38,7 +40,7 @@ class AlloyLegacy(p.ComponentResource):
 
         # Create alloy DNS record
         dns_record = utils.cloudflare.create_cloudflare_cname(
-            'alloy-legacy', component_config.cloudflare.zone, cloudflare_provider, docker_opts
+            'alloy-legacy', get_cloudflare_zone(), cloudflare_provider, docker_opts
         )
 
         # Create alloy-config folder
@@ -132,7 +134,7 @@ class AlloyLegacy(p.ComponentResource):
                 print(f'Error reloading alloy config:\n{e.read().decode()}')
                 raise
 
-        alloy_hostname = p.Output.format('{}.{}', dns_record.name, component_config.cloudflare.zone)
+        alloy_hostname = p.Output.format('{}.{}', dns_record.name, get_cloudflare_zone())
         p.Output.all(alloy_hostname, alloy_config_dir_resource.id, container.id).apply(reload_alloy)
         p.export('alloy_legacy_url', alloy_hostname)
 

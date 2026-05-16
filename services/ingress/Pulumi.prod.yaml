@@ -1,14 +1,10 @@
 environment:
+  - global/global-prod
+  - ingress/ingress-prod
   - kubernetes/kubeconfig-prod
 
 config:
   ingress:config:
-    cloudflare:
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      email: tobias_henkel@gmx.de
-      zone: tobiash.net
-
     cloudflared:
       # renovate: datasource=github-releases packageName=cloudflare/cloudflared versioning=semver
       version: 2026.5.0
@@ -37,10 +33,6 @@ config:
       host: synology.tobiash.net
       port: 5001
       scheme: https
-      username:
-        ref: op://Pulumi/Synology cert-manager/username
-      password:
-        ref: op://Pulumi/Synology cert-manager/password
       certs:
         - hostname: alloy-legacy.tobiash.net
         - hostname: minio-console.tobiash.net

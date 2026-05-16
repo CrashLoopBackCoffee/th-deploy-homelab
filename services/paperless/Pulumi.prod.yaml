@@ -1,13 +1,10 @@
 environment:
+  - global/global-prod
   - kubernetes/kubeconfig-prod
+  - paperless/paperless-prod
 
 config:
   paperless:config:
-    cloudflare:
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      email: tobias_henkel@gmx.de
-      zone: tobiash.net
     entraid:
       client-id: a02dcdca-dd0d-4b11-8a92-e7c8307ad547
       client-secret:
@@ -35,28 +32,9 @@ config:
       retention-daily: 7
       retention-weekly: 4
       retention-monthly: 6
-      restic-password:
-        ref: "op://Pulumi/Paperless Backup/password"
-      google-drive:
-        client-id:
-          ref: "op://Pulumi/Google Drive Rclone/Client ID"
-        client-secret:
-          ref: "op://Pulumi/Google Drive Rclone/Client Secret"
-        access-token:
-          ref: "op://Pulumi/Google Drive Rclone/Access Token"
-        refresh-token:
-          ref: "op://Pulumi/Google Drive Rclone/Refresh Token"
-        token-expiry: "2025-08-03T11:40:33.396532175+02:00"
-        root-folder-id: 1bGQ8Uemiv57zzQIQR0g6TyTwPkCy1lkE
       # Secondary IDrive E2 (S3) backup target
       idrive-enabled: true
-      idrive-endpoint:
-        ref: "op://Pulumi/IDrive e2 Paperless/Endpoint"
       idrive-bucket: restic-paperless
-      idrive-access-key-id:
-        ref: "op://Pulumi/IDrive e2 Paperless/Access Key ID"
-      idrive-secret-access-key:
-        ref: "op://Pulumi/IDrive e2 Paperless/Secret Access Key"
     postgres:
       # renovate: datasource=endoflife-date packageName=postgresql extractVersion=^(?<version>\d+) versioning=loose
       version: 18

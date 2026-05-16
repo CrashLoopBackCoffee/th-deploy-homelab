@@ -5,6 +5,8 @@ import pulumi_cloudflare as cloudflare
 import pulumi_kubernetes as k8s
 import utils.opnsense.unbound.host_override
 
+from utils.cloudflare import get_cloudflare_zone
+
 from monitoring.config import ComponentConfig
 from monitoring.mimir_buckets import MimirBuckets
 
@@ -235,14 +237,14 @@ class Mimir(p.ComponentResource):
         record = utils.opnsense.unbound.host_override.HostOverride(
             'mimir',
             host='mimir',
-            domain=component_config.cloudflare.zone,
+            domain=get_cloudflare_zone(),
             record_type='A',
             ipaddress=traefik_service.status.load_balancer.ingress[0].ip,
             opts=p.ResourceOptions(parent=self),
         )
 
         # Create IngressRoute for web UI access
-        fqdn = p.Output.concat('mimir.', component_config.cloudflare.zone)
+        fqdn = p.Output.concat('mimir.', get_cloudflare_zone())
         k8s.apiextensions.CustomResource(
             'mimir-ingress',
             api_version='traefik.io/v1alpha1',

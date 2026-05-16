@@ -1,7 +1,7 @@
 import pulumi as p
-import pulumi_proxmoxve as proxmoxve
 
 from utils.k8s import get_k8s_provider
+from utils.proxmox import get_proxmox_provider
 
 from iot.config import ComponentConfig
 from iot.mosquitto import Mosquitto
@@ -14,17 +14,7 @@ def main():
     component_config = ComponentConfig.model_validate(config.get_object('config'))
 
     k8s_provider = get_k8s_provider()
-    proxmox_provider = proxmoxve.Provider(
-        'proxmox',
-        endpoint=component_config.proxmox.api_endpoint,
-        username=component_config.proxmox.username,
-        password=component_config.proxmox.password.value,
-        insecure=component_config.proxmox.insecure,
-        ssh={
-            'username': 'root',
-            'agent': True,
-        },
-    )
+    proxmox_provider = get_proxmox_provider()
 
     Mosquitto('mosquitto', component_config, k8s_provider)
 
