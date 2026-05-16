@@ -1,15 +1,10 @@
 environment:
+  - global/global-prod
+  - iot/iot-prod
   - kubernetes/kubeconfig-prod
 
 config:
   iot:config:
-    proxmox:
-      username: root@pam
-      password:
-        ref: op://Pulumi/7se4f6wpe6pxnayudrtkcfs4am/password
-      api-endpoint: https://pve.tobiash.net:8006
-      node-name: pve
-
     zwave-controller:
       address: 192.168.20.21/24
       hostname: zwave-controller.tobiash.net
@@ -22,7 +17,6 @@ config:
       zwave-adapter:
         usb-id: 1a86:55d4
         serial-id: usb-Zooz_800_Z-Wave_Stick_533D004242-if00
-
 
     mosquitto:
       # renovate: datasource=github-releases packageName=eclipse-mosquitto/mosquitto versioning=semver
@@ -41,10 +35,6 @@ config:
       resources:
         cpu: 10m
         memory: 100Mi
-      username:
-        ref: op://Pulumi/Mosquitto/username
-      password:
-        ref: op://Pulumi/Mosquitto/password
       instances:
         - name: shellies
           topic-path: "home/shellies/#"
@@ -168,7 +158,6 @@ config:
               sensor_name_filter: "^nous-plug-.*$"
               const_labels:
                 sensor_type: nous-plug
-
 
             - prom_name: mqtt_current
               mqtt_name: current

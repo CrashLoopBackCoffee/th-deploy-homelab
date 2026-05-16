@@ -14,12 +14,13 @@ def main():
     component_config = ComponentConfig.model_validate(config.get_object('config'))
 
     k8s_provider = get_k8s_provider()
+    proxmox_config = p.Config().require_object('proxmox')
     proxmox_provider = proxmoxve.Provider(
         'proxmox',
-        endpoint=component_config.proxmox.api_endpoint,
-        username=component_config.proxmox.username,
-        password=component_config.proxmox.password.value,
-        insecure=component_config.proxmox.insecure,
+        endpoint=proxmox_config['api-endpoint'],
+        username=proxmox_config['username'],
+        password=proxmox_config['password'],
+        insecure=False,
         ssh={
             'username': 'root',
             'agent': True,
@@ -34,4 +35,5 @@ def main():
         'zwave-controller',
         component_config,
         proxmox_provider,
+        proxmox_config,
     )
