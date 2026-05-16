@@ -25,10 +25,10 @@ def create_minio(
 
     # Create s3 DNS record
     utils.cloudflare.create_cloudflare_cname(
-        's3', component_config.cloudflare.zone, cloudflare_provider
+        's3', utils.cloudflare.get_cloudflare_zone(), cloudflare_provider
     )
     utils.cloudflare.create_cloudflare_cname(
-        'minio-console', component_config.cloudflare.zone, cloudflare_provider
+        'minio-console', utils.cloudflare.get_cloudflare_zone(), cloudflare_provider
     )
 
     # Create data dir
@@ -86,7 +86,7 @@ def create_minio(
         {
             'values': {
                 's3': {
-                    'endpoint': f's3.{component_config.cloudflare.zone}',
+                    'endpoint': f's3.{utils.cloudflare.get_cloudflare_zone()}',
                     'admin-user': 'admin',
                     'admin-password': {'fn::secret': minio_password.result},
                 },
@@ -102,8 +102,8 @@ def create_minio(
         yaml=esc_config.apply(lambda c: p.StringAsset(yaml.safe_dump(c))),
     )
 
-    p.export('minio-s3', f'https://s3.{component_config.cloudflare.zone}')
-    p.export('minio-s3-hostname', f's3.{component_config.cloudflare.zone}')
-    p.export('minio-console', f'https://minio-console.{component_config.cloudflare.zone}')
+    p.export('minio-s3', f'https://s3.{utils.cloudflare.get_cloudflare_zone()}')
+    p.export('minio-s3-hostname', f's3.{utils.cloudflare.get_cloudflare_zone()}')
+    p.export('minio-console', f'https://minio-console.{utils.cloudflare.get_cloudflare_zone()}')
     p.export('minio-user', 'admin')
     p.export('minio-password', minio_password.result)

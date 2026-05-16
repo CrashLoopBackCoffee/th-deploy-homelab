@@ -1,13 +1,11 @@
+environment:
+  - global/global-prod
+
 config:
   s3:config:
     target:
       host: synology.tobiash.net
       user: tobias
       root-dir: /volume2/docker
-    cloudflare:
-      email: tobias_henkel@gmx.de
-      api-key:
-        ref: op://Pulumi/Cloudflare Global API Key/password
-      zone: tobiash.net
     minio:
       version: RELEASE.2024-12-18T13-15-44Z
