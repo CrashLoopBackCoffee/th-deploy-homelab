@@ -51,15 +51,16 @@ def create_traefik(
     traefik_ip = traefik_service.status.apply(lambda x: x['load_balancer']['ingress'][0]['ip'])
 
     # Create local DNS record to be used as CNAME target
+    zone_name = p.Config().require_object('cloudflare')['zone']
     utils.opnsense.unbound.host_override.HostOverride(
         'traefik',
         host=f'k8s-ingress-{p.get_stack()}',
-        domain=component_config.cloudflare.zone,
+        domain=zone_name,
         record_type='A',
         ipaddress=traefik_ip,
     )
 
-    wildcard_domain = f'*.{component_config.cloudflare.zone}'
+    wildcard_domain = f'*.{zone_name}'
     certificate = k8s.apiextensions.CustomResource(
         'certificate',
         api_version='cert-manager.io/v1',

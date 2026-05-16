@@ -78,6 +78,7 @@ def create_certmanager(
     )
 
     # Issuer
+    email = p.Config().require_object('cloudflare')['email']
     return k8s.apiextensions.CustomResource(
         'letsencrypt-issuer',
         api_version='cert-manager.io/v1',
@@ -86,7 +87,7 @@ def create_certmanager(
         spec={
             'acme': {
                 'server': component_config.cert_manager.issuer_server,
-                'email': component_config.cloudflare.email,
+                'email': email,
                 'privateKeySecretRef': {'name': 'lets-encrypt-private-key'},
                 'solvers': [
                     {
