@@ -9,7 +9,7 @@ A script to automatically import and update SSL certificates for your UniFi OS s
 - **Multiple Certificate Providers**: Support for both Certbot and acme.sh
 - **DNS Challenge Support**: Works with Cloudflare and all supported acme.sh DNS providers
 - **Smart Updates**: Automatically detects if the certificate changed and updates only if needed
-- **Command Line Options**:
+- **Command Line Options**: 
   - `--force` to reinstall certificate even if unchanged
   - `--verbose` for detailed logs and command output
   - `--provider=certbot|acme` to specify certificate provider
