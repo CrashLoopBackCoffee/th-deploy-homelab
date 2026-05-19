@@ -6,19 +6,19 @@ metadata:
     images.cnpg.io/family: postgresql
     images.cnpg.io/type: minimal
     images.cnpg.io/os: bookworm
-    images.cnpg.io/date: '20260420'
+    images.cnpg.io/date: '20260518'
     images.cnpg.io/publisher: cnpg.io
 spec:
   images:
   - major: 13
     image: ghcr.io/cloudnative-pg/postgresql:13.22-202511100817-minimal-bookworm@sha256:02e8ffc71aec2768ca177711278d3c0e6ceb5403df5fa6d3780cd590332e3a5d
   - major: 14
-    image: ghcr.io/cloudnative-pg/postgresql:14.22-202604200858-minimal-bookworm@sha256:a3884b3054b2c7c69b30dad276300f88e0f8983ab61bef4f43bd9623a2e6632b
+    image: ghcr.io/cloudnative-pg/postgresql:14.23-202605180814-minimal-bookworm@sha256:f76bf1cbd8cfead8e1fa026a4e64fdbf30b7e51c446aa90babdab0d1565d790e
   - major: 15
-    image: ghcr.io/cloudnative-pg/postgresql:15.17-202604200853-minimal-bookworm@sha256:0bb511e7eb159d25c269dcde7acb9dc2ffcc8845361cf35bf6bcebdf861d45a2
+    image: ghcr.io/cloudnative-pg/postgresql:15.18-202605180839-minimal-bookworm@sha256:8d428dec75c7146e00ffe4a1d0fc5c82b8ec9655bfecb0bbc9c8ff10f74a62ef
   - major: 16
-    image: ghcr.io/cloudnative-pg/postgresql:16.13-202604200852-minimal-bookworm@sha256:f8b0c01b3294b08870a31b9a00d2ecfbaffaf6f9e9177cd4709be5d0db9a7480
+    image: ghcr.io/cloudnative-pg/postgresql:16.14-202605180814-minimal-bookworm@sha256:a8dbe91c47757b1daea6f8793d6685b6f4e6606d7338a7c48460711fc9493965
   - major: 17
-    image: ghcr.io/cloudnative-pg/postgresql:17.9-202604200854-minimal-bookworm@sha256:9988a222224cdf7f2785b45570f2b7a0d4be2c89f629694dbd0c1352e028fdb2
+    image: ghcr.io/cloudnative-pg/postgresql:17.10-202605180839-minimal-bookworm@sha256:1098771979e6ace5c196c08a99868a30505c5e95f084ff629a92e25bae9f8082
   - major: 18
-    image: ghcr.io/cloudnative-pg/postgresql:18.3-202604200849-minimal-bookworm@sha256:7709c7b0b8e925ebca63004726e89a80e0e761b5e0d750ac72c52059527673f0
+    image: ghcr.io/cloudnative-pg/postgresql:18.4-202605180839-minimal-bookworm@sha256:a11ef25fe411f1e2528100a4a9af1b24d91a7a5fad3a8447ebdd5e153bc1f201
