@@ -9,7 +9,7 @@ config:
       root-dir: /volume2/docker
     netboot:
       # renovate: datasource=docker packageName=ghcr.io/netbootxyz/netbootxyz versioning=loose
-      version: 0.7.6-nbxyz18
+      version: 0.7.6-nbxyz22
       menu-version: 2.0.84
       web-port: 3000
       tftp-port: 69
