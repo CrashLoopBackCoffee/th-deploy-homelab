@@ -6,19 +6,19 @@ metadata:
     images.cnpg.io/family: postgresql
     images.cnpg.io/type: standard
     images.cnpg.io/os: bullseye
-    images.cnpg.io/date: '20260420'
+    images.cnpg.io/date: '20260518'
     images.cnpg.io/publisher: cnpg.io
 spec:
   images:
   - major: 13
     image: ghcr.io/cloudnative-pg/postgresql:13.22-202511100817-standard-bullseye@sha256:bdf11cbefce25a4cdad91dbd30caf00d7efc2fd54319e7ab6195814b41ba8f66
   - major: 14
-    image: ghcr.io/cloudnative-pg/postgresql:14.22-202604200858-standard-bullseye@sha256:9e378bdf8ab98b509b60c1dee34c343b03a3c7229bfc610d89693e2d72a83920
+    image: ghcr.io/cloudnative-pg/postgresql:14.23-202605180814-standard-bullseye@sha256:16b8fdeb79c45c36ca44cd2652cb49838819a968e2873deaa088f40126d486ce
   - major: 15
-    image: ghcr.io/cloudnative-pg/postgresql:15.17-202604200853-standard-bullseye@sha256:359b676ba23fcc6c9101f0f5f0548b99690d672c31a48c3d91ccf3ced7f77ac0
+    image: ghcr.io/cloudnative-pg/postgresql:15.18-202605180839-standard-bullseye@sha256:f0242e17962d4d55cb718b6ac9963f6f4d72b747e2ed2c860d5c56b21c2b8b23
   - major: 16
-    image: ghcr.io/cloudnative-pg/postgresql:16.13-202604200852-standard-bullseye@sha256:3116e9fd37c1b4ff0f3b3eba452853cca4ced52a301e29ca0a7ca72926865bdf
+    image: ghcr.io/cloudnative-pg/postgresql:16.14-202605180814-standard-bullseye@sha256:764c8a85c33e3a017c073dc55acb0dea11d26256cee0ead210a7b3064f8997a6
   - major: 17
-    image: ghcr.io/cloudnative-pg/postgresql:17.9-202604200854-standard-bullseye@sha256:fedc4635fb013a52b1b27ca9e2b482d85e6615bfa1fbeefc831609d3e316b2a3
+    image: ghcr.io/cloudnative-pg/postgresql:17.10-202605180839-standard-bullseye@sha256:3a9db2ece7d1191fbb68c088f9b38e2b0cd8d869369a604a8fb68b17658964b9
   - major: 18
-    image: ghcr.io/cloudnative-pg/postgresql:18.3-202604200849-standard-bullseye@sha256:222b85fdfb0a82354119329ede96c248ecc6d4eb2788538dc493d506842feaa7
+    image: ghcr.io/cloudnative-pg/postgresql:18.4-202605180839-standard-bullseye@sha256:be31d059666fe12753f2febec9b155dfec2536d26d3678ad7ef52613a1adcc08
