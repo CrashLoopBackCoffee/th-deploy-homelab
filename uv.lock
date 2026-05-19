@@ -370,11 +370,11 @@ requires-dist = [
     { name = "ollama", editable = "services/ollama" },
     { name = "paperless", editable = "services/paperless" },
     { name = "proxmox", editable = "services/proxmox" },
-    { name = "pulumi", specifier = "==3.239.0" },
+    { name = "pulumi", specifier = "==3.242.0" },
     { name = "pulumi-cloudflare", specifier = "==6.15.0" },
     { name = "pulumi-command", specifier = "==1.2.1" },
     { name = "pulumi-docker", specifier = "==4.11.2" },
-    { name = "pulumi-kubernetes", specifier = "==4.30.0" },
+    { name = "pulumi-kubernetes", specifier = "==4.31.0" },
     { name = "pulumi-minio", specifier = "==0.16.9" },
     { name = "pulumi-proxmoxve", specifier = "==7.13.0" },
     { name = "pulumi-pulumiservice", specifier = ">=0.32.0" },
@@ -815,7 +815,7 @@ requires-dist = [
 
 [[package]]
 name = "pulumi"
-version = "3.239.0"
+version = "3.242.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "debugpy" },
@@ -831,7 +831,7 @@ dependencies = [
     { name = "semver" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/53/ce/3a8181846b67697d2d748b30be0000cb0e62100b375ef827b431cc3815aa/pulumi-3.239.0-py3-none-any.whl", hash = "sha256:e6959bb25fc11bfbfdf9085be29d81702b3c0033654c6001310a2e0f4549253a", size = 404778, upload-time = "2026-05-14T12:57:24.216Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/84/7acd32c90c2620f2452c47f5a2b1bd0f0862efa850867167c931b207ab14/pulumi-3.242.0-py3-none-any.whl", hash = "sha256:b1f05f295d3c0ef6410c8243c93bb90ad7fc5b202de421d63b8bf98c3c855f14", size = 404775, upload-time = "2026-05-19T12:40:21.416Z" },
 ]
 
 [[package]]
@@ -878,7 +878,7 @@ wheels = [
 
 [[package]]
 name = "pulumi-kubernetes"
-version = "4.30.0"
+version = "4.31.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "parver" },
@@ -886,9 +886,9 @@ dependencies = [
     { name = "requests" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/63/d7/9b397f1328c15711210e06e25e6fead63b308edfc0298955746d23f043bb/pulumi_kubernetes-4.30.0.tar.gz", hash = "sha256:5d488be2a88ac9b3ea99d86c6d4a81be1fad449b3dcb2879f2c7757c63c92a72", size = 1981298, upload-time = "2026-04-25T00:05:30.513Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/0c/a9/05ebba180a4c59454c20b3bbd8ff82fea5b3d029ab60c9e477a6a37c3d85/pulumi_kubernetes-4.31.0.tar.gz", hash = "sha256:fb0e818b10211196e5c5d241ddd3312c4f1270ec2b21adf6e95f99479a7e69be", size = 1978544, upload-time = "2026-05-15T02:31:27.319Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f9/ff/7aede0e0a620a878f35c3aebf2d1cf0ed1642b208b38ed94269cf9293d1e/pulumi_kubernetes-4.30.0-py3-none-any.whl", hash = "sha256:e8c2534ed8cd91105edc4ce1c57356259976b1ad5c26eecc7a4456098b61ac7f", size = 3095280, upload-time = "2026-04-25T00:05:26.918Z" },
+    { url = "https://files.pythonhosted.org/packages/8a/71/9aba69a2d2680a295f21ab7add5645cf6e100826eb1f098e88de812d5fac/pulumi_kubernetes-4.31.0-py3-none-any.whl", hash = "sha256:a1db7334049f090354c3b74821513964885e5ce9185ff0ee5c973cf8639e0d92", size = 3093253, upload-time = "2026-05-15T02:31:24.788Z" },
 ]
 
 [[package]]
